@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "Stage.h"
 #include "Image.h"
+
 //メイン
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -20,9 +21,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ClearDrawScreen();
 
 		//ステージの描画
-		DrawGraph(0, 30, image.g_StageImage, TRUE);
-
-		DrawString(0, 0, "TEST", 0xffffff);
+		//DrawGraph(0, 30, image.g_StageImage, TRUE);
+		stage.DrawMap();
+		
 	
 
 		//裏画面の内容を表画面に反映
