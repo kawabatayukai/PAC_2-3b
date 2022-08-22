@@ -5,6 +5,7 @@ Image image;
 
 Image::Image() {
 	g_StageImage = 0;			// 画像用変数
+	PlayerImage = 0;
 	PlayerImageL = 0;
 	PlayerImageR = 0;
 	PlayerImageU = 0;
@@ -18,6 +19,7 @@ int Image::LoadImages()
 	//ステージ背景
 	if ((g_StageImage = LoadGraph("images/maze_blue.png")) == -1) return -1;
 	//プレイヤー画像
+	if ((PlayerImage = LoadGraph("images/02_2.png")) == -1)return -1;
 	if ((PlayerImageL = LoadGraph("images/01_2L.png")) == -1)return -1;
 	if ((PlayerImageR = LoadGraph("images/01_2R.png")) == -1)return -1;
 	if ((PlayerImageU = LoadGraph("images/01_2U.png")) == -1)return -1;

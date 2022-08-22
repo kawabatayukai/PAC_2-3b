@@ -2,11 +2,12 @@
 class Image {
 public:
 	int	g_StageImage;			// ‰æ‘œ—p•Ï”
+	int PlayerImage;
 	int PlayerImageL;
 	int PlayerImageR;
 	int PlayerImageU;
 	int PlayerImageD;
-
+	
 	Image();
 
 	int LoadImages();
