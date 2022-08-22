@@ -13,7 +13,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	if (image.LoadImages() == -1)return -1;
 
-
 	//ゲームループ              
 	while (ProcessMessage() == 0)
 	{
@@ -23,8 +22,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//ステージの描画
 		//DrawGraph(0, 30, image.g_StageImage, TRUE);
 		stage.DrawMap();
-		
-	
+		DrawGraph(650, 410, image.PlayerImageL, TRUE);
 
 		//裏画面の内容を表画面に反映
 		ScreenFlip();
