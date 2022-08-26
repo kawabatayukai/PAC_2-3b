@@ -9,6 +9,7 @@ public:
 	int MapPointX(int mapX);  //map上の"〇マス目"をウィンドウ上の座標に変換
 	int MapPointY(int mapY);
 	void DrawMap();           //描画
+    int getMap(int Y,int X);
 
 private:
 

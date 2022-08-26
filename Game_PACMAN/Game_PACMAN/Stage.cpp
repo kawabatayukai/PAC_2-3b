@@ -27,3 +27,7 @@ void Stage::DrawMap()
 		}
 	}
 }
+
+int Stage::getMap(int Y,int X) {
+	return MapData[Y][X];
+}
