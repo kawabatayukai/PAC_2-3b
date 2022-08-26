@@ -31,6 +31,8 @@ void Player::PlayerInit(){
 	J = 0;
 	C = 0;
 	S = 0;
+	OldKeyFlg = 0;
+	NextKeyFlg = 0;
 }
 
 void Player::PlayerController() {
@@ -73,16 +75,19 @@ void Player::PlayerController() {
 		}
 	}
 
+	OldKeyFlg = KEYFLG;
 
 	if (keyFlg & PAD_INPUT_LEFT) KEYFLG = LEFT;
 	if (keyFlg & PAD_INPUT_RIGHT) KEYFLG = RIGHT;
 	if (keyFlg & PAD_INPUT_UP)KEYFLG = UP;
 	if (keyFlg & PAD_INPUT_DOWN)KEYFLG = DOWN;
 
+
 	//if (stage.getMap(PYC, PXC) != 0) {
 	//	PX = oldX;
 	//	PY = oldY;
 	//}
+
 
 	switch (KEYFLG)
 	{
@@ -131,32 +136,37 @@ void Player::PlayerController() {
 
 	}
 
+
 	BOX				box[483];
+	BOX1			boxP[4];
 	CIRCLE			circle;
 
 	circle.x = PX;
 	circle.y = PY;
-	circle.r = 14.0f;
+	circle.r = 14.5f;
 
 	for (I = 0; I < MAP_HEIGHT; I++) {
 		for (J = 0; J < MAP_WIDTH; J++) {
 			if (stage.getMap(I, J) != 0) {
-				box[C].fLeft[C] = DRAW_POINT_X + (J * 30);
-				box[C].fTop[C] = DRAW_POINT_Y + (I * 30);
-				box[C].fRight[C] = DRAW_POINT_X + (J * 30) + 30.0f;
-				box[C].fBottom[C] = DRAW_POINT_Y + (I * 30) + 30.0f;
+					box[C].fLeft[C] = DRAW_POINT_X + (J * 30);
+					box[C].fTop[C] = DRAW_POINT_Y + (I * 30);
+					box[C].fRight[C] = DRAW_POINT_X + (J * 30) + 30.0f;
+					box[C].fBottom[C] = DRAW_POINT_Y + (I * 30) + 30.0f;
 
 				if (CheckHit(box[C], circle))
 				{
-					//DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
+					DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
 					DrawBox(box[C].fLeft[C], box[C].fTop[C], box[C].fRight[C], box[C].fBottom[C], GetColor(125, 125, 125), true);
+					NextKeyFlg = KEYFLG;
 					PX = oldX;
 					PY = oldY;
+					KEYFLG = OldKeyFlg;
 				}
 				else
 				{
-					//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+					DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
 					DrawBox(box[C].fLeft[C], box[C].fTop[C], box[C].fRight[C], box[C].fBottom[C], GetColor(125, 125, 125), true);
+					//KEYFLG = NextKeyFlg;
 				}
 				DrawFormatString(box[C].fLeft[C], box[C].fTop[C], 0xFF00FF, "%d", C);
 
@@ -167,20 +177,66 @@ void Player::PlayerController() {
 	I = 0;
 	J = 0;
 	C = 0;
+	for (CI = 0; CI < 483; CI++) {
+		for (I = 0; I < 4; I++) {
 
-	DrawFormatString(50, 500, 0xFFFFFF, "%d", CheckHit(box[C], circle));
+			switch (I)
+			{
+			case 0:
+				boxP[I].fLeft[I] = PX - 20;
+				boxP[I].fTop[I] = PY - 15;
+				boxP[I].fRight[I] = PX - 15 + 30.0f;
+				boxP[I].fBottom[I] = PY - 15 + 30.0f;
+				break;
+			case 1:
+				boxP[I].fLeft[I] = PX - 15;
+				boxP[I].fTop[I] = PY - 20;
+				boxP[I].fRight[I] = PX - 15 + 30.0f;
+				boxP[I].fBottom[I] = PY - 10 + 25.0f;
+				break;
+			case 2:
+				boxP[I].fLeft[I] = PX - 15;
+				boxP[I].fTop[I] = PY - 15;
+				boxP[I].fRight[I] = PX - 15 + 35.0f;
+				boxP[I].fBottom[I] = PY - 15 + 30.0f;
+				break;
+			case 3:
+				boxP[I].fLeft[I] = PX - 15;
+				boxP[I].fTop[I] = PY - 15;
+				boxP[I].fRight[I] = PX - 15 + 30.0f;
+				boxP[I].fBottom[I] = PY - 15 + 35.0f;
+				break;
 
-	//if (CheckHit(box[S], circle)) {
-	//	PX = oldX;
-	//	PY = oldY;
-	//}
+			default:
+				break;
+			}
 
-	//if (S >= 483) {
-	//	S = 0;
-	//}
-	//else {
-	//	S++;
-	//}
+			if (CheckHitBOX(box[CI], boxP[I]))
+			{
+				//DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
+				if (I == 0)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(75, 75, 125), true);
+				if (I == 1)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(75, 95, 55), true);
+				if (I == 2)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(95, 0, 125), true);
+				if (I == 3)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(25, 30, 185), true);
+				NextKeyFlg = KEYFLG;
+				//KEYFLG = OldKeyFlg;
+			}
+			else
+			{
+				//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+				if (I == 0)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(75, 75, 125), false);
+				if (I == 1)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(75, 95, 55), false);
+				if (I == 2)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(95, 0, 125), false);
+				if (I == 3)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(25, 30, 185), false);
+				//KEYFLG = NextKeyFlg;
+			}
+			DrawFormatString(boxP[I].fLeft[I], boxP[I].fTop[I], 0xFF00FF, "%d", I);
+		}
+
+		I = 0;
+	}
+	CI = 0;
+
 }
 
 float Player::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {
@@ -255,4 +311,86 @@ bool Player::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 	}
 
 	return nResult;
+}
+
+bool Player::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
+	bool nResult = false;
+
+	// éläpå`ÇÃélï”Ç…ëŒÇµÇƒâ~ÇÃîºåaï™ÇæÇØë´ÇµÇΩÇ∆Ç´â~Ç™èdÇ»Ç¡ÇƒÇ¢ÇΩÇÁ
+	if ((t_circle.x > t_box.fLeft[I] - t_circle.r) &&
+		(t_circle.x < t_box.fRight[I] + t_circle.r) &&
+		(t_circle.y > t_box.fTop[I] - t_circle.r) &&
+		(t_circle.y < t_box.fBottom[I] + t_circle.r))
+	{
+		nResult = true;
+		float fl = t_circle.r * t_circle.r;
+
+
+		// ç∂
+		if (t_circle.x < t_box.fLeft[I])
+		{
+			// ç∂è„
+			if ((t_circle.y < t_box.fTop[I]))
+			{
+				if ((DistanceSqrf(t_box.fLeft[I], t_box.fTop[I], t_circle.x, t_circle.y) >= fl))
+				{
+					nResult = false;
+				}
+			}
+			else
+			{
+				// ç∂â∫
+				if ((t_circle.y > t_box.fBottom[I]))
+				{
+					if ((DistanceSqrf(t_box.fLeft[I], t_box.fBottom[I], t_circle.x, t_circle.y) >= fl))
+					{
+						nResult = false;
+					}
+				}
+			}
+		}
+		else
+		{
+			// âE
+			if (t_circle.x > t_box.fRight[I])
+			{
+				// âEè„
+				if ((t_circle.y < t_box.fTop[I]))
+				{
+					if ((DistanceSqrf(t_box.fRight[I], t_box.fTop[I], t_circle.x, t_circle.y) >= fl))
+					{
+						nResult = false;
+					}
+				}
+				else
+				{
+					// âEâ∫
+					if ((t_circle.y > t_box.fBottom[I]))
+					{
+						if ((DistanceSqrf(t_box.fRight[I], t_box.fBottom[I], t_circle.x, t_circle.y) >= fl))
+						{
+							nResult = false;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return nResult;
+}
+
+bool Player::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
+{
+	if ((t_direA.fRight[CI] > t_direB.fLeft[I]) &&
+		(t_direA.fLeft[CI] < t_direB.fRight[I]))
+	{
+		if ((t_direA.fBottom[CI] > t_direB.fTop[I]) &&
+			(t_direA.fTop[CI] < t_direB.fBottom[I]))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

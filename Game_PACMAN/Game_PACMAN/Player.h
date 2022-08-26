@@ -22,10 +22,19 @@ public:
 	int J;
 	int C;
 	int S;
+	int CI;
+
+	int OldKeyFlg;
+	int NextKeyFlg;
 
 	struct BOX
 	{
 		float fLeft[MAP_WIDTH+ MAP_HEIGHT], fTop[MAP_WIDTH + MAP_HEIGHT], fRight[MAP_WIDTH + MAP_HEIGHT], fBottom[MAP_WIDTH + MAP_HEIGHT];
+	};
+
+	struct BOX1
+	{
+		float fLeft[MAP_WIDTH + MAP_HEIGHT], fTop[MAP_WIDTH + MAP_HEIGHT], fRight[MAP_WIDTH + MAP_HEIGHT], fBottom[MAP_WIDTH + MAP_HEIGHT];
 	};
 
 	struct CIRCLE
@@ -37,6 +46,8 @@ public:
 	void PlayerController();
 	float DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2);
 	bool CheckHit(const BOX & t_box, const CIRCLE& t_circle);
+	bool CheckHit(const BOX1 & t_box, const CIRCLE& t_circle);
+	bool CheckHitBOX(const BOX& t_direA, const BOX1& t_direB);
 
 };
 extern Player g_player;
