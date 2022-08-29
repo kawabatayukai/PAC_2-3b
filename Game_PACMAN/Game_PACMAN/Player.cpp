@@ -1,5 +1,6 @@
 #include "DxLib.h"
 #include <math.h>
+#include <time.h>
 #include "Player.h"
 #include"Image.h"
 #include "Common.h"
@@ -15,10 +16,11 @@ Player::Player() {
 	PlayerImageR = LoadGraph("images/01_2R.png");
 	PlayerImageU = LoadGraph("images/01_2U.png");
 	PlayerImageD = LoadGraph("images/01_2D.png");*/
+	FLG = true;
 	width = 60;
 	height = 8;
 	PX = 630;
-	PY = 405;
+	PY = 410;
 }
 
 ///***********************************************
@@ -47,44 +49,56 @@ void Player::PlayerControl() {
 	if (keyFlg & PAD_INPUT_RIGHT) KEYFLG = RIGHT, g_Vector = 3;
 	if (keyFlg & PAD_INPUT_UP)KEYFLG = UP, g_Vector = -3;
 	if (keyFlg & PAD_INPUT_DOWN)KEYFLG = DOWN, g_Vector = 3;
+	
+	clock_t start = clock();
+
+	const int loop = 100;
+		for (int i = 0; i < loop; i++) {
+			// ‰½‚©‚Ìˆ—
+		}
+
+	clock_t end = clock();
+
+	const double time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0 / loop;
+
 	switch (KEYFLG)
 	{
-	case LEFT:
-		//if (Map[PYC][PXC - 1] == 0)
-		PX -= 3;
-		//if (Map[syC][sxC] != 0 || Map[syC1][sxC] != 0/* && Map[syC][sxC] != 3 && Map[syC1][sxC] != 3*/)PX = PX_2, KEYFLG = 0;
-		//if (Map[syC][sxC] == 0 || Map[syC1][sxC] == 0/* && Map[syC][sxC] != 3 && Map[syC1][sxC] != 3*/)PX -= 3;
-		//DrawGraph(PX - 5, PY - 5, PlayerImageL, TRUE);
-		DrawGraph(PX, PY, image.PlayerImageL, TRUE);
-		break;
-	case RIGHT:
-		PX += 3;
-		//if (Map[PYC][PXC + 1] == 0)
-		//if (Map[syC][sxC1] != 0 || Map[syC1][sxC1] != 0/* && Map[syC][sxC1] != 3 && Map[syC1][sxC1] != 3*/)PX = PX_2, KEYFLG = 0;
-		//if (Map[syC][sxC1] == 0 || Map[syC1][sxC1] == 0/* && Map[syC][sxC1] != 3 && Map[syC1][sxC1] != 3*/)PX += 3;
-		//DrawGraph(PX - 5, PY - 5, PlayerImageR, TRUE);
-		DrawGraph(PX, PY, image.PlayerImageR, TRUE);
-		break;
-	case UP:
-		PY -= 3;
-		//if (Map[PYC - 1][PXC] == 0)
-		//if (Map[syC][sxC] != 0 || Map[syC][sxC1] != 0/* && Map[syC][sxC] != 3 && Map[syC][sxC1] != 3*/)PY = PY_2, KEYFLG = 0;
-		//if (Map[syC][sxC] == 0 || Map[syC][sxC1] == 0/* && Map[syC][sxC] != 3 && Map[syC][sxC1] != 3*/)PY -= 3;
-		//DrawGraph(PX - 5, PY - 5, PlayerImageU, TRUE);
-		DrawGraph(PX, PY, image.PlayerImageU, TRUE);
-		break;
-	case DOWN:
-		PY += 3;
-		//if (Map[PYC + 1][PXC] == 0)
-		//if (Map[syC1][sxC] != 0 || Map[syC1][sxC1] != 0/* && Map[syC1][sxC] != 3 && Map[syC1][sxC1] != 3*/)PY = PY_2, KEYFLG = 0;
-		//if (Map[syC1][sxC] == 0 || Map[syC1][sxC1] == 0/* && Map[syC1][sxC] != 3 && Map[syC1][sxC1] != 3*/)PY += 3;
-		//DrawGraph(PX - 5, PY - 5, PlayerImageD, TRUE);
-		DrawGraph(PX, PY, image.PlayerImageD, TRUE);
-		break;
-	default:
-		//DrawGraph(PX - 5, PY - 5, PlayerImageL, TRUE);
-		DrawGraph(PX, PY, image.PlayerImage, TRUE);
-		break;
+	    case LEFT:
+		   //if (Map[PYC][PXC - 1] == 0)
+		   DrawGraph(PX, PY, image.PlayerImageL, TRUE);
+		   PX -= 3;
+		   //if (Map[syC][sxC] != 0 || Map[syC1][sxC] != 0/* && Map[syC][sxC] != 3 && Map[syC1][sxC] != 3*/)PX = PX_2, KEYFLG = 0;
+		   //if (Map[syC][sxC] == 0 || Map[syC1][sxC] == 0/* && Map[syC][sxC] != 3 && Map[syC1][sxC] != 3*/)PX -= 3;
+		   //DrawGraph(PX - 5, PY - 5, PlayerImageL, TRUE);
+		   break;
+	    case RIGHT:
+		   DrawGraph(PX, PY, image.PlayerImageR, TRUE);
+		   PX += 3;
+		   //if (Map[PYC][PXC + 1] == 0)
+		   //if (Map[syC][sxC1] != 0 || Map[syC1][sxC1] != 0/* && Map[syC][sxC1] != 3 && Map[syC1][sxC1] != 3*/)PX = PX_2, KEYFLG = 0;
+		   //if (Map[syC][sxC1] == 0 || Map[syC1][sxC1] == 0/* && Map[syC][sxC1] != 3 && Map[syC1][sxC1] != 3*/)PX += 3;
+		   //DrawGraph(PX - 5, PY - 5, PlayerImageR, TRUE);
+		   break;
+	    case UP:
+		   DrawGraph(PX, PY, image.PlayerImageU, TRUE);
+		   PY -= 3;
+		   //if (Map[PYC - 1][PXC] == 0)
+		   //if (Map[syC][sxC] != 0 || Map[syC][sxC1] != 0/* && Map[syC][sxC] != 3 && Map[syC][sxC1] != 3*/)PY = PY_2, KEYFLG = 0;
+		   //if (Map[syC][sxC] == 0 || Map[syC][sxC1] == 0/* && Map[syC][sxC] != 3 && Map[syC][sxC1] != 3*/)PY -= 3;
+		   //DrawGraph(PX - 5, PY - 5, PlayerImageU, TRUE);
+		   break;
+	    case DOWN:
+		   DrawGraph(PX, PY, image.PlayerImageD, TRUE);
+		   PY += 3;
+		   //if (Map[PYC + 1][PXC] == 0)
+		   //if (Map[syC1][sxC] != 0 || Map[syC1][sxC1] != 0/* && Map[syC1][sxC] != 3 && Map[syC1][sxC1] != 3*/)PY = PY_2, KEYFLG = 0;
+		   //if (Map[syC1][sxC] == 0 || Map[syC1][sxC1] == 0/* && Map[syC1][sxC] != 3 && Map[syC1][sxC1] != 3*/)PY += 3;
+		   //DrawGraph(PX - 5, PY - 5, PlayerImageD, TRUE);
+		   break;
+	    default:
+		   //DrawGraph(PX - 5, PY - 5, PlayerImageL, TRUE);
+		   DrawGraph(PX, PY, image.PlayerImage, TRUE);
+		   break;
 	}
 }
 
