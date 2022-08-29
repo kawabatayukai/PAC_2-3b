@@ -8,6 +8,7 @@ public:
 	int PX = 640;
 	int PY = 540;
 	int KEYFLG = 0;
+	int NEXTFLG = 0;
 	int LEFT_FLG = false;
 	int RIGHT_FLG = false;
 	int UP_FLG = false;
@@ -23,6 +24,21 @@ public:
 	int C;
 	int S;
 	int CI;
+
+	int FLG_L;
+	int FLG_R;
+	int FLG_U;
+	int FLG_D;
+
+	int LC;
+	int RC;
+	int UC;
+	int DC;
+
+	int FLG_MAX_L;
+	int FLG_MAX_R;
+	int FLG_MAX_U;
+	int FLG_MAX_D;
 
 	int OldKeyFlg;
 	int NextKeyFlg;
