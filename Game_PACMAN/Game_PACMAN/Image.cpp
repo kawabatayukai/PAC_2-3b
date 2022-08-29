@@ -1,5 +1,6 @@
 #include"DxLib.h"
 #include"Image.h"
+#include"Pink.h"
 
 Image image;
 
@@ -13,5 +14,9 @@ int Image::LoadImages()
 {
 	//ステージ背景
 	if ((g_StageImage = LoadGraph("images/maze_blue.png")) == -1) return -1;
+
+	//敵（ピンク）
+	if ((Pink.Loadimages()) == -1) return -1;
+
 	return 0;
 }

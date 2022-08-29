@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\ENEMY">
+      <UniqueIdentifier>{1056e0da-8d90-4f12-a886-e538d065347c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Pink">
+      <UniqueIdentifier>{a58da1e7-5c70-48ac-856f-6b785935ef12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,6 +30,15 @@
     <ClCompile Include="Image.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル\ENEMY</Filter>
+    </ClCompile>
+    <ClCompile Include="Pink.cpp">
+      <Filter>ソース ファイル\Pink</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlayer.cpp">
+      <Filter>ソース ファイル\ENEMY</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stage.h">
@@ -34,6 +49,15 @@
     </ClInclude>
     <ClInclude Include="Info.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>ソース ファイル\ENEMY</Filter>
+    </ClInclude>
+    <ClInclude Include="Pink.h">
+      <Filter>ソース ファイル\Pink</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlayer.h">
+      <Filter>ソース ファイル\ENEMY</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

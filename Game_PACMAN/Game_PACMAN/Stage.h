@@ -10,6 +10,8 @@ public:
 	int MapPointY(int mapY);
 	void DrawMap();           //描画
 
+    //const int GetMapData(); //マップ情報取得
+
 private:
 
 	//Mapデータ[23][21]  

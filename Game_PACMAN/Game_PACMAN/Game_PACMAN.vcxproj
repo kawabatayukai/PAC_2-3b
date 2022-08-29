@@ -151,14 +151,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pink.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="TestPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="Pink.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="TestPlayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
