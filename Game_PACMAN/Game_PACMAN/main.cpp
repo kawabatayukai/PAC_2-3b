@@ -72,8 +72,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		Red.MoveEnemy2(MapData2);                                 //ターゲットに基づく移動
 		Red.DrawEnemy();                                          //敵描画
 
+		Pink.TargetCtrl(Player.GetPlayerX(), Player.GetPlayerY(), Player.GetPlayerD()); //ターゲットを設定
+		Pink.MoveEnemy2(MapData2);                                 //ターゲットに基づく移動
+		Pink.DrawEnemy();                                          //敵描画
+
 		if (g_NowKey & PAD_INPUT_M) Red.SetSortie();
 		if (g_NowKey & PAD_INPUT_A) Red.InitEnemy();
+
+		if (g_NowKey & PAD_INPUT_M) Pink.SetSortie();
+		if (g_NowKey & PAD_INPUT_A) Pink.InitEnemy();
 
 		Player.MovePlayer(g_NowKey, MapData2); //プレイヤー移動テスト
 		Player.DrawPlayer();                  //プレイヤー描画
@@ -91,5 +98,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 void GameInit()
 {
 	Red.InitEnemy();    //赤初期化
+	Pink.InitEnemy();   //ピンク初期化
 	Player.PlayerInit(); //テストプレイヤー初期化
 }

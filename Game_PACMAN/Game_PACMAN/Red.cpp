@@ -216,14 +216,6 @@ void ENEMY_RED::DrawEnemy()
 		//DrawRotaGraph((g_enemy.x*20)+(g_enemy.w/2), (g_enemy.y * 20) + (g_enemy.h / 2), 1.0, 0, enemyimage[g_enemy.img], TRUE);
 	}
 
-	//テスト　
-	DrawFormatString(0, 0, 0xffffff, "Move : %d", MoveDir);
-	DrawFormatString(1000, 30, 0xffffff, "x : %d", g_enemy.x);
-	DrawFormatString(1000, 70, 0xffffff, "y : %d", g_enemy.y);
-	DrawFormatString(1000, 100, 0xffffff, "mapX : %d", g_enemy.x / MAP_SIZE);
-	DrawFormatString(1000, 130, 0xffffff, "mapY : %d", g_enemy.y / MAP_SIZE);
-
-
 }
 
 
@@ -342,7 +334,7 @@ void ENEMY_RED::TargetCtrl(int tpX, int tpY, int tpD)
 	case MODE::PATROL:            //巡回モード
 
 		//左上座標
-		Point = { MAP_SIZE + (MAP_SIZE / 2) ,MAP_SIZE + (MAP_SIZE / 2) };
+		Point = { 19*MAP_SIZE + (MAP_SIZE / 2) ,MAP_SIZE + (MAP_SIZE / 2) };
 		MoveTarget = Point;
 
 		//8秒で追跡モードに切り替え
@@ -357,10 +349,10 @@ void ENEMY_RED::TargetCtrl(int tpX, int tpY, int tpD)
 
 		//現在の進行方向 +3マス
 		Point = { tpX ,tpY };
-		if (tpD == DIRECTION::LEFT)  Point.x = tpX + (-4 * MAP_SIZE);
-		if (tpD == DIRECTION::RIGHT) Point.x = tpX + (4 * MAP_SIZE);
-		if (tpD == DIRECTION::UP)    Point.y = tpY + (-4 * MAP_SIZE);
-		if (tpD == DIRECTION::DOWN)  Point.y = tpY + (4 * MAP_SIZE);
+		if (tpD == DIRECTION::LEFT)  Point.x = tpX;// + (-4 * MAP_SIZE);
+		if (tpD == DIRECTION::RIGHT) Point.x = tpX;// +(4 * MAP_SIZE);
+		if (tpD == DIRECTION::UP)    Point.y = tpY;// +(-4 * MAP_SIZE);
+		if (tpD == DIRECTION::DOWN)  Point.y = tpY;// +(4 * MAP_SIZE);
 		MoveTarget.x = Point.x;
 		MoveTarget.y = Point.y;
 
