@@ -3,6 +3,7 @@
 #include "Image.h"
 
 #include"Pink.h"
+#include"Red.h"
 #include"TestPlayer.h"
 
 int	g_OldKey;				// 前回の入力キー
@@ -67,12 +68,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//DrawGraph(0, 30, image.g_StageImage, TRUE);
 		stage.DrawMap();
 
-		Pink.TargetCtrl(Player.GetPlayerX(), Player.GetPlayerY(), Player.GetPlayerD()); //ターゲットを設定
-		Pink.MoveEnemy2(MapData2);                                 //ターゲットに基づく移動
-		Pink.DrawEnemy();                                          //敵描画
+		Red.TargetCtrl(Player.GetPlayerX(), Player.GetPlayerY(), Player.GetPlayerD()); //ターゲットを設定
+		Red.MoveEnemy2(MapData2);                                 //ターゲットに基づく移動
+		Red.DrawEnemy();                                          //敵描画
 
-		if (g_NowKey & PAD_INPUT_M) Pink.SetSortie();
-		if (g_NowKey & PAD_INPUT_A) Pink.InitEnemy();
+		if (g_NowKey & PAD_INPUT_M) Red.SetSortie();
+		if (g_NowKey & PAD_INPUT_A) Red.InitEnemy();
 
 		Player.MovePlayer(g_NowKey, MapData2); //プレイヤー移動テスト
 		Player.DrawPlayer();                  //プレイヤー描画
@@ -89,6 +90,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 //初期化
 void GameInit()
 {
-	Pink.InitEnemy();    //ピンク初期化
+	Red.InitEnemy();    //赤初期化
 	Player.PlayerInit(); //テストプレイヤー初期化
 }

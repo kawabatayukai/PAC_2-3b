@@ -1,6 +1,7 @@
 #include"DxLib.h"
 #include"Image.h"
 #include"Pink.h"
+#include"Red.h"
 
 Image image;
 
@@ -17,6 +18,8 @@ int Image::LoadImages()
 
 	//敵（ピンク）
 	if ((Pink.Loadimages()) == -1) return -1;
+	//敵（アカ）
+	if ((Red.Loadimages()) == -1) return -1;
 
 	return 0;
 }
