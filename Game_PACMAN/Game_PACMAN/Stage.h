@@ -4,18 +4,19 @@
 class Stage
 {
 public:
-	Stage();
+    Stage();
 
-	int MapPointX(int mapX);  //map上の"〇マス目"をウィンドウ上の座標に変換
-	int MapPointY(int mapY);
-	void DrawMap();           //描画
+    int MapPointX(int mapX);  //map上の"〇マス目"をウィンドウ上の座標に変換
+    int MapPointY(int mapY);
+    void DrawMap();           //描画
+    int getMap(int Y, int X);
 
 private:
 
-	//Mapデータ[23][21]  
-	int MapData[MAP_HEIGHT][MAP_WIDTH] =
-	{
-		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
+    //Mapデータ[23][21]  
+    int MapData[MAP_HEIGHT][MAP_WIDTH] =
+    {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
         {1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,},
         {1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,0,1,},
         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
@@ -38,6 +39,6 @@ private:
         {1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,},
         {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
-	};
+    };
 };
 extern Stage stage;

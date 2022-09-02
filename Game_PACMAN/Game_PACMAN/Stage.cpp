@@ -3,8 +3,8 @@
 
 Stage stage;
 
-Stage::Stage(){
-	
+Stage::Stage() {
+
 }
 
 //map上の"〇マス目"をウィンドウ上の座標に変換
@@ -26,4 +26,8 @@ void Stage::DrawMap()
 			}
 		}
 	}
+}
+
+int Stage::getMap(int Y, int X) {
+	return MapData[Y][X];
 }
