@@ -186,3 +186,24 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 		if ((My + 1) * MAP_SIZE < y2) g_enemy.y = (My + 1) * MAP_SIZE - g_enemy.w / 2;
 	}
 }
+
+//巡回モード用
+int ENEMY_BASE::CheckTarget2()
+{
+	int ex1 = g_enemy.x - (g_enemy.w / 2); //左
+	int ex2 = g_enemy.x + (g_enemy.w / 2); //右
+	int ey1 = g_enemy.y - (g_enemy.h / 2); //上
+	int ey2 = g_enemy.y + (g_enemy.h / 2); //下
+
+	int tx1 = MoveTarget.x - (MAP_SIZE / 2);
+	int tx2 = MoveTarget.x + (MAP_SIZE / 2);
+	int ty1 = MoveTarget.y - (MAP_SIZE / 2);
+	int ty2 = MoveTarget.y + (MAP_SIZE / 2);
+
+	//if(MoveTarget.x-15<g_enemy.x&&)
+	if (ex1 < tx2 && tx1 < ex2 && ey1 < ty2 && ty1 < ey2)
+	{
+		return 3;
+	}
+	else return 0;
+}

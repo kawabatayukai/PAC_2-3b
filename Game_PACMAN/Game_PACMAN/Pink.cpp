@@ -325,11 +325,20 @@ void ENEMY_PINK::TestMove6(int MapData[MAP_HEIGHT][MAP_WIDTH], int NowKey)
 
 }
 
+//巡回用座標
+int PtrlPoint[4][2] =
+{
+	{MAP_SIZE * 1 + (MAP_SIZE / 2),MAP_SIZE * 1 + (MAP_SIZE / 2)},
+	{4 * MAP_SIZE * 1 + (MAP_SIZE / 2),MAP_SIZE * 1 + (MAP_SIZE / 2)},
+	{4 * MAP_SIZE * 1 + (MAP_SIZE / 2),5 * MAP_SIZE * 1 + (MAP_SIZE / 2)},
+	{MAP_SIZE * 1 + (MAP_SIZE / 2),5 * MAP_SIZE * 1 + (MAP_SIZE / 2)},
+};
 
 //ターゲット設定  引数:プレイヤーの座標
 void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 {
 	M_POINT Point = { 0,0 };
+	static int order = 0; //巡回
 
 	switch (EnemyMode)
 	{
@@ -352,7 +361,18 @@ void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 	case MODE::PATROL:            //巡回モード
 
 		//左上座標
-		Point = { MAP_SIZE + (MAP_SIZE / 2) ,MAP_SIZE + (MAP_SIZE / 2) };
+		//Point = { MAP_SIZE + (MAP_SIZE / 2) ,MAP_SIZE + (MAP_SIZE / 2) };
+		Point = { PtrlPoint[order][0] ,PtrlPoint[order][1] };
+		MoveTarget = Point;
+
+
+		if (CheckTarget2() == 3)
+		{
+			order++;
+			if (order == 4) order = 0;
+		}
+		Point = { PtrlPoint[order][0] ,PtrlPoint[order][1] };
+
 		MoveTarget = Point;
 
 		//8秒で追跡モードに切り替え

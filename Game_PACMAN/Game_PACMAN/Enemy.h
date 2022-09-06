@@ -64,6 +64,8 @@ public:
 	void moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int playerX, int playerY);   //最短経路を探す準備　経路探索用mapの初期化・目標座標に10(目印)を設定
 	void MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY);  //ターゲットの位置に最短経路で移動する
 
+	int CheckTarget2();       //巡回モード用 
+
 	int GetEnemyMode() { return EnemyMode; }                          //現在のモードを取得
 	void SetEnemyMode(int mode) { if (mode < 3) EnemyMode = mode; }   //モードを変更
 

@@ -307,11 +307,20 @@ void ENEMY_RED::TestMove6(int MapData[MAP_HEIGHT][MAP_WIDTH], int NowKey)
 
 }
 
+//巡回用座標　とりあえず
+int PPoint[4][2] =
+{
+	{19 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE * 1 + (MAP_SIZE / 2)},
+	{16 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE * 1 + (MAP_SIZE / 2)},
+	{16 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE * 1 + (MAP_SIZE / 2)},
+	{19 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE * 1 + (MAP_SIZE / 2)},
+};
 
 //ターゲット設定  引数:プレイヤーの座標
 void ENEMY_RED::TargetCtrl(int tpX, int tpY, int tpD)
 {
 	M_POINT Point = { 0,0 };
+	static int order = 0; //巡回座標を操作
 
 	switch (EnemyMode)
 	{
@@ -333,8 +342,23 @@ void ENEMY_RED::TargetCtrl(int tpX, int tpY, int tpD)
 
 	case MODE::PATROL:            //巡回モード
 
-		//左上座標
-		Point = { 19*MAP_SIZE + (MAP_SIZE / 2) ,MAP_SIZE + (MAP_SIZE / 2) };
+		//右上座標
+		//Point = { 19*MAP_SIZE + (MAP_SIZE / 2) ,MAP_SIZE + (MAP_SIZE / 2) };
+		//MoveTarget = Point;
+
+		//右上座標
+		Point = { PPoint[order][0] ,PPoint[order][1] };
+		MoveTarget = Point;
+
+
+		if (CheckTarget2() == 3)
+		{
+			order++;
+			if (order == 4) order = 0;
+		}
+		Point = { PPoint[order][0] ,PPoint[order][1] };
+
+
 		MoveTarget = Point;
 
 		//8秒で追跡モードに切り替え
