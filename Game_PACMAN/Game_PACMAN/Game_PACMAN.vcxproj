@@ -157,9 +157,12 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Fps.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="Controlloer.h" />
+    <ClInclude Include="Fps.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="Player.h" />

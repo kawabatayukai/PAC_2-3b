@@ -4,6 +4,7 @@
 #include"Common.h"
 #include "Player.h"
 #include"Title.h"
+#include"Fps.h"
 
 int	oldKey;				// 前回の入力キー
 int	nowKey;				// 今回の入力キー
@@ -21,7 +22,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);         //描画先画面を裏にする
 
 	if (image.LoadImages() == -1)return -1;
-
+	Fps fps;
 
 	//ゲームループ              
 	while (ProcessMessage() == 0)
@@ -46,10 +47,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DrawFormatString(50, 50, 0xffffff, "%d", DRAW_POINT_X);
 			DrawFormatString(50, 100, 0xFFFFFF, "%d", DRAW_POINT_Y);
 		}
+		fps.Update();
 		//裏画面の内容を表画面に反映
 		ScreenFlip();
+		fps.Wait();
 
-		if (keyFlg == 1024) DxLib_End();
+		if (keyFlg == 1024) /*DxLib_End()*/;
 	}
 
 	DxLib_End();				// ＤＸライブラリ使用の終了処理
