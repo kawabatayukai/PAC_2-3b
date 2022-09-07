@@ -25,6 +25,6 @@ int Image::LoadImages()
 	if ((PlayerImageR = LoadGraph("images/01_2R.png")) == -1)return -1;
 	if ((PlayerImageU = LoadGraph("images/01_2U.png")) == -1)return -1;
 	if ((PlayerImageD = LoadGraph("images/01_2D.png")) == -1)return -1;
-	if ((g_StageImage = LoadGraph("images/T01.png")) == -1) return -1;
+	if ((g_T01Image = LoadGraph("images/T01.png")) == -1) return -1;
 	return 0;
 }

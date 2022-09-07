@@ -129,6 +129,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\DxLib</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,9 +149,13 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\DxLib</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="A_star.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy2.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -158,6 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="A_star.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Enemy2.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="Player.h" />

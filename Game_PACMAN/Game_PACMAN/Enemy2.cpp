@@ -1,141 +1,77 @@
 #include "DxLib.h"
-#include "Player.h"
-#include "Image.h"
-#include "Common.h"
+#include "Enemy2.h"
 #include "Info.h"
+#include "Image.h"
+#include "A_star.h"
 #include "Stage.h"
+#include "Player.h"
 #define LEFT 1
 #define RIGHT 2
 #define UP 3
 #define DOWN 4
 
-Player g_player;
+Enemy2 g_enemy2;
 
-Player::Player() {
-
-}
-
-void Player::PlayerInit(){
-	PX = 640;
-	PY = 540;
-	KEYFLG = 0;
-	NEXTFLG = 0;
-	LEFT_FLG = false;
-	RIGHT_FLG = false;
-	UP_FLG = false;
-	DOWN_FLG = false;
-	PXC = 0;
-	PYC = 0;
+Enemy2::Enemy2() {
+	EX = 370;
+	EY = 60;
+	EXC = (EX - DRAW_POINT_X) / 30;
+	EYC = (EY - DRAW_POINT_Y) / 30;
 	oldX = 0;
 	oldY = 0;
-	I = 0;
-	J = 0;
-	C = 0;
-	S = 0;
-	CI = 0;
-	CF = 0;
-	FLG_L = 0;
-	FLG_R = 0;
-	FLG_U = 0;
-	FLG_D = 0;
-	LC = 0;
-	RC = 0;
-	UC = 0;
-	DC = 0;
-	FLG_MAX_L = false;
-	FLG_MAX_R = false;
-	FLG_MAX_U = false;
-	FLG_MAX_D = false;
-	PXC = (PX - DRAW_POINT_X) / 30;
-	PYC = (PY - DRAW_POINT_Y) / 30;
-	OldKeyFlg = 0;
-	NextKeyFlg = 0;
-
-	/*BOX				box[783];
-	for (int i = 0; i < 783; i++) {
-		box[i] = 0;
-	}*/
-
 }
 
-void Player::PlayerController() {
+void Enemy2::EnemyInit() {
+	EX = 370;
+	EY = 60;
+	EXC = (EX - DRAW_POINT_X) / 30;
+	EYC = (EY - DRAW_POINT_Y) / 30;
+	oldX = 0;
+	oldY = 0;
+}
 
-	PXC = (PX - DRAW_POINT_X) / 30;
-	PYC = (PY - DRAW_POINT_Y) / 30;
+void Enemy2::EnemyController() {
+	EXC = (EX - DRAW_POINT_X) / 30;
+	EYC = (EY - DRAW_POINT_Y) / 30;
 
 	BOX				box[783] = { 0 };
 	BOX1			boxP[4] = { 0 };
 
-	//PXC = (PX - DRAW_POINT_X) / MAP_SIZE;
-	//PYC = (PY - DRAW_POINT_Y) / MAP_SIZE;
+	oldX = EX;
+	oldY = EY;
 
-	int a = (1 - DRAW_POINT_X) / MAP_SIZE;
-	int b = (3 - DRAW_POINT_Y) / MAP_SIZE;
+	OldKeyFlg = VectorFlg;
 
-	/*DrawFormatString(150, 150, 0xFFFFFF, "%d", a);
-	DrawFormatString(150, 200, 0xFFFFFF, "%d", b);*/
-
-	oldX = PX;
-	oldY = PY;
-
-	/*DrawFormatString(50, 50, 0xFFFFFF, "%d", PXC);
-	DrawFormatString(50, 100, 0xFFFFFF, "%d", PYC);
-
-	DrawFormatString(50, 400, 0xFFFFFF, "%d", stage.getMap(PYC, PXC));
-
-	DrawFormatString(50, 150, 0xFFFFFF, "%d", PX);
-	DrawFormatString(50, 200, 0xFFFFFF, "%d", PY);
-
-	DrawFormatString(250, 300, 0xFFFFFF, "%d", I);
-	DrawFormatString(250, 340, 0xFFFFFF, "%d", J);
-
-	DrawFormatString(100, 50, 0xFFFFFF, "%d", DRAW_POINT_X);
-	DrawFormatString(100, 100, 0xFFFFFF, "%d", DRAW_POINT_Y);*/
-
-	for (int i = 0; i < MAP_HEIGHT; i++) {
-		for (int j = 0; j < MAP_WIDTH; j++) {
-			DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
-		}
-	}
-
-	for (int i = 0; i < MAP_HEIGHT; i++) {
-		for (int j = 0; j < MAP_WIDTH; j++) {
-			DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
-		}
-	}
-
-	OldKeyFlg = KEYFLG;
-
-	if (keyFlg & PAD_INPUT_LEFT) {
+	if (a_star.data[EYC][EXC - 1].status == 1) {
 		if (LC >= 783) {
-			KEYFLG = LEFT;
+			VectorFlg = LEFT;
 			NEXTFLG = 0;
 		}
 		else if (LC <= 782) {
 			NEXTFLG = LEFT;
 		}
 	}
-		if (keyFlg & PAD_INPUT_RIGHT) {
-			if (RC >= 783) {
-				KEYFLG = RIGHT;
-				NEXTFLG = 0;
-			}
-			else if (RC <= 782) {
-				NEXTFLG = RIGHT;
-			}
+	if (a_star.data[EYC][EXC + 1].status == 1) {
+		if (RC >= 783) {
+			VectorFlg = RIGHT;
+			NEXTFLG = 0;
 		}
-	if (keyFlg & PAD_INPUT_UP) {
+		else if (RC <= 782) {
+			NEXTFLG = RIGHT;
+		}
+	}
+	if (a_star.data[EYC - 1][EXC].status == 1) {
 		if (UC >= 783) {
-			KEYFLG = UP;
+			VectorFlg = UP;
 			NEXTFLG = 0;
 		}
 		else if (UC <= 782) {
 			NEXTFLG = UP;
 		}
 	}
-	if (keyFlg & PAD_INPUT_DOWN) {
+	if (a_star.data[EYC + 1][EXC].status == 1) {
 		if (DC >= 783) {
-			KEYFLG = DOWN;
+			VectorFlg = DOWN;
 			NEXTFLG = 0;
 		}
 		else if (DC <= 782) {
@@ -143,83 +79,116 @@ void Player::PlayerController() {
 		}
 	}
 
+	/*if (MapData[EYC][EXC - 1] == 1) {
+		if (LC >= 783) {
+			VectorFlg = LEFT;
+			NEXTFLG = 0;
+		}
+		else if (LC <= 782) {
+			NEXTFLG = LEFT;
+		}
+	}
+	if (MapData[EYC][EXC + 1] == 1) {
+		if (RC >= 783) {
+			VectorFlg = RIGHT;
+			NEXTFLG = 0;
+		}
+		else if (RC <= 782) {
+			NEXTFLG = RIGHT;
+		}
+	}
+	if (MapData[EYC - 1][EXC] == 1) {
+		if (UC >= 783) {
+			VectorFlg = UP;
+			NEXTFLG = 0;
+		}
+		else if (UC <= 782) {
+			NEXTFLG = UP;
+		}
+	}
+	if (MapData[EYC + 1][EXC] == 1) {
+		if (DC >= 783) {
+			VectorFlg = DOWN;
+			NEXTFLG = 0;
+		}
+		else if (DC <= 782) {
+			NEXTFLG = DOWN;
+		}
+	}*/
 
-	switch (KEYFLG)
+	//if (a_star.data[EYC][EXC - 1].status == 1/* && FLG_MAX_L == true*/) {
+	//	VectorFlg = LEFT;
+	//}
+	//if (a_star.data[EYC][EXC + 1].status == 1/* && FLG_MAX_R == true*/) {
+	//	VectorFlg = RIGHT;
+	//}
+	//if (a_star.data[EYC - 1][EXC].status == 1/* && FLG_MAX_U == true*/) {
+	//	VectorFlg = UP;
+	//}
+	//if (a_star.data[EYC + 1][EXC].status == 1/* && FLG_MAX_D == true*/) {
+	//	VectorFlg = DOWN;
+	//}
+
+	switch (VectorFlg)
 	{
 	case LEFT:
 		//PX -= 3;
 		if (FLG_MAX_L == true && NEXTFLG == LEFT) {
-			PX -= 4;
+			EX -= 4;
 		}
 		else {
-			PX -= 3;
+			EX -= 3;
 		}
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
-		DrawGraph(PX-15, PY-15, image.PlayerImageL, TRUE);
+		//DrawGraph(PX - 15, PY - 15, image.PlayerImageL, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
 		break;
 	case RIGHT:
 		//PX += 3;
 		if (FLG_MAX_R == true && NEXTFLG == RIGHT) {
-			PX += 4;
+			EX += 4;
 		}
 		else {
-			PX += 3;
+			EX += 3;
 		}
-		DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
+		//DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
 		break;
 	case UP:
 		//PY -= 3;
 		if (FLG_MAX_U == true && NEXTFLG == UP) {
-			PY -= 4;
+			EY -= 4;
 		}
 		else {
-			PY -= 3;
+			EY -= 3;
 		}
-		DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
+		//DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
 		break;
 	case DOWN:
 		//PY += 3;
 		if (FLG_MAX_D == true && NEXTFLG == DOWN) {
-			PY += 4;
+			EY += 4;
 		}
 		else {
-			PY += 3;
+			EY += 3;
 		}
 		//DrawGraph(PX, PY, image.PlayerImageD, TRUE);
-		DrawGraph(PX-15, PY-15, image.PlayerImageD, TRUE);
+		//DrawGraph(PX - 15, PY - 15, image.PlayerImageD, TRUE);
 		break;
 	default:
 		//DrawGraph(PX, PY, image.g_PlayerImage, TRUE);
-		DrawGraph(PX-15, PY-15, image.g_PlayerImage, TRUE);
+		//DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
 		break;
 
 	}
 
-
-	//BOX				box[783];
-	//BOX1			boxP[4];
 	CIRCLE			circle;
 
-	circle.x = PX;
-	circle.y = PY;
+	circle.x = EX;
+	circle.y = EY;
 	circle.r = 14.5f;
-
-	if (CheckHitBOX(box[FLG_L], boxP[0]) && NEXTFLG != 0) {
-		KEYFLG = NEXTFLG;
-		NEXTFLG = 0;
-	}
-	if (CheckHitBOX(box[FLG_R], boxP[2]) && NEXTFLG != 0) {
-		KEYFLG = NEXTFLG;
-		NEXTFLG = 0;
-	}
-	if (CheckHitBOX(box[FLG_U], boxP[1]) && NEXTFLG != 0) {
-		KEYFLG = NEXTFLG;
-		NEXTFLG = 0;
-	}
-	if (CheckHitBOX(box[FLG_D], boxP[3]) && NEXTFLG != 0) {
-		KEYFLG = NEXTFLG;
-		NEXTFLG = 0;
-	}
 
 	C = 0;
 	CF = 0;
@@ -229,29 +198,29 @@ void Player::PlayerController() {
 			try {
 
 
-			if (stage.getMap(I, J) != 0) {
+				if (stage.getMap(I, J) != 0) {
 					box[C].fLeft[CF] = DRAW_POINT_X + (J * 30);
 					box[C].fTop[CF] = DRAW_POINT_Y + (I * 30);
 					box[C].fRight[CF] = DRAW_POINT_X + (J * 30) + 30;
 					box[C].fBottom[CF] = DRAW_POINT_Y + (I * 30) + 30;
 
-					
-						if (CheckHit(box[C], circle))
-						{
-							//DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
-							DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
-							NextKeyFlg = KEYFLG;
-							PX = oldX;
-							PY = oldY;
-							KEYFLG = OldKeyFlg;
-						}
-						else
-						{
-							//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
-							DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
-						}
-						//DrawFormatString(box[C].fLeft[C], box[C].fTop[C], 0xFF00FF, "%d", C);
-					
+
+					if (CheckHit(box[C], circle))
+					{
+						//DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
+						//DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
+						NextKeyFlg = VectorFlg;
+						EX = oldX;
+						EY = oldY;
+						VectorFlg = OldKeyFlg;
+					}
+					else
+					{
+						//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+						//DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
+					}
+					//DrawFormatString(box[C].fLeft[C], box[C].fTop[C], 0xFF00FF, "%d", C);
+
 				}
 			}
 			catch (int p) {
@@ -275,28 +244,28 @@ void Player::PlayerController() {
 			switch (I)
 			{
 			case 0://Left
-				boxP[I].fLeft[I] = PX - 20;
-				boxP[I].fTop[I] = PY - 15;
-				boxP[I].fRight[I] = PX - 15 + 30.0f;
-				boxP[I].fBottom[I] = PY - 15 + 30.0f;
+				boxP[I].fLeft[I] = EX - 20;
+				boxP[I].fTop[I] = EY - 15;
+				boxP[I].fRight[I] = EX - 15 + 30.0f;
+				boxP[I].fBottom[I] = EY - 15 + 30.0f;
 				break;
 			case 1://Up
-				boxP[I].fLeft[I] = PX - 15;
-				boxP[I].fTop[I] = PY - 20;
-				boxP[I].fRight[I] = PX - 15 + 30.0f;
-				boxP[I].fBottom[I] = PY - 10 + 25.0f;
+				boxP[I].fLeft[I] = EX - 15;
+				boxP[I].fTop[I] = EY - 20;
+				boxP[I].fRight[I] = EX - 15 + 30.0f;
+				boxP[I].fBottom[I] = EY - 10 + 25.0f;
 				break;
 			case 2://Right
-				boxP[I].fLeft[I] = PX - 15;
-				boxP[I].fTop[I] = PY - 15;
-				boxP[I].fRight[I] = PX - 15 + 35.0f;
-				boxP[I].fBottom[I] = PY - 15 + 30.0f;
+				boxP[I].fLeft[I] = EX - 15;
+				boxP[I].fTop[I] = EY - 15;
+				boxP[I].fRight[I] = EX - 15 + 35.0f;
+				boxP[I].fBottom[I] = EY - 15 + 30.0f;
 				break;
 			case 3://Down
-				boxP[I].fLeft[I] = PX - 15;
-				boxP[I].fTop[I] = PY - 15;
-				boxP[I].fRight[I] = PX - 15 + 30.0f;
-				boxP[I].fBottom[I] = PY - 15 + 35.0f;
+				boxP[I].fLeft[I] = EX - 15;
+				boxP[I].fTop[I] = EY - 15;
+				boxP[I].fRight[I] = EX - 15 + 30.0f;
+				boxP[I].fBottom[I] = EY - 15 + 35.0f;
 				break;
 
 			default:
@@ -311,12 +280,16 @@ void Player::PlayerController() {
 				if (I == 2)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(95, 0, 125), true);
 				if (I == 3)DrawBox(boxP[I].fLeft[I], boxP[I].fTop[I], boxP[I].fRight[I], boxP[I].fBottom[I], GetColor(25, 30, 185), true);*/
 
+				/*EX = oldX;
+				EY = oldY;*/
+
 				if (I == 0)FLG_L = CI;
 				if (I == 1)FLG_U = CI;
 				if (I == 2)FLG_R = CI;
 				if (I == 3)FLG_D = CI;
 
-				NextKeyFlg = KEYFLG;
+				NextKeyFlg = VectorFlg;
+
 
 			}
 			else
@@ -367,52 +340,64 @@ void Player::PlayerController() {
 
 	if (NEXTFLG != 0) {
 		if (FLG_MAX_L == true && NEXTFLG == LEFT) {
-			KEYFLG = NEXTFLG;
+			VectorFlg = NEXTFLG;
 			NEXTFLG = 0;
 		}
 		if (FLG_MAX_R == true && NEXTFLG == RIGHT) {
-			KEYFLG = NEXTFLG;
+			VectorFlg = NEXTFLG;
 			NEXTFLG = 0;
 		}
 		if (FLG_MAX_U == true && NEXTFLG == UP) {
-			KEYFLG = NEXTFLG;
+			VectorFlg = NEXTFLG;
 			NEXTFLG = 0;
 		}
 		if (FLG_MAX_D == true && NEXTFLG == DOWN) {
-			KEYFLG = NEXTFLG;
+			VectorFlg = NEXTFLG;
 			NEXTFLG = 0;
 		}
 	}
 
-	if (PX <= 340 && PY == 330 && KEYFLG == LEFT) {
-		PX = 940;
+	for (int i = 0; i < 27; i++) {
+		for (int j = 0; j < 29; j++) {
+			if (MapData[j][i] == 1) {
+				DrawFormatString(630+10 + (i * 20), 20 + (j * 20), 0xff0000, "%d", MapData[j][i]);
+			}
+			else if (MapData[j][i] == 0) {
+				DrawFormatString(630+10 + (i * 20), 20 + (j * 20), 0xffffff, "%d", MapData[j][i]);
+			}
+			else {
+				DrawFormatString(630+10 + (i * 20), 20 + (j * 20), 0x0000ff, "%d", MapData[j][i]);
+			}
+			//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
+		}
 	}
-	if (PX >= 940 && PY == 330 && KEYFLG == RIGHT) {
-		PX = 340;
+	DrawFormatString(1100, 220, 0x0000ff, "%d", EYC);
+	DrawFormatString(1100, 230, 0x0000ff, "%d", EY);
+	DrawFormatString(1100, 260, 0x0000ff, "%d", VectorFlg);
+	DrawFormatString(1100, 280, 0x0000ff, "%d", NextKeyFlg);
+	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+	DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+
+	//a_star.main(g_player.PXC, g_player.PYC, EXC, EYC);
+
+	if (EX <= 340 && EY == 330 && VectorFlg == LEFT) {
+		EX = 940;
 	}
-
-	/*DrawFormatString(PX, PY-5, 0xFFFFFF, "%d", (g_player.PX - MAP_WIDTH) / 30 - 10);
-	DrawFormatString(PX, PY+5, 0xFFFFFF, "%d", (g_player.PY - MAP_HEIGHT) / 30);*/
-
-	/*DrawFormatString(50, 250, 0xFFFFFF, "%d", oldX - PX);
-	DrawFormatString(50, 300, 0xFFFFFF, "%d", oldY - PY);
-
-	DrawFormatString(50, 500, 0xFFFFFF, "%d", DRAW_POINT_X);
-	DrawFormatString(50, 550, 0xFFFFFF, "%d", DRAW_POINT_Y);*/
-
-	DrawFormatString(1000, 500, 0xFFFFFF, "%d", PXC);
-	DrawFormatString(1000, 550, 0xFFFFFF, "%d", PYC);
+	if (EX >= 940 && EY == 330 && VectorFlg == RIGHT) {
+		EX = 340;
+	}
 
 }
 
-float Player::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {
+float Enemy2::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {
 	float dx = t_x2 - t_x1;
 	float dy = t_y2 - t_y1;
 
 	return (dx * dx) + (dy * dy);
 }
 
-bool Player::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
+bool Enemy2::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 	bool nResult = false;
 
 	// ŽlŠpŒ`‚ÌŽl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
@@ -479,7 +464,7 @@ bool Player::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 	return nResult;
 }
 
-bool Player::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
+bool Enemy2::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 	bool nResult = false;
 
 	// ŽlŠpŒ`‚ÌŽl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
@@ -546,7 +531,7 @@ bool Player::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 	return nResult;
 }
 
-bool Player::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
+bool Enemy2::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 {
 	if ((t_direA.fRight[CF] > t_direB.fLeft[I]) &&
 		(t_direA.fLeft[CF] < t_direB.fRight[I]))
@@ -559,4 +544,12 @@ bool Player::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 	}
 
 	return false;
+}
+
+void Enemy2::MapCopy() {
+	for (int h = 0; h < HEIGHT; h++) {
+		for (int w = 0; w < WIDTH; w++) {
+			MapData[h][w] = a_star.data[h][w].status;
+		}
+	}
 }
