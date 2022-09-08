@@ -46,7 +46,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DrawPixel(g_player.PX, g_player.PY, 0xff00ff);
 			DrawBox(g_player.PX, g_player.PY, 1000, 200, 0xff00ff, false);
 
-			DrawFormatString(50, 50, 0xffffff, "%d", DRAW_POINT_X);
+			DrawFormatString(50, 50, 0xFFFFFF, "%d", DRAW_POINT_X);
 			DrawFormatString(50, 100, 0xFFFFFF, "%d", DRAW_POINT_Y);
 		}
 		//— ‰æ–Ê‚Ì“à—e‚ð•\‰æ–Ê‚É”½‰f

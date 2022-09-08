@@ -144,6 +144,7 @@ void Player::PlayerController() {
 		}
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
 		DrawGraph(PX - 15, PY - 15, image.PlayerImageL, TRUE);
+		DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
 		break;
 	case RIGHT:
 		//PX += 3;
@@ -154,6 +155,7 @@ void Player::PlayerController() {
 			PX += 3;
 		}
 		DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
+		DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
 		break;
 	case UP:
 		//PY -= 3;
@@ -164,6 +166,7 @@ void Player::PlayerController() {
 			PY -= 3;
 		}
 		DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
+		DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
 		break;
 	case DOWN:
 		//PY += 3;
@@ -175,6 +178,7 @@ void Player::PlayerController() {
 		}
 		//DrawGraph(PX, PY, image.PlayerImageD, TRUE);
 		DrawGraph(PX - 15, PY - 15, image.PlayerImageD, TRUE);
+		DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
 		break;
 	default:
 		//DrawGraph(PX, PY, image.g_PlayerImage, TRUE);
