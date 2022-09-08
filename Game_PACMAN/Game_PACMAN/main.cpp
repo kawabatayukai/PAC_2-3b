@@ -31,6 +31,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		nowKey = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 		keyFlg = nowKey & ~oldKey;
 
+		fps.Update();
+
 		//画面の初期化
 		ClearDrawScreen();
 		if (title.g_GameTitleFlg == FALSE) {
@@ -47,12 +49,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DrawFormatString(50, 50, 0xffffff, "%d", DRAW_POINT_X);
 			DrawFormatString(50, 100, 0xFFFFFF, "%d", DRAW_POINT_Y);
 		}
-		fps.Update();
 		//裏画面の内容を表画面に反映
 		ScreenFlip();
 		fps.Wait();
 
-		if (keyFlg == 1024) /*DxLib_End()*/;
+		if (keyFlg == 1024) DxLib_End();
 	}
 
 	DxLib_End();				// ＤＸライブラリ使用の終了処理

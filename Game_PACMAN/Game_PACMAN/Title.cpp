@@ -6,6 +6,8 @@
 #include"Title.h"
 #define XINPUT_BUTTON_START		(4)	// STARTƒ{ƒ^ƒ“
 
+
+
 Title title;
 Title::Title() {
 	g_GameTitleFlg = FALSE;
