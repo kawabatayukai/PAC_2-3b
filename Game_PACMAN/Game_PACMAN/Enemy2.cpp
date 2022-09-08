@@ -388,6 +388,19 @@ void Enemy2::EnemyController() {
 		EX = 340;
 	}
 
+	if (EX <= 429 && EY == 330 && VectorFlg == LEFT) {
+		EX += 1;
+	}
+	if (EX <= 429 && EY == 330 && VectorFlg == RIGHT) {
+		EX -= 1;
+	}
+	if (EX >= 851 && EY == 330 && VectorFlg == LEFT) {
+		EX += 1;
+	}
+	if (EX >= 851 && EY == 330 && VectorFlg == RIGHT) {
+		EX -= 1;
+	}
+
 }
 
 float Enemy2::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {

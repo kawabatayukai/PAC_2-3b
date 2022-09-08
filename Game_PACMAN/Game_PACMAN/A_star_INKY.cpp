@@ -39,11 +39,6 @@ A_star::A_star() {
 
 	Count = 0;
 
-	Time = 0;
-	GFlg = false;
-
-	Rand = 0;
-
 //	enum {
 //	SEARCH_NO_CHECK = 0,
 //	SEARCH_OPEN = 1,
@@ -324,19 +319,6 @@ void A_star::TraceRoute(int x, int y)
 {
 	//if (x == SX && y == SY) {
 	if (x == SX && y == SY) {
-		if (g_enemy2.VectorFlg == 1) {
-			data[SY][SX - 1].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 2) {
-			data[SY][SX + 1].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 3) {
-			data[SY - 1][SX].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 4) {
-			data[SY + 1][SX].status = -1;
-		}
-		//data[y][x].status = -1;
 		printf("開始ノード>");
 		return;
 	}
@@ -381,41 +363,25 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 		GX = g_player.PXC;
 		GY = g_player.PYC;
 
-		if (GFlg == false) {
-
-			if (g_player.KEYFLG == 1) {//LEFT
-				GX = g_player.PXC - 3;
-				GY = g_player.PYC;
-			}
-			else if (g_player.KEYFLG == 2) {//RIGHT
-				GX = g_player.PXC + 3;
-				GY = g_player.PYC;
-			}
-			else if (g_player.KEYFLG == 3) {//UP
-				GX = g_player.PXC;
-				GY = g_player.PYC - 3;
-			}
-			else if (g_player.KEYFLG == 4) {//DOWN
-				GX = g_player.PXC;
-				GY = g_player.PYC + 3;
-			}
-			else {
-				GX = g_player.PXC;
-				GY = g_player.PYC;
-			}
-			Rand = GetRand(3);
+		if (g_player.KEYFLG == 1) {//LEFT
+			GX = g_player.PXC-3;
+			GY = g_player.PYC;
 		}
-		else if (GFlg == true) {
-			GX = g_player.PXC + Rand;
-			GY = g_player.PYC + Rand;
-			if (Time++ >= 180) {
-				Time = 0;
-				GFlg = false;
-			}
+		else if (g_player.KEYFLG == 2) {//RIGHT
+			GX = g_player.PXC+3;
+			GY = g_player.PYC;
 		}
-
-		if (SX == GX && SY == GY) {
-			GFlg = true;
+		else if (g_player.KEYFLG == 3) {//UP
+			GX = g_player.PXC;
+			GY = g_player.PYC-3;
+		}
+		else if (g_player.KEYFLG == 4) {//DOWN
+			GX = g_player.PXC;
+			GY = g_player.PYC+3;
+		}
+		else {
+			GX = g_player.PXC;
+			GY = g_player.PYC;
 		}
 		//Count = 0;
 	}
@@ -431,20 +397,6 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 
 	a_star.SetDefault();
 	a_star.ResetSearchStatus();
-
-		/*if (g_enemy2.VectorFlg == 1) {
-			data[SY][SX - 1].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 2) {
-			data[SY][SX + 1].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 3) {
-			data[SY - 1][SX].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 4) {
-			data[SY + 1][SX].status = -1;
-		}*/
-	//data[SY][SX].status = -1;
 
 	a_star.data[SY][SX].SearchStatus = a_star.SEARCH_OPEN;
 

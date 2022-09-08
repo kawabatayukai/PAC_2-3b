@@ -114,10 +114,6 @@ public:
 
 	int Count = 0;
 
-	int Time = 0;
-	int GFlg = false;
-	int Rand = 0;
-
 
 	A_star();
 

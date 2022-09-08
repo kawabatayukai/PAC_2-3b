@@ -59,8 +59,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		g_enemy.MapCopy();
 		g_enemy.EnemyController();
 		//a_star.main(/*g_player.PXC, g_player.PYC, g_enemy2.EXC, g_enemy2.EYC*/);
-		//g_enemy2.MapCopy();
-		//g_enemy2.EnemyController();
+		g_enemy2.MapCopy();
+		g_enemy2.EnemyController();
 		//DrawPixel(g_player.PX, g_player.PY, 0xff00ff);
 		//DrawBox(g_player.PX, g_player.PY, 1000, 200, 0xff00ff, false);
 		
