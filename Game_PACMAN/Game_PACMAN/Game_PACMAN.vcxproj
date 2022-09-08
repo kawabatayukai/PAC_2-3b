@@ -151,13 +151,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Blue.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Orange.cpp" />
+    <ClCompile Include="Pink.cpp" />
+    <ClCompile Include="Red.cpp" />
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Blue.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="Orange.h" />
+    <ClInclude Include="Pink.h" />
+    <ClInclude Include="Red.h" />
     <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
