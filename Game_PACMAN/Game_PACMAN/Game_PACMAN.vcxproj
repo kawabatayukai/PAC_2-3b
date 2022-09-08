@@ -156,6 +156,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pink.cpp" />
     <ClCompile Include="Red.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="TestPlayer.cpp" />
   </ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="Info.h" />
     <ClInclude Include="Pink.h" />
     <ClInclude Include="Red.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="TestPlayer.h" />
   </ItemGroup>

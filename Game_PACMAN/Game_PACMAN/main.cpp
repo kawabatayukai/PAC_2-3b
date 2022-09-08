@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "Stage.h"
 #include "Image.h"
+#include"Sound.h"
 
 #include"Pink.h"
 #include"Red.h"
@@ -51,6 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);         //•`‰ææ‰æ–Ê‚ğ— ‚É‚·‚é
 
 	if (image.LoadImages() == -1)return -1;
+	if (sound.LoadSounds() == -1)return -1;
 	GameInit();  //‰Šúˆ—
 
 	//ƒQ[ƒ€ƒ‹[ƒv              

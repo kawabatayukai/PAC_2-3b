@@ -45,6 +45,9 @@
     <ClCompile Include="Red.cpp">
       <Filter>ソース ファイル\ENEMY\Red</Filter>
     </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stage.h">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="Red.h">
       <Filter>ソース ファイル\ENEMY\Red</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

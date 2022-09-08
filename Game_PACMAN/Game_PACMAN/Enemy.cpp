@@ -1,5 +1,6 @@
 #include"DxLib.h"
 #include"Enemy.h"
+#include"Sound.h"
 
 //壁より内側　限界点  ※描画上ではDRAW_POINT_X(Y)が加算された座標 　"ピンク"の目標座標はステージ外になることがある
 const int L_END = MAP_SIZE;
@@ -142,24 +143,28 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 	{
 		MoveDir = DIRECTION::LEFT;
 		g_enemy.x -= g_enemy.speed;
+		sound.PlayMoveSounds();
 	}
 	//右
 	else if (MapData[My][Mx + 1] != 1 && my_mapdata[My][Mx + 1] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::RIGHT;
 		g_enemy.x += g_enemy.speed;
+		sound.PlayMoveSounds();
 	}
 	//上
 	else if (MapData[My - 1][Mx] != 1 && my_mapdata[My - 1][Mx] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::UP;
 		g_enemy.y -= g_enemy.speed;
+		sound.PlayMoveSounds();
 	}
 	//下
 	else if (MapData[My + 1][Mx] != 1 && my_mapdata[My + 1][Mx] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::DOWN;
 		g_enemy.y += g_enemy.speed;
+		sound.PlayMoveSounds();
 	}
 
 	//めり込ませない
