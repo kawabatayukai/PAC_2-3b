@@ -42,7 +42,7 @@ int Image::LoadImages()
 	if ((g_StageImagePx[16] = LoadGraph("images/Stage18.png")) == -1) return -1;
 	if ((g_StageImagePx[17] = LoadGraph("images/Stage19.png")) == -1) return -1;
 
-	if ((g_GameTitleImage = LoadGraph("images/PAC-MAN_Classic_Logo.jpg")) == -1)return -1;
+	if ((g_GameTitleImage = LoadGraph("images/PAC-MAN_Classic_Logo.png")) == -1)return -1;
 	//‰a
 	if ((EsaImage = LoadGraph("images/Esa.png")) == -1)return -1;
 	if ((PowerEsaImage = LoadGraph("images/Esa.png")) == -1)return -1;
