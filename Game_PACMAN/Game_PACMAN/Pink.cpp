@@ -21,8 +21,8 @@ int ENEMY_PINK::Loadimages()
 void ENEMY_PINK::InitEnemy()
 {
 	g_enemy.flg = true;
-	g_enemy.x = 8 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
-	g_enemy.y = 9 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+	g_enemy.x = (8+3) * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+	g_enemy.y = (9+3) * MAP_SIZE + (MAP_SIZE / 2); //巣の中
 
 	g_enemy.w = E_WIDTH;
 	g_enemy.h = E_HEIGHT;
@@ -190,20 +190,20 @@ void ENEMY_PINK::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 		MoveShortest(MapData, MoveTarget.x, MoveTarget.y);
 	}
 
-	////テスト
-	//for (int i = 0; i < MAP_HEIGHT; i++)
-	//{
-	//	for (int j = 0; j < MAP_WIDTH; j++)
-	//	{
-	//		int x = (j * MAP_SIZE) + DRAW_POINT_X;
-	//		int y = (i * MAP_SIZE) + DRAW_POINT_Y;
-	//		if (my_mapdata[i][j] != 0)
-	//		{
-	//			DrawFormatString(x, y, 0x00ff00, "%d", my_mapdata[i][j]);
-	//		}
+	//テスト
+	for (int i = 0; i < MAP_HEIGHT; i++)
+	{
+		for (int j = 0; j < MAP_WIDTH; j++)
+		{
+			int x = (j * MAP_SIZE) + DRAW_POINT_X;
+			int y = (i * MAP_SIZE) + DRAW_POINT_Y;
+			if (my_mapdata[i][j] != 0)
+			{
+				DrawFormatString(x, y, 0x00ff00, "%d", my_mapdata[i][j]);
+			}
 
-	//	}
-	//}
+		}
+	}
 }
 
 //描画
@@ -255,14 +255,14 @@ void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 		if (sortie_flg == false)     //出撃不可
 		{
 			//上下に往復
-			if (CheckTarget() == 3 && g_enemy.y == 285) MoveTarget.y = 345;      //下部
-			else if (CheckTarget() == 3 && g_enemy.y == 345) MoveTarget.y = 285; //上部
-			else if (CheckTarget() == 0) MoveTarget = { 255,285 };               //初期位置
+			if (CheckTarget() == 3 && g_enemy.y == 285+90) MoveTarget.y = 345+90;      //下部
+			else if (CheckTarget() == 3 && g_enemy.y == 345+90) MoveTarget.y = 285+90; //上部
+			else if (CheckTarget() == 0) MoveTarget = { 255+90,285+90 };               //初期位置
 		}
 		else if (sortie_flg == true) //出撃可
 		{
-			MoveTarget = { 315,225 };  //巣の入口上 (巣から出撃)
-			if (g_enemy.x == 315 && g_enemy.y == 225) EnemyMode = MODE::PATROL;  //移動完了後、巡回モードに切り替え
+			MoveTarget = { 315+90,225+90 };  //巣の入口上 (巣から出撃)
+			if (g_enemy.x == 315+90 && g_enemy.y == 225+90) EnemyMode = MODE::PATROL;  //移動完了後、巡回モードに切り替え
 		}
 		break;
 
@@ -270,7 +270,8 @@ void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 
 
 		//左上座標
-		Point = { PtrlPoint[1][order][0] ,PtrlPoint[1][order][1] };
+		//Point = { PtrlPoint[1][order][0] ,PtrlPoint[1][order][1] };
+		Point = { 155,155 };
 		MoveTarget = Point;
 
 		if (CheckTarget3() == 3)

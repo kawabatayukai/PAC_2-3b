@@ -155,6 +155,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NewPlayer.cpp" />
     <ClCompile Include="Orange.cpp" />
     <ClCompile Include="Pink.cpp" />
     <ClCompile Include="Red.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="NewPlayer.h" />
     <ClInclude Include="Orange.h" />
     <ClInclude Include="Pink.h" />
     <ClInclude Include="Red.h" />

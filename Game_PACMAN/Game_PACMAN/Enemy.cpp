@@ -219,11 +219,11 @@ void ENEMY_BASE::moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, in
 		}
 	}
 
-	//ターゲット座標がステージ外の場合、ステージ内に戻す
-	if (targetX < L_END) targetX = L_END + 1;
-	if (targetX > R_END) targetX = R_END - 1;
-	if (targetY < U_END) targetY = U_END + 1;
-	if (targetY > D_END) targetY = D_END - 1;
+	////ターゲット座標がステージ外の場合、ステージ内に戻す
+	//if (targetX < L_END) targetX = L_END + 1;
+	//if (targetX > R_END) targetX = R_END - 1;
+	//if (targetY < U_END) targetY = U_END + 1;
+	//if (targetY > D_END) targetY = D_END - 1;
 
 	//マップ上のターゲットの位置に目印(10)をセット
 	my_mapdata[targetY / MAP_SIZE][targetX / MAP_SIZE] = 10;
@@ -354,17 +354,17 @@ const int ENEMY_BASE::PtrlPoint[4][4][2] =
 {
 	//アカ
 	{
-		{19 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-		{16 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-		{16 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-		{19 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
+		{19 * MAP_SIZE + (MAP_SIZE / 2)+90,MAP_SIZE + (MAP_SIZE / 2) + 90},
+		{16 * MAP_SIZE + (MAP_SIZE / 2) + 90,MAP_SIZE + (MAP_SIZE / 2) + 90},
+		{16 * MAP_SIZE + (MAP_SIZE / 2) + 90,5 * MAP_SIZE + (MAP_SIZE / 2) + 90},
+		{19 * MAP_SIZE + (MAP_SIZE / 2) + 90,5 * MAP_SIZE + (MAP_SIZE / 2) + 90},
 	},
 	//ピンク
 	{
-		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-		{4 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-		{4 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-		{MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
+		{MAP_SIZE + (MAP_SIZE / 2) + 90,MAP_SIZE + (MAP_SIZE / 2) + 90},
+		{4 * MAP_SIZE + (MAP_SIZE / 2) + 90,MAP_SIZE + (MAP_SIZE / 2) + 90},
+		{4 * MAP_SIZE + (MAP_SIZE / 2) + 90,5 * MAP_SIZE + (MAP_SIZE / 2) + 90},
+		{MAP_SIZE + (MAP_SIZE / 2) + 90,5 * MAP_SIZE + (MAP_SIZE / 2) + 90},
 	},
 	//アオ
 	{

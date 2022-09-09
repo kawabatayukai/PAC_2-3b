@@ -28,6 +28,9 @@
     <Filter Include="ソース ファイル\Enemy\Orange">
       <UniqueIdentifier>{9995a449-d125-45ae-b993-85f2e92e8a05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Player">
+      <UniqueIdentifier>{a57db280-ebe1-4fe9-97ce-bc63e090ca32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -54,6 +57,9 @@
     <ClCompile Include="Red.cpp">
       <Filter>ソース ファイル\Enemy\Red</Filter>
     </ClCompile>
+    <ClCompile Include="NewPlayer.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stage.h">
@@ -79,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="Blue.h">
       <Filter>ソース ファイル\Enemy\Blue</Filter>
+    </ClInclude>
+    <ClInclude Include="NewPlayer.h">
+      <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
