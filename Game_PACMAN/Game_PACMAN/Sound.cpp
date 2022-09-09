@@ -12,7 +12,7 @@ Sound sound;
 int Sound::LoadSounds()
 {
 	//“G‚Ì“®‚«SE
-	if ((g_Sound = LoadSoundMem("sounds/move.mp3")) == -1) return -1;
+	if ((g_Sound = LoadSoundMem("sounds/Enemymove.mp3")) == -1) return -1;
 
 	return 0;
 }
