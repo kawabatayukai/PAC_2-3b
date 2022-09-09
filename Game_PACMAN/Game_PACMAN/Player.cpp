@@ -182,7 +182,9 @@ void Player::PlayerController() {
 		break;
 	default:
 		//DrawGraph(PX, PY, image.g_PlayerImage, TRUE);
-		DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
+		for (int i = 0; i < 150; i++) {
+			DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
+		}
 		break;
 
 	}
