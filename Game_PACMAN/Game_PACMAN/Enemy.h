@@ -52,6 +52,7 @@ public:
 	/*** 純粋仮想関数（基底クラスで関数の内容を定義しない）***/
 
 	virtual int Loadimages() = 0;   //画像読み込み
+	virtual int LoadSounds() = 0;   //音源読み込み
 	virtual void InitEnemy() = 0;   //初期処理
 	virtual void MoveEnemy(int MapData[MAP_HEIGHT][MAP_WIDTH]) = 0;   //移動
 	virtual void DrawEnemy() = 0;   //描画
@@ -71,6 +72,7 @@ public:
 
 protected:
 	int enemyimage[8] = { 0 };//画像（配列）　
+	int enemysounds;    //音源用変数
 
 	ENEMY g_enemy;            //敵のデータ
 	int MoveCount;            //画像変化用にフレームをカウント

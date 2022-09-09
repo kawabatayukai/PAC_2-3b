@@ -16,6 +16,7 @@ class ENEMY_PINK : public ENEMY_BASE
 {
 public:
 	int Loadimages();   //‰æ‘œ“Ç‚İ‚İ
+	int LoadSounds();   //‰¹Œ¹“Ç‚İ‚İ
 	void InitEnemy();   //‰Šúˆ—
 	void MoveEnemy(int MapData[MAP_HEIGHT][MAP_WIDTH]);   //ˆÚ“®
 	void MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH]);

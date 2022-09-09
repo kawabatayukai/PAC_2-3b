@@ -22,6 +22,12 @@ int ENEMY_PINK::Loadimages()
 	//if ((LoadDivGraph("images/All_PinkS30.png", 8, 4, 2, 30, 30, enemyimage)) == -1) return -1;   //30 @²¼Ş¹E–Ú‚ğŠÜ‚Ş
 }
 
+//‰¹Œ¹“Ç‚İ‚İ
+int ENEMY_PINK::LoadSounds()
+{
+	if ((enemysounds = LoadSoundMem("sounds/Enemymove.mp3")) == -1) return -1;
+}
+
 //‰Šúˆ—
 void ENEMY_PINK::InitEnemy()
 {
