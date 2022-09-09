@@ -377,6 +377,27 @@ void Player::PlayerController() {
 	DrawFormatString(50, 500, 0xffffff, "%d", DRAW_POINT_X);
 	DrawFormatString(50, 550, 0xFFFFFF, "%d", DRAW_POINT_Y);
 
+	//int x1, x2, y1, y2;
+	//x1 = (g_enemy.x - (g_enemy.w / 2));
+	//x2 = (g_enemy.x + (g_enemy.w / 2) - 1);
+	//y1 = (g_enemy.y - (g_enemy.h / 2) + 1);
+	//y2 = (g_enemy.y + (g_enemy.h / 2) - 1);
+	//if (MapData[My][Mx - 1] == 1)//¶
+	//{
+	//	if ((Mx - 1) * MAP_SIZE + MAP_SIZE > x1) g_enemy.x = (Mx - 1) * MAP_SIZE + MAP_SIZE + g_enemy.w / 2;
+	//}
+	//if (MapData[My][Mx + 1] == 1)//‰E
+	//{
+	//	if ((Mx + 1) * MAP_SIZE < x2) g_enemy.x = (Mx + 1) * MAP_SIZE - g_enemy.w / 2;
+	//}
+	//if (MapData[My - 1][Mx] == 1)//ã
+	//{
+	//	if ((My - 1) * MAP_SIZE + MAP_SIZE > y1) g_enemy.y = (My - 1) * MAP_SIZE + MAP_SIZE + g_enemy.w / 2;
+	//}
+	//if (MapData[My + 1][Mx] == 1)//‰º
+	//{
+	//	if ((My + 1) * MAP_SIZE < y2) g_enemy.y = (My + 1) * MAP_SIZE - g_enemy.w / 2;
+	//}
 }
 
 float Player::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {

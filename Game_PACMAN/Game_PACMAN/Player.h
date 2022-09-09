@@ -40,6 +40,8 @@ public:
 	int FLG_MAX_U;
 	int FLG_MAX_D;
 
+	int g_player;
+
 	int OldKeyFlg;
 	int NextKeyFlg;
 
