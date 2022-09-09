@@ -13,5 +13,7 @@ public:
 	int g_MenuSelect[4];
 	Title();
 	void DrawTitle();
+	int	g_MenuNumber;		// メニューカーソル位置
+	int g_MenuY;				// メニューカーソルのＹ座標
 };
 extern Title title;
