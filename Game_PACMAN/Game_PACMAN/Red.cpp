@@ -5,6 +5,12 @@
 
 ENEMY_RED Red;
 
+//テスト出力用
+char DirectStr[][6] = { "LEFT","RIGHT","UP","DOWN" ,"NONE" };
+char ModeStr[][8] = { "STANDBY","PATROL","TRACK" };
+
+//左・右・上・下方向の座標差分
+const int Delta[][2] = { {-1,0},{1,0},{0,-1},{0,1} };
 
 //画像読み込み
 int ENEMY_RED::Loadimages()
@@ -26,8 +32,11 @@ int ENEMY_RED::LoadSounds()
 void ENEMY_RED::InitEnemy()
 {
 	g_enemy.flg = true;
-	g_enemy.x = 8 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
-	g_enemy.y = 9 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+	//g_enemy.x = 8 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+	//g_enemy.y = 9 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+
+	g_enemy.x = 315;
+	g_enemy.y = 225;
 
 	g_enemy.w = E_WIDTH;
 	g_enemy.h = E_HEIGHT;
@@ -222,6 +231,9 @@ void ENEMY_RED::DrawEnemy()
 		//DrawRotaGraph((g_enemy.x*20)+(g_enemy.w/2), (g_enemy.y * 20) + (g_enemy.h / 2), 1.0, 0, enemyimage[g_enemy.img], TRUE);
 	}
 
+	DrawFormatString(1000, 160, 0xffffff, "Direct : %s", DirectStr[MoveDir]);
+	DrawFormatString(1000, 220, 0xffffff, "Mode : %s", ModeStr[EnemyMode]);
+
 }
 
 
@@ -334,10 +346,13 @@ void ENEMY_RED::TargetCtrl(int tpX, int tpY, int tpD)
 
 		if (sortie_flg == false)     //出撃不可
 		{
-			//上下に往復
-			if (CheckTarget() == 3 && g_enemy.y == 285) MoveTarget.y = 345;      //下部
-			else if (CheckTarget() == 3 && g_enemy.y == 345) MoveTarget.y = 285; //上部
-			else if (CheckTarget() == 0) MoveTarget = { 255,285 };               //初期位置
+			/*上下に往復*/
+			//if (CheckTarget() == 3 && g_enemy.y == 285) MoveTarget.y = 345;      //下部
+			//else if (CheckTarget() == 3 && g_enemy.y == 345) MoveTarget.y = 285; //上部
+			//else if (CheckTarget() == 0) MoveTarget = { 255,285 };               //初期位置
+
+			/*巣の上で待機*/
+			MoveTarget = { g_enemy.x,g_enemy.y }; //初期位置
 		}
 		else if (sortie_flg == true) //出撃可
 		{
