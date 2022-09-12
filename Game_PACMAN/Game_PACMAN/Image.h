@@ -1,5 +1,6 @@
 #pragma once
-class Image {
+class Image 
+{
 public:
 	int	g_StageImage;			// ‰æ‘œ—p•Ï”
 

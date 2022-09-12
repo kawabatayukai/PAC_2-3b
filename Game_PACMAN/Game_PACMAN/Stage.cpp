@@ -3,7 +3,8 @@
 
 Stage stage;
 
-Stage::Stage(){
+Stage::Stage()
+{
 	
 }
 
