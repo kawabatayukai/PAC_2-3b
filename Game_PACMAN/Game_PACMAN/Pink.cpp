@@ -404,6 +404,13 @@ void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 
 		MoveTarget = Point;
 
+		/*8秒で追跡モードに切り替え*/
+		//if (++mode_count % 480 == 0)
+		//{
+		//	mode_count = 0;
+		//	EnemyMode = MODE::TRACK;
+		//}
+
 		//16秒で追跡モードに切り替え
 		if (++mode_count % 880 == 0)
 		{
