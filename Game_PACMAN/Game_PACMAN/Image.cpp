@@ -1,10 +1,11 @@
 #include"DxLib.h"
 #include"Image.h"
+#include"Player.h"
 
 Image image;
 
 Image::Image() {
-	g_StageImagePx[17] = 0;
+	//g_StageImagePx[17] = 0;
 	EsaImage = 0;
 	PowerEsaImage = 0;
 	g_StageImage = 0;			// ‰æ‘œ—p•Ï”
@@ -15,6 +16,7 @@ Image::Image() {
 	PlayerImageR = 0;
 	PlayerImageU = 0;
 	PlayerImageD = 0;
+	PacManImage[0] = 0;
 }
 /***********************************************
  * ‰æ‘œ“Ç‚İ‚İ
@@ -53,5 +55,6 @@ int Image::LoadImages()
 	if ((PlayerImageU = LoadGraph("images/01_2U.png")) == -1)return -1;
 	if ((PlayerImageD = LoadGraph("images/01_2D.png")) == -1)return -1;
 	if ((g_StageImage = LoadGraph("images/T01.png")) == -1) return -1;
+	if ((LoadDivGraph("images/PacMan.png",12,3,4,30,30,PacManImage)) == -1)return -1;
 	return 0;
 }

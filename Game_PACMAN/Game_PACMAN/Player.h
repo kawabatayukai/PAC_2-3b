@@ -34,6 +34,7 @@ public:
 	int RC;
 	int UC;
 	int DC;
+	//int PacMan[12];
 
 	int FLG_MAX_L;
 	int FLG_MAX_R;
@@ -44,6 +45,12 @@ public:
 
 	int OldKeyFlg;
 	int NextKeyFlg;
+	int PacMan[12];
+	//int PacMan_motion[5];
+	int PacMan_index;
+
+	int PacMan_wait;
+	int PacMan_dir;
 
 	struct BOX
 	{
