@@ -224,6 +224,7 @@ void Player::PlayerController() {
 		break;
 		
 	}
+	
 	if (--PacMan_wait <= 0)
 	{
 		PacMan_index++;
@@ -231,7 +232,8 @@ void Player::PlayerController() {
 		PacMan_index %= MAX_MOTION_INDEX;
 	}
 	int motion_index = PacMan_motion[PacMan_index];
-	DrawGraph(PX - 15, PY - 15, image.PacManImage[motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE], TRUE);
+	DrawGraph(PX - 15, PY - 15, 
+		image.PacManImage[motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE], TRUE);
 
 	//BOX				box[483];
 	//BOX1			boxP[4];
