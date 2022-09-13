@@ -232,6 +232,8 @@ void Player::PlayerController() {
 		PacMan_index %= MAX_MOTION_INDEX;
 	}
 	int motion_index = PacMan_motion[PacMan_index];
+	if (FLG_MAX_L == false && KEYFLG == LEFT || FLG_MAX_R == false && KEYFLG == RIGHT || FLG_MAX_U == false
+		&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)motion_index = 1;
 	DrawGraph(PX - 15, PY - 15, 
 		image.PacManImage[motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE], TRUE);
 
