@@ -56,6 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		//ステージの描画
 		//DrawGraph(0, 30, image.g_StageImage, TRUE);
+		//DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 90, image.g_StageImage, TRUE);
 		//a_star.A_starInit();
 		stage.DrawMap();
 		g_player.PlayerController();

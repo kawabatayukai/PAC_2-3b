@@ -8,6 +8,11 @@
 #define RIGHT 2
 #define UP 3
 #define DOWN 4
+#define MAX_MOTION_INDEX 4
+#define PAC_MAN_SPEED 5
+#define PAC_MAN_DIR_SLIDE 3
+#define PAC_MAN_WIDTH 30
+#define PAC_MAN_HEIGHT 30
 
 Player g_player;
 
@@ -53,6 +58,13 @@ void Player::PlayerInit(){
 	SpeedUPFlg = false;
 	SpeedUPTime = 0;
 
+	PacMan[0] = 0;
+
+	PacMan_index = 0;
+
+	PacMan_wait = PAC_MAN_SPEED;
+	PacMan_dir = 0;
+
 	/*BOX				box[783];
 	for (int i = 0; i < 783; i++) {
 		box[i] = 0;
@@ -93,6 +105,8 @@ void Player::PlayerController() {
 
 	DrawFormatString(100, 50, 0xFFFFFF, "%d", DRAW_POINT_X);
 	DrawFormatString(100, 100, 0xFFFFFF, "%d", DRAW_POINT_Y);*/
+
+	int PacMan_motion[] = { 0,1,2,1, };
 
 	for (int i = 0; i < MAP_HEIGHT; i++) {
 		for (int j = 0; j < MAP_WIDTH; j++) {
@@ -158,8 +172,9 @@ void Player::PlayerController() {
 		else {
 			PX -= 3;
 		}
+		PacMan_dir = 0;
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
-		DrawGraph(PX-15, PY-15, image.PlayerImageL, TRUE);
+		//DrawGraph(PX-15, PY-15, image.PlayerImageL, TRUE);
 		break;
 	case RIGHT:
 		//PX += 3;
@@ -171,7 +186,8 @@ void Player::PlayerController() {
 		else {
 			PX += 3;
 		}
-		DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
+		PacMan_dir = 1;
+		//DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
 		break;
 	case UP:
 		//PY -= 3;
@@ -183,7 +199,8 @@ void Player::PlayerController() {
 		else {
 			PY -= 3;
 		}
-		DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
+		PacMan_dir = 2;
+		//DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
 		break;
 	case DOWN:
 		//PY += 3;
@@ -195,15 +212,27 @@ void Player::PlayerController() {
 		else {
 			PY += 3;
 		}
+		PacMan_dir = 3;
 		//DrawGraph(PX, PY, image.PlayerImageD, TRUE);
-		DrawGraph(PX-15, PY-15, image.PlayerImageD, TRUE);
+		//DrawGraph(PX-15, PY-15, image.PlayerImageD, TRUE);
 		break;
 	default:
 		//DrawGraph(PX, PY, image.g_PlayerImage, TRUE);
-		DrawGraph(PX-15, PY-15, image.g_PlayerImage, TRUE);
+		//DrawGraph(PX-15, PY-15, image.g_PlayerImage, TRUE);
 		break;
 
 	}
+
+	if (--PacMan_wait <= 0)
+	{
+		PacMan_index++;
+		PacMan_wait = PAC_MAN_SPEED;
+		PacMan_index %= MAX_MOTION_INDEX;
+	}
+	int motion_index = PacMan_motion[PacMan_index];
+	if (FLG_MAX_L == false && KEYFLG == LEFT || FLG_MAX_R == false && KEYFLG == RIGHT || FLG_MAX_U == false
+		&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)motion_index = 0;
+	DrawGraph(PX - 15, PY - 15, image.PacManImage[motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE], TRUE);
 
 
 	//BOX				box[783];

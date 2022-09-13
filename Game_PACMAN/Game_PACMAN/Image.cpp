@@ -13,6 +13,8 @@ Image::Image() {
 	PlayerImageD = 0;
 	EsaImage = 0;
 	PowerEsaImage = 0;
+	PacManImage[0] = 0;
+	g_StageImagePx[0] = 0;
 }
 /***********************************************
  * 画像読み込み
@@ -20,7 +22,7 @@ Image::Image() {
 int Image::LoadImages()
 {
 	//ステージ背景
-	if ((g_StageImage = LoadGraph("images/maze_blue.png")) == -1) return -1;
+	if ((g_StageImage = LoadGraph("images/maze_blueV2.png")) == -1) return -1;
 	//プレイヤー画像
 	if ((g_PlayerImage = LoadGraph("images/02_2.png")) == -1)return -1;
 	if ((PlayerImageL = LoadGraph("images/01_2L.png")) == -1)return -1;
@@ -31,5 +33,8 @@ int Image::LoadImages()
 	if ((g_T02Image = LoadGraph("images/T02.png")) == -1) return -1;
 	if ((EsaImage = LoadGraph("images/Esa_V2.png")) == -1) return -1;
 	if ((PowerEsaImage = LoadGraph("images/PowerEsa_V2.png")) == -1) return -1;
+	if ((LoadDivGraph("images/PacMan.png", 12, 3, 4, 30, 30, PacManImage)) == -1)return -1;
+
+	if ((g_StageImagePx[0] = LoadGraph("images/maze_blue_px_1.png")) == -1) return -1;
 	return 0;
 }

@@ -11,6 +11,10 @@ public:
 	int	g_T02Image;			// ‰æ‘œ—p•Ï”
 	int	EsaImage;			// ‰æ‘œ—p•Ï”
 	int	PowerEsaImage;			// ‰æ‘œ—p•Ï”
+	int g_GameTitleImage;
+	int PacManImage[12];
+
+	int g_StageImagePx[25];
 
 	Image();
 

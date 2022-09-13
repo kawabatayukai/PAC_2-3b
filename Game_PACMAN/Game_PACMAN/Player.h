@@ -49,6 +49,13 @@ public:
 	int SpeedUPFlg;
 	int SpeedUPTime;
 
+	int PacMan[12];
+	//int PacMan_motion[5];
+	int PacMan_index;
+
+	int PacMan_wait;
+	int PacMan_dir;
+
 	struct BOX
 	{
 		int fLeft[MAP], fTop[MAP], fRight[MAP], fBottom[MAP];

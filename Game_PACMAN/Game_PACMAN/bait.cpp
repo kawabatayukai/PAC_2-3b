@@ -45,7 +45,7 @@ void Bait::BaitController() {
 		circleP.y = g_player.PY;
 		circleP.r = 6.5f;
 		DrawFormatString(1000,700,0xffffff,"%d",pscore);
-		DrawCircle(circleP.x, circleP.y, circleP.r, GetColor(255, 255, 255));
+		//DrawCircle(circleP.x, circleP.y, circleP.r, GetColor(255, 255, 255));
 		if (bait[I].flg == true) {
 			//for (int j = 0; j < BAIT_MAX; j++) {
 
