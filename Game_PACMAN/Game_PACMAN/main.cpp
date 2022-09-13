@@ -7,8 +7,10 @@
 #include"Common.h"
 #include "Player.h"
 #include "A_star.h"
+#include "A_star_PINKY.h"
 #include "Enemy.h"
 #include "Enemy2.h"
+#include "bait.h"
 
 int	oldKey;				// 前回の入力キー
 int	nowKey;				// 今回の入力キー
@@ -44,8 +46,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			g_enemy.EnemyInit();
 			g_enemy2.EnemyInit();
 			a_star.A_starInit();
+			bait.CreateBait();
 			//a_star.SetDefault();
 			//a_star.ResetSearchStatus();
+			/*a_star.main();
+			a_star.main();*/
 			InitFlg = true;
 		}
 
@@ -58,9 +63,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		a_star.main(/*g_player.PXC, g_player.PYC, g_enemy.EXC, g_enemy.EYC*/);
 		g_enemy.MapCopy();
 		g_enemy.EnemyController();
-		//a_star.main(/*g_player.PXC, g_player.PYC, g_enemy2.EXC, g_enemy2.EYC*/);
+		a_star_pink.main(/*g_player.PXC, g_player.PYC, g_enemy2.EXC, g_enemy2.EYC*/);
 		g_enemy2.MapCopy();
 		g_enemy2.EnemyController();
+		bait.BaitController();
 		//DrawPixel(g_player.PX, g_player.PY, 0xff00ff);
 		//DrawBox(g_player.PX, g_player.PY, 1000, 200, 0xff00ff, false);
 		

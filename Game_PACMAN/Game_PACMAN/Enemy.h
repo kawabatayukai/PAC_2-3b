@@ -41,6 +41,8 @@ public:
 
 	int NEXTFLG;
 
+	int DFLG;
+
 	Enemy();
 
 	struct BOX

@@ -46,6 +46,9 @@ public:
 	int OldKeyFlg;
 	int NextKeyFlg;
 
+	int SpeedUPFlg;
+	int SpeedUPTime;
+
 	struct BOX
 	{
 		int fLeft[MAP], fTop[MAP], fRight[MAP], fBottom[MAP];

@@ -40,6 +40,8 @@ public:
 
 	int NEXTFLG;
 
+	int DFLG;
+
 	Enemy2();
 
 	struct BOX

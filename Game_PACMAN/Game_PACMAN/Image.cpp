@@ -11,6 +11,8 @@ Image::Image() {
 	PlayerImageR = 0;
 	PlayerImageU = 0;
 	PlayerImageD = 0;
+	EsaImage = 0;
+	PowerEsaImage = 0;
 }
 /***********************************************
  * âÊëúì«Ç›çûÇ›
@@ -26,5 +28,8 @@ int Image::LoadImages()
 	if ((PlayerImageU = LoadGraph("images/01_2U.png")) == -1)return -1;
 	if ((PlayerImageD = LoadGraph("images/01_2D.png")) == -1)return -1;
 	if ((g_T01Image = LoadGraph("images/T01.png")) == -1) return -1;
+	if ((g_T02Image = LoadGraph("images/T02.png")) == -1) return -1;
+	if ((EsaImage = LoadGraph("images/Esa_V2.png")) == -1) return -1;
+	if ((PowerEsaImage = LoadGraph("images/PowerEsa_V2.png")) == -1) return -1;
 	return 0;
 }

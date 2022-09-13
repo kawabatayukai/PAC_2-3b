@@ -34,8 +34,8 @@ A_star::A_star() {
 	d = 0;
 	f = 0;
 
-	SX1 = g_enemy2.EXC;
-	SY1 = g_enemy2.EYC;
+	SX1 = g_enemy.EXC;
+	SY1 = g_enemy.EYC;
 
 	Count = 0;
 
@@ -43,6 +43,23 @@ A_star::A_star() {
 	GFlg = false;
 
 	Rand = 0;
+
+	DFlg = false;
+
+	DX = 0;
+	DY = 0;
+
+	XP = 0;
+	YP = 0;
+	XM = 0;
+	YM = 0;
+
+	OldXP = 0;
+	OldYP = 0;
+	OldXM = 0;
+	OldYM = 0;
+
+	Timer = 0;
 
 //	enum {
 //	SEARCH_NO_CHECK = 0,
@@ -281,8 +298,22 @@ int A_star::Search(int count) {
 	BackCost = BackTrace(CX, CY);
 
 	for (int i = 0; i < 4; i++) {
+
 		int check_x = CX + CheckMatrix[i].x;
 		int check_y = CY + CheckMatrix[i].y;
+
+		/*if (g_enemy.VectorFlg == 1 && CheckMatrix[i].x == 1) {
+			continue;
+		}
+		else if (g_enemy.VectorFlg == 2 && CheckMatrix[i].x == -1) {
+			continue;
+		}
+		else if (g_enemy.VectorFlg == 3 && CheckMatrix[i].y == 1) {
+			continue;
+		}
+		else if (g_enemy.VectorFlg == 4 && CheckMatrix[i].y == -1) {
+			continue;
+		}*/
 
 		if (check_x < 0) continue;
 		if (check_y < 0) continue;
@@ -324,18 +355,22 @@ void A_star::TraceRoute(int x, int y)
 {
 	//if (x == SX && y == SY) {
 	if (x == SX && y == SY) {
-		if (g_enemy2.VectorFlg == 1) {
+		/*if (g_enemy.VectorFlg == 1) {
 			data[SY][SX - 1].status = -1;
+			data[SY][SX - 2].status = -1;
 		}
-		else if (g_enemy2.VectorFlg == 2) {
+		else if (g_enemy.VectorFlg == 2) {
 			data[SY][SX + 1].status = -1;
+			data[SY][SX + 2].status = -1;
 		}
-		else if (g_enemy2.VectorFlg == 3) {
+		else if (g_enemy.VectorFlg == 3) {
 			data[SY - 1][SX].status = -1;
+			data[SY - 2][SX].status = -1;
 		}
-		else if (g_enemy2.VectorFlg == 4) {
+		else if (g_enemy.VectorFlg == 4) {
 			data[SY + 1][SX].status = -1;
-		}
+			data[SY + 2][SX].status = -1;
+		}*/
 		//data[y][x].status = -1;
 		printf("開始ノード>");
 		return;
@@ -343,11 +378,43 @@ void A_star::TraceRoute(int x, int y)
 	d = x;
 	f = y;
 
+	/*if (data[y][x].status == 2) {
+		DX = d;
+		DY = f;
+		DFlg = true;
+	}*/
+
 	POINT* parent_way = &CheckMatrix[data[y][x].parent];
 
 	data[y][x].status = 1;
 
-	TraceRoute(x + parent_way->x, y + parent_way->y);
+	if (y == 14) {
+		if (x <= 4 && &CheckMatrix[1]) {
+			data[14][25].status = -1;
+			//x = 24;
+		}
+		else if (x >= 24 && &CheckMatrix[3]) {
+			data[14][3].status = -1;
+			//x = 4;
+		}
+	}
+
+	/*if (CheckMatrix->x == 1) {
+		OldXP = XP;
+		XP = 1;
+	}
+	if (CheckMatrix->y == 1)
+	if (CheckMatrix->x == -1)
+	if (CheckMatrix->y == -1)
+
+	if(XP>=2)*/
+
+	try {
+		TraceRoute(x + parent_way->x, y + parent_way->y);
+	}
+	catch (int o) {
+		return;
+	}
 
 	if (d == GX && f == GY) {
 		//TraceRoute(x + parent_way->x, y + parent_way->y);
@@ -367,55 +434,93 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 		SX = g_enemy.EXC;
 		SY = g_enemy.EYC;
 
-		GX = g_player.PXC;
-		GY = g_player.PYC;
-		Count = 1;
-	}
-	else if (Count == 1) {
-		/*SX = g_enemy2.EXC;
-		SY = g_enemy2.EYC;*/
+		if (DFlg == false) {
 
-		SX = g_enemy2.EXC;
-		SY = g_enemy2.EYC;
+			if (GFlg == false) {
 
-		GX = g_player.PXC;
-		GY = g_player.PYC;
-
-		if (GFlg == false) {
-
-			if (g_player.KEYFLG == 1) {//LEFT
-				GX = g_player.PXC - 3;
-				GY = g_player.PYC;
-			}
-			else if (g_player.KEYFLG == 2) {//RIGHT
-				GX = g_player.PXC + 3;
-				GY = g_player.PYC;
-			}
-			else if (g_player.KEYFLG == 3) {//UP
-				GX = g_player.PXC;
-				GY = g_player.PYC - 3;
-			}
-			else if (g_player.KEYFLG == 4) {//DOWN
-				GX = g_player.PXC;
-				GY = g_player.PYC + 3;
-			}
-			else {
 				GX = g_player.PXC;
 				GY = g_player.PYC;
+
+				Rand = GetRand(3);
+
 			}
-			Rand = GetRand(3);
+			else if (GFlg == true) {
+				GX = g_player.PXC + Rand;
+				GY = g_player.PYC + Rand;
+				if (Time++ >= 180) {
+					Time = 0;
+					GFlg = false;
+				}
+			}
+
 		}
-		else if (GFlg == true) {
-			GX = g_player.PXC + Rand;
-			GY = g_player.PYC + Rand;
-			if (Time++ >= 180) {
-				Time = 0;
-				GFlg = false;
-			}
+		else if (DFlg == true) {
+			GX = DX;
+			GY = DY;
 		}
 
 		if (SX == GX && SY == GY) {
 			GFlg = true;
+			DFlg = false;
+		}
+
+		//Count = 1;
+	}
+	else if (Count == 1) {
+		/*SX = g_enemy.EXC;
+		SY = g_enemy.EYC;*/
+
+		SX = g_enemy.EXC;
+		SY = g_enemy.EYC;
+
+		if (DFlg == false) {
+
+		GX = g_player.PXC;
+		GY = g_player.PYC;
+
+		
+
+			if (GFlg == false) {
+
+				if (g_player.KEYFLG == 1) {//LEFT
+					GX = g_player.PXC - 3;
+					GY = g_player.PYC;
+				}
+				else if (g_player.KEYFLG == 2) {//RIGHT
+					GX = g_player.PXC + 3;
+					GY = g_player.PYC;
+				}
+				else if (g_player.KEYFLG == 3) {//UP
+					GX = g_player.PXC;
+					GY = g_player.PYC - 3;
+				}
+				else if (g_player.KEYFLG == 4) {//DOWN
+					GX = g_player.PXC;
+					GY = g_player.PYC + 3;
+				}
+				else {
+					GX = g_player.PXC;
+					GY = g_player.PYC;
+				}
+				Rand = GetRand(3);
+			}
+			else if (GFlg == true) {
+				GX = g_player.PXC + Rand;
+				GY = g_player.PYC + Rand;
+				if (Time++ >= 180) {
+					Time = 0;
+					GFlg = false;
+				}
+			}
+		}
+		else if (DFlg == true) {
+			GX = DX;
+			GY = DY;
+		}
+
+		if (SX == GX && SY == GY) {
+			GFlg = true;
+			DFlg = false;
 		}
 		//Count = 0;
 	}
@@ -432,19 +537,74 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 	a_star.SetDefault();
 	a_star.ResetSearchStatus();
 
-		/*if (g_enemy2.VectorFlg == 1) {
-			data[SY][SX - 1].status = -1;
-		}
-		else if (g_enemy2.VectorFlg == 2) {
+	if (g_enemy.VectorFlg == 1) {
 			data[SY][SX + 1].status = -1;
+			//data[SY][SX + 2].status = -1;
 		}
-		else if (g_enemy2.VectorFlg == 3) {
-			data[SY - 1][SX].status = -1;
+		else if (g_enemy.VectorFlg == 2) {
+			data[SY][SX - 1].status = -1;
+			//data[SY][SX - 2].status = -1;
 		}
-		else if (g_enemy2.VectorFlg == 4) {
+		else if (g_enemy.VectorFlg == 3) {
 			data[SY + 1][SX].status = -1;
-		}*/
-	//data[SY][SX].status = -1;
+			//data[SY + 2][SX].status = -1;
+		}
+		else if (g_enemy.VectorFlg == 4) {
+			data[SY - 1][SX].status = -1;
+			//data[SY - 2][SX].status = -1;
+		}
+
+	if (DFlg == false) {
+		if (def_data[g_enemy.EYC][g_enemy.EXC] == 2) {
+			if (Timer == 0) {
+				XP = SX;
+				YP = SY;
+			}
+			if (Timer <= 180) {
+				if (g_enemy.VectorFlg == 1) {
+					data[YP][XP + 1].status = -1;
+					data[YP][XP + 2].status = -1;
+				}
+				else if (g_enemy.VectorFlg == 2) {
+					data[YP][XP - 1].status = -1;
+					data[YP][XP - 2].status = -1;
+				}
+				else if (g_enemy.VectorFlg == 3) {
+					data[YP + 1][XP].status = -1;
+					data[YP + 2][XP].status = -1;
+				}
+				else if (g_enemy.VectorFlg == 4) {
+					data[YP - 1][XP].status = -1;
+					data[YP - 2][XP].status = -1;
+				}
+				Timer++;
+			}
+			else {
+				Timer = 0;
+			}
+		}
+	}
+
+	if (g_enemy.EX <= 429 && g_enemy.EY == 330 && g_enemy.VectorFlg == 1) {
+		data[13][7].status = -1;
+	}
+	if (g_enemy.EX >= 851 && g_enemy.EY == 330 && g_enemy.VectorFlg == 2) {
+		data[13][19].status = -1;
+	}
+
+	/*if (g_enemy.EY >= 230) {
+		data[8][12].status = -1;
+		data[8][14].status = -1;
+	}
+	if (g_enemy.EY >= 530) {
+		data[18][12].status = -1;
+		data[18][14].status = -1;
+	}*/
+
+	/*if (g_enemy.EY >= 535) {
+		data[20][13].status = -1;
+		data[20][15].status = -1;
+	}*/
 
 	a_star.data[SY][SX].SearchStatus = a_star.SEARCH_OPEN;
 
@@ -478,6 +638,6 @@ void A_star::A_starInit() {
 	GX = g_player.PXC;
 	GY = g_player.PYC;
 
-	SX1 = g_enemy2.EXC;
-	SY1 = g_enemy2.EYC;
+	SX1 = g_enemy.EXC;
+	SY1 = g_enemy.EYC;
 }

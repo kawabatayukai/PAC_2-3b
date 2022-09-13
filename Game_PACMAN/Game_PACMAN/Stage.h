@@ -13,7 +13,7 @@ public:
 
 private:
 
-	//Mapデータ[23][21]  
+	//Mapデータ[29][27]  
 	int MapData[MAP_HEIGHT][MAP_WIDTH] =
 	{
 		/*{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},

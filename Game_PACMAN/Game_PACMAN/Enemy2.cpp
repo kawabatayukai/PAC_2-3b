@@ -2,9 +2,10 @@
 #include "Enemy2.h"
 #include "Info.h"
 #include "Image.h"
-#include "A_star.h"
+#include "A_star_PINKY.h"
 #include "Stage.h"
 #include "Player.h"
+#include "Common.h"
 #define LEFT 1
 #define RIGHT 2
 #define UP 3
@@ -19,6 +20,7 @@ Enemy2::Enemy2() {
 	EYC = (EY - DRAW_POINT_Y) / 30;
 	oldX = 0;
 	oldY = 0;
+	DFLG = false;
 }
 
 void Enemy2::EnemyInit() {
@@ -28,6 +30,7 @@ void Enemy2::EnemyInit() {
 	EYC = (EY - DRAW_POINT_Y) / 30;
 	oldX = 0;
 	oldY = 0;
+	DFLG = false;
 }
 
 void Enemy2::EnemyController() {
@@ -42,42 +45,88 @@ void Enemy2::EnemyController() {
 
 	OldKeyFlg = VectorFlg;
 
-	if (a_star.data[EYC][EXC - 1].status == 1) {
-		if (LC >= 783) {
+
+
+		if (a_star_pink.data[EYC][EXC - 1].status == 1) {
+			if (LC >= 783) {
+				VectorFlg = LEFT;
+				NEXTFLG = 0;
+			}
+			else if (LC <= 782) {
+				NEXTFLG = LEFT;
+			}
+		}
+		if (a_star_pink.data[EYC][EXC + 1].status == 1) {
+			if (RC >= 783) {
+				VectorFlg = RIGHT;
+				NEXTFLG = 0;
+			}
+			else if (RC <= 782) {
+				NEXTFLG = RIGHT;
+			}
+		}
+		if (a_star_pink.data[EYC - 1][EXC].status == 1) {
+			if (UC >= 783) {
+				VectorFlg = UP;
+				NEXTFLG = 0;
+			}
+			else if (UC <= 782) {
+				NEXTFLG = UP;
+			}
+		}
+		if (a_star_pink.data[EYC + 1][EXC].status == 1) {
+			if (DC >= 783) {
+				VectorFlg = DOWN;
+				NEXTFLG = 0;
+			}
+			else if (DC <= 782) {
+				NEXTFLG = DOWN;
+			}
+		}
+
+	if (a_star_pink.data[EYC][EXC].status == 2) {
+		if (OldKeyFlg == LEFT) {
+			if (VectorFlg == RIGHT) {
+				VectorFlg = LEFT;
+			}
+			
+		}
+		else if (OldKeyFlg == RIGHT) {
+			if (VectorFlg == LEFT) {
+				VectorFlg = RIGHT;
+			}
+		}
+		else if (OldKeyFlg == UP) {
+			if (VectorFlg == DOWN) {
+				VectorFlg = UP;
+			}
+		}
+		else if (OldKeyFlg == DOWN) {
+			if (VectorFlg == UP) {
+				VectorFlg = DOWN;
+			}
+		}
+	}
+
+	/*if (EX - oldX == 0 && EY - oldY == 0) {
+		switch (GetRand(3))
+		{
+		case 0:
 			VectorFlg = LEFT;
-			NEXTFLG = 0;
-		}
-		else if (LC <= 782) {
-			NEXTFLG = LEFT;
-		}
-	}
-	if (a_star.data[EYC][EXC + 1].status == 1) {
-		if (RC >= 783) {
+			break;
+		case 1:
 			VectorFlg = RIGHT;
-			NEXTFLG = 0;
-		}
-		else if (RC <= 782) {
-			NEXTFLG = RIGHT;
-		}
-	}
-	if (a_star.data[EYC - 1][EXC].status == 1) {
-		if (UC >= 783) {
+			break;
+		case 2:
 			VectorFlg = UP;
-			NEXTFLG = 0;
-		}
-		else if (UC <= 782) {
-			NEXTFLG = UP;
-		}
-	}
-	if (a_star.data[EYC + 1][EXC].status == 1) {
-		if (DC >= 783) {
+			break;
+		case 3:
 			VectorFlg = DOWN;
-			NEXTFLG = 0;
+			break;
+		default:
+			break;
 		}
-		else if (DC <= 782) {
-			NEXTFLG = DOWN;
-		}
-	}
+	}*/
 
 	/*if (MapData[EYC][EXC - 1] == 1) {
 		if (LC >= 783) {
@@ -116,16 +165,16 @@ void Enemy2::EnemyController() {
 		}
 	}*/
 
-	//if (a_star.data[EYC][EXC - 1].status == 1/* && FLG_MAX_L == true*/) {
+	//if (a_star_pink.data[EYC][EXC - 1].status == 1/* && FLG_MAX_L == true*/) {
 	//	VectorFlg = LEFT;
 	//}
-	//if (a_star.data[EYC][EXC + 1].status == 1/* && FLG_MAX_R == true*/) {
+	//if (a_star_pink.data[EYC][EXC + 1].status == 1/* && FLG_MAX_R == true*/) {
 	//	VectorFlg = RIGHT;
 	//}
-	//if (a_star.data[EYC - 1][EXC].status == 1/* && FLG_MAX_U == true*/) {
+	//if (a_star_pink.data[EYC - 1][EXC].status == 1/* && FLG_MAX_U == true*/) {
 	//	VectorFlg = UP;
 	//}
-	//if (a_star.data[EYC + 1][EXC].status == 1/* && FLG_MAX_D == true*/) {
+	//if (a_star_pink.data[EYC + 1][EXC].status == 1/* && FLG_MAX_D == true*/) {
 	//	VectorFlg = DOWN;
 	//}
 
@@ -141,7 +190,7 @@ void Enemy2::EnemyController() {
 		}
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageL, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
 		break;
 	case RIGHT:
 		//PX += 3;
@@ -152,7 +201,7 @@ void Enemy2::EnemyController() {
 			EX += 3;
 		}
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
 		break;
 	case UP:
 		//PY -= 3;
@@ -163,7 +212,7 @@ void Enemy2::EnemyController() {
 			EY -= 3;
 		}
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
 		break;
 	case DOWN:
 		//PY += 3;
@@ -179,7 +228,7 @@ void Enemy2::EnemyController() {
 	default:
 		//DrawGraph(PX, PY, image.g_PlayerImage, TRUE);
 		//DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
 		break;
 
 	}
@@ -357,29 +406,40 @@ void Enemy2::EnemyController() {
 		}
 	}
 
-	for (int i = 0; i < 27; i++) {
-		for (int j = 0; j < 29; j++) {
-			if (MapData[j][i] == 1) {
-				DrawFormatString(630+10 + (i * 20), 20 + (j * 20), 0xff0000, "%d", MapData[j][i]);
+	if (keyFlg & PAD_INPUT_B)DFLG = true;
+	if (keyFlg & PAD_INPUT_A)DFLG = false;
+	
+
+	if (DFLG == true) {
+		for (int i = 0; i < 27; i++) {
+			for (int j = 0; j < 29; j++) {
+				if (MapData[j][i] == 1) {
+					DrawFormatString(630 + 10 + (i * 20), 20 + (j * 20), 0xff0000, "%d", MapData[j][i]);
+				}
+				else if (MapData[j][i] == 0) {
+					DrawFormatString(630 + 10 + (i * 20), 20 + (j * 20), 0xffffff, "%d", MapData[j][i]);
+				}
+				else if (MapData[j][i] == 2) {
+					DrawFormatString(630 + 10 + (i * 20), 20 + (j * 20), 0xff00ff, "%d", MapData[j][i]);
+				}
+				else {
+					DrawFormatString(630 + 10 + (i * 20), 20 + (j * 20), 0x0000ff, "%d", MapData[j][i]);
+				}
+				//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
 			}
-			else if (MapData[j][i] == 0) {
-				DrawFormatString(630+10 + (i * 20), 20 + (j * 20), 0xffffff, "%d", MapData[j][i]);
-			}
-			else {
-				DrawFormatString(630+10 + (i * 20), 20 + (j * 20), 0x0000ff, "%d", MapData[j][i]);
-			}
-			//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
 		}
+		DrawFormatString(1150, 220, 0x0000ff, "%d", EYC);
+		DrawFormatString(1150, 230, 0x0000ff, "%d", EY);
+		DrawFormatString(1150, 630, 0x0000ff, "%d", EX);
+		DrawFormatString(1150, 260, 0x0000ff, "%d", VectorFlg);
+		DrawFormatString(1150, 280, 0x0000ff, "%d", NextKeyFlg);
+
 	}
-	DrawFormatString(1100, 220, 0x0000ff, "%d", EYC);
-	DrawFormatString(1100, 230, 0x0000ff, "%d", EY);
-	DrawFormatString(1100, 260, 0x0000ff, "%d", VectorFlg);
-	DrawFormatString(1100, 280, 0x0000ff, "%d", NextKeyFlg);
 	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
-	DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+	DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
 	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
 
-	//a_star.main(g_player.PXC, g_player.PYC, EXC, EYC);
+	//a_star_pink.main(g_player.PXC, g_player.PYC, EXC, EYC);
 
 	if (EX <= 340 && EY == 330 && VectorFlg == LEFT) {
 		EX = 940;
@@ -400,6 +460,19 @@ void Enemy2::EnemyController() {
 	if (EX >= 851 && EY == 330 && VectorFlg == RIGHT) {
 		EX -= 1;
 	}
+
+	if (EY == 330) {
+		if (EX == 762)EX = 760;
+		if (EX == 518)EX = 520;
+	}
+	/*if (EY == 14) {
+		if (EX <= 7) {
+			VectorFlg = OldKeyFlg;
+		}
+		else if (EX >= 20) {
+			VectorFlg = OldKeyFlg;
+		}
+	}*/
 
 }
 
@@ -562,7 +635,7 @@ bool Enemy2::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 void Enemy2::MapCopy() {
 	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
-			MapData[h][w] = a_star.data[h][w].status;
+			MapData[h][w] = a_star_pink.data[h][w].status;
 		}
 	}
 }

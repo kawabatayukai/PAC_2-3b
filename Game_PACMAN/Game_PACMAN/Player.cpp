@@ -50,6 +50,8 @@ void Player::PlayerInit(){
 	PYC = (PY - DRAW_POINT_Y) / 30;
 	OldKeyFlg = 0;
 	NextKeyFlg = 0;
+	SpeedUPFlg = false;
+	SpeedUPTime = 0;
 
 	/*BOX				box[783];
 	for (int i = 0; i < 783; i++) {
@@ -148,8 +150,10 @@ void Player::PlayerController() {
 	{
 	case LEFT:
 		//PX -= 3;
-		if (FLG_MAX_L == true && NEXTFLG == LEFT) {
+		//if (FLG_MAX_L == true && NEXTFLG == LEFT) {
+		if (SpeedUPFlg == true && SpeedUPTime < 6) {
 			PX -= 4;
+			SpeedUPTime++;
 		}
 		else {
 			PX -= 3;
@@ -159,8 +163,10 @@ void Player::PlayerController() {
 		break;
 	case RIGHT:
 		//PX += 3;
-		if (FLG_MAX_R == true && NEXTFLG == RIGHT) {
+		//if (FLG_MAX_R == true && NEXTFLG == RIGHT) {
+		if (SpeedUPFlg == true && SpeedUPTime < 6) {
 			PX += 4;
+			SpeedUPTime++;
 		}
 		else {
 			PX += 3;
@@ -169,8 +175,10 @@ void Player::PlayerController() {
 		break;
 	case UP:
 		//PY -= 3;
-		if (FLG_MAX_U == true && NEXTFLG == UP) {
+		//if (FLG_MAX_U == true && NEXTFLG == UP) {
+		if (SpeedUPFlg == true && SpeedUPTime < 6) {
 			PY -= 4;
+			SpeedUPTime++;
 		}
 		else {
 			PY -= 3;
@@ -179,8 +187,10 @@ void Player::PlayerController() {
 		break;
 	case DOWN:
 		//PY += 3;
-		if (FLG_MAX_D == true && NEXTFLG == DOWN) {
+		//if (FLG_MAX_D == true && NEXTFLG == DOWN) {
+		if (SpeedUPFlg == true && SpeedUPTime < 6) {
 			PY += 4;
+			SpeedUPTime++;
 		}
 		else {
 			PY += 3;
@@ -369,18 +379,26 @@ void Player::PlayerController() {
 		if (FLG_MAX_L == true && NEXTFLG == LEFT) {
 			KEYFLG = NEXTFLG;
 			NEXTFLG = 0;
+			SpeedUPTime = 0;
+			SpeedUPFlg = true;
 		}
 		if (FLG_MAX_R == true && NEXTFLG == RIGHT) {
 			KEYFLG = NEXTFLG;
 			NEXTFLG = 0;
+			SpeedUPTime = 0;
+			SpeedUPFlg = true;
 		}
 		if (FLG_MAX_U == true && NEXTFLG == UP) {
 			KEYFLG = NEXTFLG;
 			NEXTFLG = 0;
+			SpeedUPTime = 0;
+			SpeedUPFlg = true;
 		}
 		if (FLG_MAX_D == true && NEXTFLG == DOWN) {
 			KEYFLG = NEXTFLG;
 			NEXTFLG = 0;
+			SpeedUPTime = 0;
+			SpeedUPFlg = true;
 		}
 	}
 

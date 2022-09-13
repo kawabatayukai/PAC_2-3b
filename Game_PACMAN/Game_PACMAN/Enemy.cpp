@@ -5,6 +5,7 @@
 #include "A_star.h"
 #include "Stage.h"
 #include "Player.h"
+#include "Common.h"
 #define LEFT 1
 #define RIGHT 2
 #define UP 3
@@ -17,6 +18,7 @@ Enemy::Enemy() {
 	EY = 60;
 	EXC = (EX - DRAW_POINT_X) / 30;
 	EYC = (EY - DRAW_POINT_Y) / 30;
+	DFLG = false;
 }
 
 void Enemy::EnemyInit() {
@@ -26,6 +28,7 @@ void Enemy::EnemyInit() {
 	EYC = (EY - DRAW_POINT_Y) / 30;
 	oldX = 0;
 	oldY = 0;
+	DFLG = false;
 }
 
 void Enemy::EnemyController() {
@@ -355,29 +358,66 @@ void Enemy::EnemyController() {
 		}
 	}
 
-	for (int i = 0; i < 27; i++) {
-		for (int j = 0; j < 29; j++) {
-			if (MapData[j][i] == 1) {
-				DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xff0000, "%d", MapData[j][i]);
-			}
-			else if(MapData[j][i] == 0){
-				DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xffffff, "%d", MapData[j][i]);
-			}
-			else {
-				DrawFormatString(10 + (i * 20), 20 + (j * 20), 0x0000ff, "%d", MapData[j][i]);
-			}
-			//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
-		}
-	}
-	DrawFormatString(1100, 20, 0x0000ff, "%d", EYC);
-	DrawFormatString(1100, 30, 0x0000ff, "%d", EY);
-	DrawFormatString(1100, 60, 0x0000ff, "%d", VectorFlg);
-	DrawFormatString(1100, 80, 0x0000ff, "%d", NextKeyFlg);
-	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
-	DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
-	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+	if (keyFlg & PAD_INPUT_B)DFLG = true;
+	if (keyFlg & PAD_INPUT_A)DFLG = false;
 
-	//a_star.main(g_player.PXC, g_player.PYC, EXC, EYC);
+	if (DFLG == true) {
+
+		for (int i = 0; i < 27; i++) {
+			for (int j = 0; j < 29; j++) {
+				if (MapData[j][i] == 1) {
+					DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xff0000, "%d", MapData[j][i]);
+				}
+				else if (MapData[j][i] == 0) {
+					DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xffffff, "%d", MapData[j][i]);
+				}
+				else if (MapData[j][i] == 2) {
+					DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xff00ff, "%d", MapData[j][i]);
+				}
+				else {
+					DrawFormatString(10 + (i * 20), 20 + (j * 20), 0x0000ff, "%d", MapData[j][i]);
+				}
+				//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
+			}
+		}
+		DrawFormatString(1100, 20, 0x0000ff, "%d", EYC);
+		DrawFormatString(1100, 30, 0x0000ff, "%d", EY);
+		DrawFormatString(1100, 60, 0x0000ff, "%d", VectorFlg);
+		DrawFormatString(1100, 80, 0x0000ff, "%d", NextKeyFlg);
+		//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+		
+		//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
+
+		//a_star.main(g_player.PXC, g_player.PYC, EXC, EYC);
+
+	}
+
+	DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
+
+	if (EX <= 340 && EY == 330 && VectorFlg == LEFT) {
+		EX = 940;
+	}
+	if (EX >= 940 && EY == 330 && VectorFlg == RIGHT) {
+		EX = 340;
+	}
+
+	if (EX <= 429 && EY == 330 && VectorFlg == LEFT) {
+		EX += 1;
+	}
+	if (EX <= 429 && EY == 330 && VectorFlg == RIGHT) {
+		EX -= 1;
+	}
+	if (EX >= 851 && EY == 330 && VectorFlg == LEFT) {
+		EX += 1;
+	}
+	if (EX >= 851 && EY == 330 && VectorFlg == RIGHT) {
+		EX -= 1;
+	}
+
+	if (EY == 330) {
+		if (EX == 762)EX = 760;
+		if (EX == 518)EX = 520;
+	}
 
 }
 
