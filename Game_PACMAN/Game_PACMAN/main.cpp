@@ -17,6 +17,7 @@ int	nowKey;				// 今回の入力キー
 int	keyFlg;				// 入力キー情報
 
 int InitFlg = false;
+int Timer = 0;
 
 
 //メイン
@@ -54,24 +55,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			InitFlg = true;
 		}
 
-		//ステージの描画
-		//DrawGraph(0, 30, image.g_StageImage, TRUE);
-		//DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 90, image.g_StageImage, TRUE);
-		//a_star.A_starInit();
-		stage.DrawMap();
-		g_player.PlayerController();
-		//a_star.main(int plX, int plY, int enX, int enY);
-		a_star.main(/*g_player.PXC, g_player.PYC, g_enemy.EXC, g_enemy.EYC*/);
-		g_enemy.MapCopy();
-		g_enemy.EnemyController();
-		a_star_pink.main(/*g_player.PXC, g_player.PYC, g_enemy2.EXC, g_enemy2.EYC*/);
-		g_enemy2.MapCopy();
-		g_enemy2.EnemyController();
-		bait.BaitController();
-		//DrawPixel(g_player.PX, g_player.PY, 0xff00ff);
-		//DrawBox(g_player.PX, g_player.PY, 1000, 200, 0xff00ff, false);
-		
-		
+		if (bait.pscore < 168) {
+			//ステージの描画
+			//DrawGraph(0, 30, image.g_StageImage, TRUE);
+			//DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 90, image.g_StageImage, TRUE);
+			//a_star.A_starInit();
+			//stage.DrawMap();
+			stage.DrawMapImageV3();
+			g_player.PlayerController();
+			//a_star.main(int plX, int plY, int enX, int enY);
+			a_star.main(/*g_player.PXC, g_player.PYC, g_enemy.EXC, g_enemy.EYC*/);
+			g_enemy.MapCopy();
+			g_enemy.EnemyController();
+			a_star_pink.main(/*g_player.PXC, g_player.PYC, g_enemy2.EXC, g_enemy2.EYC*/);
+			g_enemy2.MapCopy();
+			g_enemy2.EnemyController();
+			bait.BaitController();
+			//DrawPixel(g_player.PX, g_player.PY, 0xff00ff);
+			//DrawBox(g_player.PX, g_player.PY, 1000, 200, 0xff00ff, false);
+			DrawFormatString(1100, 500, 0xffffff, "%d", g_player.PX);
+			DrawFormatString(1100, 550, 0xffffff, "%d", g_player.PY);
+
+			DrawFormatString(1100, 400, 0xffffff, "%d", DRAW_POINT_X);
+			DrawFormatString(1100, 450, 0xffffff, "%d", DRAW_POINT_Y);
+			//stage.DrawMapImage();
+			if (keyFlg & PAD_INPUT_A)bait.pscore+=10;
+
+		}else if (bait.pscore >= 168) {
+			stage.DrawMapImageV3();
+			DrawGraph(g_player.PX - 15, g_player.PY - 15, image.PacManImage[g_player.PacMan_index + g_player.PacMan_dir * 3], TRUE);
+			if (Timer++ <= 280) {
+				if(Timer >= 80)stage.flashingMapImageV3();
+				DrawGraph(g_player.PX - 15, g_player.PY - 15, image.PacManImage[g_player.PacMan_index + g_player.PacMan_dir * 3], TRUE);
+			}
+			else{
+				Timer = 0;
+				bait.pscore = 0;
+				InitFlg = false;
+			}
+		}
 	
 
 		//裏画面の内容を表画面に反映

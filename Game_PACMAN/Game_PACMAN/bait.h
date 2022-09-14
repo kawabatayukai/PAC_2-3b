@@ -14,6 +14,7 @@ public:
 
 	int pscore = 0;//エサの取得数
 	int I = 0;//for文用変数
+	int Timer = 0;//powerエサ点滅変数
 
 	Bait();
 

@@ -108,7 +108,7 @@ void Player::PlayerController() {
 
 	int PacMan_motion[] = { 0,1,2,1, };
 
-	for (int i = 0; i < MAP_HEIGHT; i++) {
+	/*for (int i = 0; i < MAP_HEIGHT; i++) {
 		for (int j = 0; j < MAP_WIDTH; j++) {
 			DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
 		}
@@ -118,7 +118,7 @@ void Player::PlayerController() {
 		for (int j = 0; j < MAP_WIDTH; j++) {
 			DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
 		}
-	}
+	}*/
 
 	OldKeyFlg = KEYFLG;
 
@@ -278,8 +278,14 @@ void Player::PlayerController() {
 						if (CheckHit(box[C], circle))
 						{
 							//DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
-							DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
+							//DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
 							NextKeyFlg = KEYFLG;
+							if (oldX % 10 != 0) {
+								oldX -= oldX % 10;
+							}
+							if (oldY % 10 != 0) {
+								oldY -= oldY % 10;
+							}
 							PX = oldX;
 							PY = oldY;
 							KEYFLG = OldKeyFlg;
@@ -287,7 +293,7 @@ void Player::PlayerController() {
 						else
 						{
 							//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
-							DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
+							//DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
 						}
 						//DrawFormatString(box[C].fLeft[C], box[C].fTop[C], 0xFF00FF, "%d", C);
 					

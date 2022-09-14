@@ -408,8 +408,12 @@ void A_star_PINK::TraceRoute(int x, int y)
 	if (CheckMatrix->y == -1)
 
 	if(XP>=2)*/
+	try {
+		TraceRoute(x + parent_way->x, y + parent_way->y);
+	}
+	catch (int o){
 
-	TraceRoute(x + parent_way->x, y + parent_way->y);
+	}
 
 	if (d == GX && f == GY) {
 		//TraceRoute(x + parent_way->x, y + parent_way->y);

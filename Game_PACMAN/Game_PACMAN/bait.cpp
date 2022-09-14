@@ -8,10 +8,11 @@ Bait bait;
 
 Bait::Bait() {
 	I = 0;
+	Timer = 0;
 }
 
 void Bait::BaitInit() {
-
+	Timer = 0;
 }
 
 void Bait::CreateBait() {
@@ -34,6 +35,7 @@ void Bait::CreateBait() {
 }
 
 void Bait::BaitController() {
+	if (Timer++ >= 20)Timer = 0;
 	for (I = 0; I < BAIT_MAX; I++) {
 		CIRCLE circlebait[BAIT_MAX], circleP;
 
@@ -49,6 +51,7 @@ void Bait::BaitController() {
 		if (bait[I].flg == true) {
 			//for (int j = 0; j < BAIT_MAX; j++) {
 
+
 				if (I < 9) {//1—ñ–Ú
 				circlebait[I].x = bait[I].x + MAP_SIZE * I;
 				circlebait[I].y = bait[I].y;
@@ -61,10 +64,12 @@ void Bait::BaitController() {
 					DrawGraph(circlebait[I].x, circlebait[I].y, bait[I].img, true);
 					//DrawCircle(circlebait[I].x, circlebait[I].y, circlebait[I].r, GetColor(255, 255, 255));
 
-				}else if (I < 19) {//2—ñ–Ú
+				}else if (I < 19) {//2—ñ–Ú(power)
 					circlebait[I].x = bait[I].x;
 					circlebait[I].y = bait[I].y + 33;
-					DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+					if (Timer <= 10) {
+						DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+					}
 					//DrawCircle(circlebait[I].x, circlebait[I].y, circlebait[I].r, GetColor(255, 255, 255));
 
 				}
@@ -96,10 +101,12 @@ void Bait::BaitController() {
 					//DrawCircle(circlebait[I].x, circlebait[I].y, circlebait[I].r, GetColor(255, 255, 255));
 
 				}
-				else if (I < 24) {//2—ñ–Ú
+				else if (I < 24) {//2—ñ–Ú(power)
 					circlebait[I].x = bait[I].x + MAP_SIZE * 18;
 					circlebait[I].y = bait[I].y + 33;
-					DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+					if (Timer <= 10) {
+						DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+					}
 					//DrawCircle(circlebait[I].x, circlebait[I].y, circlebait[I].r, GetColor(255, 255, 255));
 
 				}
@@ -252,7 +259,9 @@ void Bait::BaitController() {
 				else if (I < 108) {//2—ñ–Ú(power)
 				circlebait[I].x = bait[I].x;
 				circlebait[I].y = bait[I].y + 33 + MAP_SIZE * 15;
+				if (Timer <= 10) {
 					DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+				}
 				//DrawCircle(circlebait[I].x, circlebait[I].y, circlebait[I].r, GetColor(255, 255, 255));
 
 				}
@@ -288,7 +297,9 @@ void Bait::BaitController() {
 				else if (I < 123) {//2—ñ–Ú(power)
 				circlebait[I].x = bait[I].x + MAP_SIZE * 18;
 				circlebait[I].y = bait[I].y + 33 + MAP_SIZE * 15;
-				DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+				if (Timer <= 10) {
+					DrawGraph(circlebait[I].x - 7, circlebait[I].y - 10, bait[I].img, true);
+				}
 				//DrawCircle(circlebait[I].x, circlebait[I].y, circlebait[I].r, GetColor(255, 255, 255));
 
 				}
