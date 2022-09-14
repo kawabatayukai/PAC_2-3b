@@ -154,22 +154,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="A_star.cpp" />
+    <ClCompile Include="A_star_INKY.cpp" />
     <ClCompile Include="A_star_PINKY.cpp" />
     <ClCompile Include="bait.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy2.cpp" />
+    <ClCompile Include="Enemy3.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="A_star_INKY.h" />
     <ClInclude Include="A_star_PINKY.h" />
     <ClInclude Include="bait.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="A_star.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy2.h" />
+    <ClInclude Include="Enemy3.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="Player.h" />

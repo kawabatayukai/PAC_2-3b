@@ -9,6 +9,7 @@ public:
 	int PlayerImageD;
 	int	g_T01Image;			// 画像用変数
 	int	g_T02Image;			// 画像用変数
+	int	g_T03Image;			// 画像用変数
 	int	EsaImage;			// 画像用変数
 	int	PowerEsaImage;			// 画像用変数
 	int g_GameTitleImage;
