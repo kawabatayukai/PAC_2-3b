@@ -15,11 +15,14 @@ public:
 	//移動目標との一致　戻り値　0：x,y座標共に一致ﾅｼ　 1：x座標のみ一致  2：y座標のみ一致　　3:x,y座標共に一致 
 	int CheckTarget();
 
-	//ターゲットを設定
-	void TargetCtrl(int tpX, int tpY, int tpD);
+	void TestMove5(int MapData[MAP_HEIGHT][MAP_WIDTH], int NowKey); //テスト
+	void TestMove6(int MapData[MAP_HEIGHT][MAP_WIDTH], int NowKey);
 
-	//イジケフラグを変更（テスト用）
-	void SetIjike() { if (ijike_flg == false) ijike_flg = true; }   
+	void TargetCtrl(int tpX, int tpY, int tpD);              //ターゲットを設定
+	void TargetCtrl2(int tpX, int tpY, int tpD);             //ターゲットを設定
+
+
+	void SetIjike() { if (ijike_flg == false) ijike_flg = true; }   //イジケフラグを変更（テスト用）
 
 
 	void EnemyControl();  //敵の挙動(モードによって変化  出撃前/巡回/追跡)
@@ -31,6 +34,8 @@ public:
 private:
 	const int p_speed[4] = { 5,6,7,8 }; //スピード（変化用）
 	const int p_score = 3373;           //スコア  
+
+	//int mode_count = 0;
 };
 
 extern ENEMY_BLUE Blue;

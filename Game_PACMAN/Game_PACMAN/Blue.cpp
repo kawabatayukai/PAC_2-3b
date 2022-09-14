@@ -21,17 +21,20 @@ int ENEMY_BLUE::Loadimages()
 void ENEMY_BLUE::InitEnemy()
 {
 	g_enemy.flg = true;
-	g_enemy.x = 8 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
-	g_enemy.y = 9 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+	//g_enemy.x = 8 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+	//g_enemy.y = 10 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
+
+	g_enemy.x = 11 * MAP_SIZE + (MAP_SIZE / 2); //巣の上
+	g_enemy.y = 13 * MAP_SIZE + (MAP_SIZE / 2); //巣の上
 
 	g_enemy.w = E_WIDTH;
 	g_enemy.h = E_HEIGHT;
-	//g_enemy.speed = 3;//p_speed[0];
-	g_enemy.speed = GetRand(4) + 1;
+	g_enemy.speed = 3;//p_speed[0];
+	//g_enemy.speed = GetRand(4) + 1;
 	g_enemy.img = 0;
 
 	//移動なし
-	MoveDir = (int)DIRECTION::NONE;
+	MoveDir = (int)DIRECTION::UP;
 
 	//移動目標初期化
 	MoveTarget = { 0,0 };
@@ -184,7 +187,7 @@ void ENEMY_BLUE::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 	{
 		MoveEnemy(MapData);
 	}
-	else if (EnemyMode == MODE::TRACK || EnemyMode == MODE::PATROL)
+	else if (EnemyMode == MODE::TRACK || EnemyMode == MODE::PATROL || EnemyMode == MODE::EYE || EnemyMode == MODE::IJIKE)
 	{
 		MoveShortest(MapData, MoveTarget.x, MoveTarget.y);
 	}
@@ -227,7 +230,14 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 {
 	M_POINT Point = { 0,0 };
 
+	//イジケ
+	//if (ijike_flg == true) EnemyMode = MODE::IJIKE;
+
 	static int order = 0;
+	static int oldmode;
+
+	int Red_X;
+	int Red_Y;
 
 	switch (EnemyMode)
 	{
@@ -235,16 +245,26 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 
 		if (sortie_flg == false)     //出撃不可
 		{
+			////上下に往復
+			//if (CheckTarget() == 3 && g_enemy.y == 285) MoveTarget.y = 345;      //下部
+			//else if (CheckTarget() == 3 && g_enemy.y == 345) MoveTarget.y = 285; //上部
+			//else if (CheckTarget() == 0) MoveTarget = { 255,285 };               //初期位置
+
 			//上下に往復
-			if (CheckTarget() == 3 && g_enemy.y == 285) MoveTarget.y = 345;      //下部
-			else if (CheckTarget() == 3 && g_enemy.y == 345) MoveTarget.y = 285; //上部
-			else if (CheckTarget() == 0) MoveTarget = { 315,285 };               //初期位置
+			if (CheckTarget() == 3 && g_enemy.y == 375) MoveTarget.y = 435;      //下部
+			else if (CheckTarget() == 3 && g_enemy.y == 435) MoveTarget.y = 375; //上部
+			else if (CheckTarget() == 0) MoveTarget = { 345,375 };               //初期位置
 		}
 		else if (sortie_flg == true) //出撃可
 		{
-			MoveTarget = { 315,225 };  //巣の入口上 (巣から出撃)
-			if (g_enemy.x == 315 && g_enemy.y == 225) EnemyMode = MODE::PATROL;  //移動完了後、巡回モードに切り替え
+			MoveTarget = { 405,315 };  //巣の入口上 (巣から出撃)
+			if (g_enemy.x == 405 && g_enemy.y == 315) EnemyMode = MODE::PATROL;  //移動完了後、巡回モードに切り替え
 		}
+		//else if (sortie_flg == true) //出撃可
+		//{
+		//	MoveTarget = { 315,225 };  //巣の入口上 (巣から出撃)
+		//	if (g_enemy.x == 315 && g_enemy.y == 225) EnemyMode = MODE::PATROL;  //移動完了後、巡回モードに切り替え
+		//}
 		break;
 
 	case MODE::PATROL:            //巡回モード
@@ -262,6 +282,9 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 
 		MoveTarget = Point;
 
+		//現在のモードを保持
+		oldmode = EnemyMode;
+
 		//8秒で追跡モードに切り替え
 		if (++mode_count % 480 == 0)
 		{
@@ -274,12 +297,22 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 
 		//追跡方法を設定
 		Point = { tpX ,tpY };
-		if (tpD == DIRECTION::LEFT)  Point.x = tpX;// +(-4 * MAP_SIZE);
-		if (tpD == DIRECTION::RIGHT) Point.x = tpX;// +(4 * MAP_SIZE);
-		if (tpD == DIRECTION::UP)    Point.y = tpY;// +(-4 * MAP_SIZE);
-		if (tpD == DIRECTION::DOWN)  Point.y = tpY;// +(4 * MAP_SIZE);
+
+		//アカの座標を取得
+		Red_X = All_Enemy[0]->GetEnemyX();
+		Red_Y = All_Enemy[0]->GetEnemyY();
+
+		//Point.x = tpX + (-1 * (Red_X - tpX));
+		//Point.y = tpY + (-1 * (Red_Y - tpY));
+
+		Point.x = ((tpX + (-1 * (Red_X - tpX))) / MAP_SIZE) * MAP_SIZE + (MAP_SIZE / 2);
+		Point.y = ((tpY + (-1 * (Red_Y - tpY))) / MAP_SIZE) * MAP_SIZE + (MAP_SIZE / 2);
+
 		MoveTarget.x = Point.x;
 		MoveTarget.y = Point.y;
+
+		//現在のモードを保持
+		oldmode = EnemyMode;
 
 		//20秒で巡回モードに切り替え
 		if (++mode_count % 1200 == 0)
@@ -289,6 +322,18 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 		}
 		break;
 
+	case MODE::IJIKE:       //イジケ時
+//Point.x = tpX + (MAP_SIZE * ((GetRand(4) + 1) * 3));
+//Point.y = tpY + (MAP_SIZE * ((GetRand(4) + 1) * 3));
+
+//if (ijike_flg == false) EnemyMode = oldmode;
+
+		//とりあえず巡回モード一番目
+		Point = { PtrlPoint[2][order][0] ,PtrlPoint[2][order][1] };
+		MoveTarget = Point;
+		if (ijike_flg == false) EnemyMode = oldmode;
+
+		break;
 	case MODE::RANDOM:
 		Point.x = 1;
 		Point.y = 1;
@@ -301,6 +346,7 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 		MoveTarget.x = (Point.x * MAP_SIZE) + DRAW_POINT_X;
 		MoveTarget.y = (Point.y * MAP_SIZE) + DRAW_POINT_Y;
 
+		break;
 	default:
 		break;
 	}

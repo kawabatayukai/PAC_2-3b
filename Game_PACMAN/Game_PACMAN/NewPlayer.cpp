@@ -92,17 +92,17 @@ void Player::PlayerController(int keyFlg, int MapData[MAP_HEIGHT][MAP_WIDTH]) {
 	DrawFormatString(100, 50, 0xFFFFFF, "%d", DRAW_POINT_X);
 	DrawFormatString(100, 100, 0xFFFFFF, "%d", DRAW_POINT_Y);*/
 
-	for (int i = 0; i < MAP_HEIGHT; i++) {
-		for (int j = 0; j < MAP_WIDTH; j++) {
-			DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
-		}
-	}
+	//for (int i = 0; i < MAP_HEIGHT; i++) {
+	//	for (int j = 0; j < MAP_WIDTH; j++) {
+	//		DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
+	//	}
+	//}
 
-	for (int i = 0; i < MAP_HEIGHT; i++) {
-		for (int j = 0; j < MAP_WIDTH; j++) {
-			DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
-		}
-	}
+	//for (int i = 0; i < MAP_HEIGHT; i++) {
+	//	for (int j = 0; j < MAP_WIDTH; j++) {
+	//		DrawBox(DRAW_POINT_X + (j * MAP_SIZE), DRAW_POINT_Y + (i * MAP_SIZE), DRAW_POINT_X + (j * MAP_SIZE) + MAP_SIZE, DRAW_POINT_Y + (i * MAP_SIZE) + MAP_SIZE, 0xffffff, false);
+	//	}
+	//}
 
 	OldKeyFlg = KEYFLG;
 
@@ -239,7 +239,7 @@ void Player::PlayerController(int keyFlg, int MapData[MAP_HEIGHT][MAP_WIDTH]) {
 					if (CheckHit(box[C], circle))
 					{
 						//DrawCircle(circle.x, circle.y, circle.r, GetColor(125, 125, 125));
-						DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
+						//DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
 						NextKeyFlg = KEYFLG;
 						PX = oldX;
 						PY = oldY;
@@ -248,7 +248,7 @@ void Player::PlayerController(int keyFlg, int MapData[MAP_HEIGHT][MAP_WIDTH]) {
 					else
 					{
 						//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
-						DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
+						//DrawBox(box[C].fLeft[CF], box[C].fTop[CF], box[C].fRight[CF], box[C].fBottom[CF], GetColor(125, 125, 125), true);
 					}
 					//DrawFormatString(box[C].fLeft[C], box[C].fTop[C], 0xFF00FF, "%d", C);
 

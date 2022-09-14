@@ -39,6 +39,7 @@ enum MODE
 	STANDBY = 0,//出撃前
 	PATROL,     //巡回モード
 	TRACK,      //追跡モード
+	IJIKE,      //イジケ
 	EYE,        //目
 	RANDOM      //ランダム
 };
@@ -81,29 +82,24 @@ public:
 	virtual void DrawEnemy() = 0;   //描画
 
 	/*********************************************************/
-	//すべてのEnemyを初期化
-	static void AllEnemyInit();    
+	static void AllEnemyInit();    //すべてのEnemyを初期化
+	void DrawAllEnemy();           //すべてのEnemyを描画
 
-	//出撃を管理
-	void SoltieControl(int num); 
+	static void SoltieControl(int NowKey, int FoodCount, int ClearCount);   //出撃を管理
+	static void IjikeControl(int PowerFlg);                               //イジケ状態ON・OFF
 
-	//出撃フラグを変更（テスト用）
-	void SetSortie() { if (sortie_flg == false)sortie_flg = true; } 
+	void SetSortie() { if (sortie_flg == false)sortie_flg = true; } //出撃フラグを変更（テスト用）
 
-	//移動による画像チェンジ
-	void ChangeMoveImages();       
+	void ChangeMoveImages();       //移動による画像チェンジ
 
-	//ターゲットまでの最短経路を探す
-	void search(int tx, int ty, int n);  
+	void search(int tx, int ty, int n);  //ターゲットまでの最短経路を探す
+	void moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int playerX, int playerY);   //最短経路を探す準備　コピーマップの初期化と目的地(player)の場所に10(目印)を設定
+	void MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY);  //ターゲットの位置に最短経路で移動する
 
-	//最短経路を探す準備　コピーマップの初期化と目的地(player)の場所に10(目印)を設定
-	void moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int playerX, int playerY);   
-
-	//ターゲットの位置に最短経路で移動する
-	void MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY);  
-
-	//目標マスとの当たり判定(?)
 	int CheckTarget3();
+
+	int GetEnemyX() { return g_enemy.x; }     //x座標を取得
+	int GetEnemyY() { return g_enemy.y; }     //y座標を取得
 
 	int GetEnemyMode() { return EnemyMode; }                          //現在のモードを取得
 	void SetEnemyMode(int mode) { if (mode < 5) EnemyMode = mode; }   //モードを変更
@@ -111,25 +107,24 @@ public:
 	static void DrawAllInfo();  //テスト用　敵全色の情報を表示
 
 protected:
-	int enemyimage[16] = { 0 };   //画像（配列）
+	int enemyimage[16] = { 0 };//画像（配列）
 
-	const int My_Color = ENEMY_COLOR::CLEAR;  //固有色
-
-	ENEMY g_enemy;                //敵のデータ
-	int MoveCount = 0;            //画像変化用にフレームをカウント
+	const int My_Color = ENEMY_COLOR::CLEAR; //固有色
+	ENEMY g_enemy;             //敵のデータ
+	int MoveCount = 0;         //画像変化用にフレームをカウント
 
 	int MoveDir;                              //移動方向
 	M_POINT MoveTarget;                       //移動目標
 	int EnemyMode = MODE::STANDBY;            //敵のモード
 	int my_mapdata[MAP_HEIGHT][MAP_WIDTH];    //経路探索用map
 
-	bool sortie_flg = false;      //出撃フラグ　false 待機　　true 出撃
-	int mode_count = 0;           //モードチェンジ(巡回・追跡)用にフレームをカウント
+	bool sortie_flg = false;            //出撃フラグ　false 待機　　true 出撃
+	int mode_count = 0;                 //モードチェンジ(巡回・追跡)用にフレームをカウント
 
-	bool ijike_flg = false;       //"イジケ状態"フラグ true：イジケ　false：イジケなし 
-	int IjikeCount = 0;           //イジケ状態時間カウント用
+	bool ijike_flg = false;   //"イジケ状態"フラグ true：イジケ　false：イジケなし 
+	int IjikeCount = 0;       //イジケ状態時間カウント用
 
-	bool hitp_flg = false;        //プレイヤー当たりフラグ true：当たり　false：当たりなし
+	bool hitp_flg = false;    //プレイヤー当たりフラグ true：当たり　false：当たりなし
 
 
 	/*****************************************************************************/
@@ -138,3 +133,36 @@ protected:
 
 	static const int PtrlPoint[4][4][2];      //巡回モード用座標
 };
+
+////巡回モード用座標
+//int PtrlPoint[4][4][2] =
+//{
+//	//アカ
+//	{
+//		{19 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{16 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//	    {16 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
+//	    {19 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
+//	},
+//	//ピンク
+//	{
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//	    {4 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//	    {4 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
+//	    {MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
+//	},
+//	//アオ
+//	{
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//	},
+//	//オレンジ
+//	{
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
+//	},
+//};

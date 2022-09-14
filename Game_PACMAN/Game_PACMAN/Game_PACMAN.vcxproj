@@ -151,7 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bait.cpp" />
     <ClCompile Include="Blue.cpp" />
+    <ClCompile Include="display.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
@@ -162,7 +164,9 @@
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bait.h" />
     <ClInclude Include="Blue.h" />
+    <ClInclude Include="display.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />

@@ -31,6 +31,12 @@
     <Filter Include="ソース ファイル\Player">
       <UniqueIdentifier>{a57db280-ebe1-4fe9-97ce-bc63e090ca32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Display">
+      <UniqueIdentifier>{75271ab2-a34e-4150-99f4-fba55f2e1430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Bait">
+      <UniqueIdentifier>{e0d3685d-4fce-4280-a371-1ceb3624fdc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,6 +66,12 @@
     <ClCompile Include="NewPlayer.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
+    <ClCompile Include="display.cpp">
+      <Filter>ソース ファイル\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Bait.cpp">
+      <Filter>ソース ファイル\Bait</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stage.h">
@@ -88,6 +100,12 @@
     </ClInclude>
     <ClInclude Include="NewPlayer.h">
       <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="display.h">
+      <Filter>ソース ファイル\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Bait.h">
+      <Filter>ソース ファイル\Bait</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

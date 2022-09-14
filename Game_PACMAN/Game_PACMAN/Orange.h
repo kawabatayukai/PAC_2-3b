@@ -1,5 +1,5 @@
 #pragma once
-#include "enemy.h"
+#include "Enemy.h"
 
 class ENEMY_ORANGE :public ENEMY_BASE
 {
@@ -16,10 +16,10 @@ public:
 	int CheckTarget();
 
 	//ターゲットを設定
-	void TargetCtrl(int tpX, int tpY, int tpD);              
+	void TargetCtrl(int tpX, int tpY, int tpD);
 
 	//イジケフラグを変更（テスト用）
-	void SetIjike() { if (ijike_flg == false) ijike_flg = true; }   
+	void SetIjike() { if (ijike_flg == false) ijike_flg = true; }
 
 
 	void EnemyControl();  //敵の挙動(モードによって変化  出撃前/巡回/追跡)

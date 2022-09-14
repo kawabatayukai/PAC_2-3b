@@ -1,26 +1,40 @@
 #pragma once
 #include"Enemy.h"
 
+////移動ベクトル(単位)
+//int d[][2] =
+//{
+//	{-1,0}, //左
+//	{1,0},  //右
+//	{0,-1}, //上
+//	{0,1}   //下
+//};
+
 
 //敵キャラ（ピンク）基底クラスにENEMY_BASE
 class ENEMY_PINK : public ENEMY_BASE
 {
 public:
-	ENEMY_PINK();           //コンストラクタ
-	int Loadimages();       //画像読み込み
-	void InitEnemy();       //初期処理
+	ENEMY_PINK();       //コンストラクタ
+	int Loadimages();   //画像読み込み
+	void InitEnemy();   //初期処理
 	void MoveEnemy(int MapData[MAP_HEIGHT][MAP_WIDTH]);   //移動
 	void MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH]);
-	void DrawEnemy();       //描画
-	 
+
+	void DrawEnemy();   //描画
+
 	//移動目標との一致　戻り値　0：x,y座標共に一致ﾅｼ　 1：x座標のみ一致  2：y座標のみ一致　　3:x,y座標共に一致 
 	int CheckTarget();
+	int CheckTarget2(int targetX, int targetY);
+	//int CheckTarget3();
 
-	//ターゲットを設定
-	void TargetCtrl(int tpX, int tpY, int tpD);              
+	void TestMove5(int MapData[MAP_HEIGHT][MAP_WIDTH], int NowKey); //テスト
+	void TestMove6(int MapData[MAP_HEIGHT][MAP_WIDTH], int NowKey);
 
-	//イジケフラグを変更（テスト用）
-	void SetIjike() { if (ijike_flg == false) ijike_flg = true; }   
+	void TargetCtrl(int tpX, int tpY, int tpD);              //ターゲットを設定
+	void TargetCtrl2(int tpX, int tpY, int tpD);             //ターゲットを設定
+
+	void SetIjike() { if (ijike_flg == false) ijike_flg = true; }   //イジケフラグを変更（テスト用）
 
 
 	void EnemyControl();  //敵の挙動(モードによって変化  出撃前/巡回/追跡)

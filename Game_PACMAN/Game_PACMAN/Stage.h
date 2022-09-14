@@ -1,6 +1,14 @@
 #pragma once
 #include"Info.h"
 
+//総エサ数　168の場合
+const int FirstTime = 50;     //正:48
+const int SecondTime = 120;   //正:117
+
+////総エサ数　244の場合
+//const int FirstTime = 70;
+//const int SecondTime = 170;
+
 class Stage
 {
 public:
@@ -9,6 +17,18 @@ public:
 	int MapPointX(int mapX);  //map上の"〇マス目"をウィンドウ上の座標に変換
 	int MapPointY(int mapY);
 	void DrawMap();           //描画
+
+	//初期処理
+	void StageInit();
+
+	//画像読み込み
+	int LoadImages();
+
+	//フルーツの出現、描画  　引数(食べたエサ数、クリア回数)
+	void DrawFruit(int FoodCnt, int ClearCnt);
+
+	//クリア回数による出現フルーツの変化    DrawFruit内でのみ使用
+	int* FruitToClear(int ClearCnt);
 
 private:
 
@@ -68,5 +88,9 @@ private:
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 	};
+
+	int FruitImgs[8] = { 0 };  //フルーツ画像
+	int DrawTime = 0;          //描画時間
+	int DrawCnt = 0;           //表示回数　2回
 };
 extern Stage stage;
