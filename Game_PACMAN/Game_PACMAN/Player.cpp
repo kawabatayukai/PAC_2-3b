@@ -13,6 +13,7 @@
 #define PAC_MAN_DIR_SLIDE 3
 #define PAC_MAN_WIDTH 30
 #define PAC_MAN_HEIGHT 30
+#define MAX_MOTION_DESTROY_INDEX 11
 
 Player g_player;
 
@@ -607,4 +608,21 @@ bool Player::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 	}
 
 	return false;
+}
+
+void Player :: PlayerDestroy()
+{
+	PacManDamage_dir = 0;
+	int PacManDamage_motion[] = { 0,1,2,3,4,5,6,7,8,9,10, };
+	if (--PacManDamage_wait <= 0)
+	{
+		PacMan_index++;
+		PacMan_wait = 100;
+		PacMan_index %= 11;
+	}
+	int motion_index = PacManDamage_motion[PacMan_index];
+	if (FLG_MAX_L == false && KEYFLG == LEFT || FLG_MAX_R == false && KEYFLG == RIGHT || FLG_MAX_U == false
+		&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)/*motion_index = 1*/;
+	DrawGraph(PX - 15, PY - 15,
+		image.PacManDestroy[motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE], TRUE);
 }

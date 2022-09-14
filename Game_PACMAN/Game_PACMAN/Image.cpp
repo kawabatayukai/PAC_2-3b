@@ -56,5 +56,6 @@ int Image::LoadImages()
 	if ((PlayerImageD = LoadGraph("images/01_2D.png")) == -1)return -1;
 	if ((g_StageImage = LoadGraph("images/T01.png")) == -1) return -1;
 	if ((LoadDivGraph("images/PacMan.png",12,3,4,30,30,PacManImage)) == -1)return -1;
+	if ((LoadDivGraph("images/PacMan_Damage.png", 11, 11, 1, 30, 30, PacManDestroy)) == -1)return -1;
 	return 0;
 }

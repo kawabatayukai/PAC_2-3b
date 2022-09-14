@@ -52,6 +52,11 @@ public:
 	int PacMan_wait;
 	int PacMan_dir;
 
+	int PacManDamage_index;
+
+	int PacManDamage_wait;
+	int PacManDamage_dir;
+
 	struct BOX
 	{
 		float fLeft[MAP_WIDTH + MAP_HEIGHT], fTop[MAP_WIDTH + MAP_HEIGHT], fRight[MAP_WIDTH + MAP_HEIGHT], fBottom[MAP_WIDTH + MAP_HEIGHT];
@@ -73,6 +78,7 @@ public:
 	bool CheckHit(const BOX& t_box, const CIRCLE& t_circle);
 	bool CheckHit(const BOX1& t_box, const CIRCLE& t_circle);
 	bool CheckHitBOX(const BOX& t_direA, const BOX1& t_direB);
+	void PlayerDestroy();
 
 };
 extern Player g_player;

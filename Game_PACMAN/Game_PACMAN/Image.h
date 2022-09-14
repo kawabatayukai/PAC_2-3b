@@ -13,6 +13,7 @@ public:
 	int	g_T01Image;			// ‰æ‘œ—p•Ï”
 	int g_GameTitleImage;
 	int PacManImage[12];
+	int PacManDestroy[11];
 
 	Image();
 
