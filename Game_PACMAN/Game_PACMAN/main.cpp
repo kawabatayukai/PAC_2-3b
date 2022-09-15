@@ -55,6 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 		else {
+			stage.DrawMap();
 			g_player.PlayerDestroy();
 		}
 		//— ‰æ–Ê‚Ì“à—e‚ð•\‰æ–Ê‚É”½‰f
