@@ -277,7 +277,7 @@ void GameInit()
 	ENEMY_BASE::AllEnemyInit();
 
 	g_player.PlayerInit();
-	Disp.DispInit();
+	Disp.DispInit(ClearCount);
 	bait.CreateBait();
 	stage.StageInit();
 
@@ -355,6 +355,7 @@ void NewGameMain()
 	bait.BaitController(g_player.GetPlayerX() + DRAW_POINT_X, g_player.GetPlayerY() + DRAW_POINT_Y);
 
 	//フルーツの出現
+	//stage.FruitControl(当たり判定, ClearCount, bait.GetBaitCount(), スコア);
 	stage.DrawFruit(bait.GetBaitCount(), ClearCount);
 
 	//プレイヤーの移動・描画を管理
@@ -397,7 +398,9 @@ void NewGameMain()
 	DrawFormatString(30, 340, 0xffffff, "playerY : %d", g_player.GetPlayerY());
 
 
-
+	Disp.DrawStageFruit(ClearCount); //画面右のフルーツ
+	
+	Disp.DrawPlayerLife(3);          //残機　引数で残機を
 
 	DrawMap();                         //マップ描画テスト
 	DrawSquare();                      //テスト用　枠表示

@@ -1,6 +1,7 @@
 #include"DxLib.h"
 #include"Info.h"
 
+#include"Stage.h"
 #include "display.h"
 
 DISPLAY Disp;
@@ -21,11 +22,11 @@ int DISPLAY::LoadSounds()
 }
 
 //初期処理
-void DISPLAY::DispInit()
+void DISPLAY::DispInit(int ClearCnt)
 {
 	counter = 0;
 
-	//clearcount = 0;
+	SetDrawFruit(ClearCnt);
 }
 
 //ゲームスタート時
@@ -96,4 +97,72 @@ void DISPLAY::DrawOverDisp(GAME_STATE* state)
 
 		counter = 0;
 	}
+}
+
+//描画位置
+const int DrawX = DRAW_POINT_X + (MAP_SIZE * MAP_WIDTH);
+const int DrawY = SCREEN_HEIGHT - 80;
+
+//残機描画
+void DISPLAY::DrawPlayerLife(int LifeCnt)
+{
+	for (int i = 0; i < LifeCnt; i++)
+	{
+		DrawGraph(DrawX + (i * 40), DrawY, PacImage, TRUE);
+	}
+}
+
+//クリア面によるフルーツ描画
+void DISPLAY::DrawStageFruit(int ClearCnt)
+{
+	int dx = DRAW_POINT_X + (MAP_SIZE * MAP_WIDTH) - 40;
+	int dy = SCREEN_HEIGHT - 200;
+	for (int i = 0; i < MAX_DRAW_F; i++)
+	{
+		//if (Img_Fruits[i] != nullptr)
+
+		//dx += (i * 40);
+		DrawGraph(dx + (i * 40), dy, Img_Fruits[i], TRUE);
+		//if (i == 3)
+		//{
+		//	dx = DRAW_POINT_X + (MAP_SIZE * MAP_WIDTH) - 40;
+		//	dy += 40;
+		//}
+
+
+	}
+}
+
+//クリア面による描画フルーツのセット
+void DISPLAY::SetDrawFruit(int ClearCnt)
+{
+	index = MAX_DRAW_F - 1;  //配列の末尾
+
+	//末尾が空だった場合
+	if (Img_Fruits[index] == NULL)
+	{
+		//ひとつ前
+		while (Img_Fruits[index - 1] == NULL)
+		{
+			index--;
+			if (index == 0) break;
+		}
+	}
+	else
+	{
+		//0番目を削除、一つずつ（現在の添字-1に）ずらす
+		int sort = 1;
+		for (int i = 0; i < MAX_DRAW_F - 1; i++)
+		{
+			Img_Fruits[i] = Img_Fruits[i + 1];
+		}
+	}
+
+	Img_Fruits[index] = *stage.FruitToClear(ClearCnt);
+}
+
+//表示用フルーツ配列をリセット（new を使えばいらない）
+void DISPLAY::ResetDrawFruit()
+{
+	for (int i = 0; i < MAX_DRAW_F; i++) Img_Fruits[i] = NULL;
 }
