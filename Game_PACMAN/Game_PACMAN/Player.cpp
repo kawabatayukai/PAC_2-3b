@@ -629,7 +629,7 @@ void Player :: PlayerDestroy()
 			//&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)/*motion_index = 1*/;
 	PacManDamage_wait++;
 		DrawGraph(PX - 15, PY - 15,
-			image.PacManDestroy[PacManDamage_wait/12 /*motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE*/], TRUE);
+			image.PacManDestroy[PacManDamage_wait/8], TRUE);
 		//return;
 	//}
 }

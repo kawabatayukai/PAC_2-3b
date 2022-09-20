@@ -19,7 +19,9 @@ Title::Title() {
 void Title::DrawTitle()
 {
 	DrawGraph(150, 30, image.g_GameTitleImage, FALSE);
+
 	DrawString(600, 360, "GAME STATE", 0xffffff);
+
 	if (keyFlg & PAD_INPUT_A)/*g_GameState = MenuNo + 1; */{
 		g_GameTitleFlg = TRUE;
 		return stage.DrawMap();
