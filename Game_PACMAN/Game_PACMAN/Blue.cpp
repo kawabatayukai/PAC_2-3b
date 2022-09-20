@@ -326,6 +326,11 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 		Move_Ijike();
 		break;
 
+	case MODE::EYE:               //–Úi‘ƒ‚É–ß‚éj
+
+		Move_Eye();
+		break;
+
 	default:
 		break;
 	}

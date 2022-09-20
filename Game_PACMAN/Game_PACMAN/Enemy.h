@@ -106,7 +106,13 @@ public:
 
 	void ModeChanger();                       //モード切替え
 	void Move_Ijike();                        //イジケ状態の挙動
+
+	void Move_Eye();                          //"目"状態の挙動
+	void Eaten_OnIjike(float px, float py, float pr, int& score);  //イジケ時に食べられる
+
+	bool CheckHitCircle(float x, float y, float r);                //'引数'と敵との当たり判定
 	/************************************************/
+
 	int GetEnemyX() { return g_enemy.x; }     //x座標を取得
 	int GetEnemyY() { return g_enemy.y; }     //y座標を取得
 
@@ -364,6 +370,7 @@ protected:
 	static ENEMY_BASE* All_Enemy[ENEMY_MAX];  //全ての敵キャラのアドレスを保持 静的メンバ変数
 
 	static const int PtrlPoint[4][4][2];      //巡回モード用座標
+	static const int SbyPoint[4][3][2];       //出撃前座標
 };
 
 extern ENEMY_BASE* EnemyManager;              //全色の敵を管理

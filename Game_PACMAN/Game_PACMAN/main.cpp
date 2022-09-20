@@ -399,7 +399,9 @@ void NewGameMain()
 	//Red.EnemyController();
 	Red.DrawEnemy();                                          //敵描画 
 	Red.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
-	                                        
+	//イジケの時食われる
+	Red.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
+
 	/*DrawFormatString(1100, 700, 0xffffff, "%d", Red.EXC);
 	DrawFormatString(1130, 700, 0xffffff, "%d", Red.EYC);
 	DrawFormatString(1100, 650, 0xffffff, "%d", Red.EX);
@@ -431,6 +433,8 @@ void NewGameMain()
 		Pink.MapCopy();
 	Pink.DrawEnemy();                                          //敵描画                                         //敵描画
 	Pink.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	//イジケの時食われる
+	Pink.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
 
 	//アオ
 	Blue.TargetCtrl(g_player.GetPlayerX(), g_player.GetPlayerY(), g_player.GetPlayerD()); //ターゲットを設定
@@ -438,6 +442,8 @@ void NewGameMain()
 		Blue.MapCopy();
 	Blue.DrawEnemy();
 	Blue.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	//イジケの時食われる
+	Blue.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
 
 	//オレンジ
 	Orange.TargetCtrl(g_player.GetPlayerX(), g_player.GetPlayerY(), g_player.GetPlayerD()); //ターゲットを設定
@@ -445,14 +451,13 @@ void NewGameMain()
 		Orange.MapCopy();
 	Orange.DrawEnemy();
 	Orange.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	//イジケの時食われる
+	Orange.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
 
-	//if (g_NowKey & PAD_INPUT_2) Pink.SetEnemyMode(MODE::EYE);
-
-	//if (g_NowKey & PAD_INPUT_2) Red.SetIjike();
-
-	//if (g_NowKey & PAD_INPUT_2) Orange.SetIjike();
-
-	//if (g_NowKey & PAD_INPUT_2) Blue.SetIjike();
+	
+	
+	
+	
 
 	ENEMY_BASE::IjikeControl(bait.GetPowerFlg());  //イジケ状態を管理
 

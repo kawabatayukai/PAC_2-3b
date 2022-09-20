@@ -330,13 +330,7 @@ void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 
 	case MODE::EYE:               //–Úi‘ƒ‚É–ß‚éj
 
-		////‘ƒ‚Ì’†‚Ì’èˆÊ’u
-		//MoveTarget.x = NestPoint[My_Color][0];
-		//MoveTarget.y = NestPoint[My_Color][1];
-
-		////‘ƒ‚É“’…Œã
-		//if (CheckTarget3() == 3) EnemyMode = oldmode;
-		//break;
+		Move_Eye();
 		break;
 
 	default:

@@ -1,4 +1,5 @@
 #include"DxLib.h"
+#include<math.h>
 #include"Enemy.h"
 //#include"A_star.h"
 //#include"A_star_PINKY.h"
@@ -559,6 +560,42 @@ void ENEMY_BASE::Move_Ijike()
 	if (ijike_flg == false) EnemyMode = old_mode;
 }
 
+//"目"状態の挙動
+void ENEMY_BASE::Move_Eye()
+{
+	//巣の中の初期位置               初  x                    初  y
+	MoveTarget = { SbyPoint[0][0][0],SbyPoint[0][0][0] };
+
+	//巣に到着後
+	if (CheckTarget3() == 3)
+	{
+		eye_flg = false;
+		ijike_flg = false;
+		EnemyMode = old_mode;
+	}
+}
+
+//イジケ時に食べられる
+void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
+{
+	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true;
+
+	//スコア加算
+	//score+= //スコア
+
+	//その場にスコア表示
+}
+
+//'引数'と敵との当たり判定
+bool ENEMY_BASE::CheckHitCircle(float x, float y, float r)
+{
+	float dx = g_enemy.x - x;             //x座標の差分
+	float dy = g_enemy.y - y;             //y座標の差分
+	float dis = sqrtf((dx * dx) + (dy * dy));  //2つの円の距離
+
+	if (dis < 14.5f + r) return true;    //2点の距離<=A半径+B半径
+	else false;
+}
 
 /************************************************/
 
@@ -600,36 +637,6 @@ void ENEMY_BASE::DrawAllInfo()
 //巡回モード用座標
 const int ENEMY_BASE::PtrlPoint[4][4][2] =
 {
-	////アカ
-	//{
-	//	{19 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-	//	{16 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-	//	{16 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{19 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-	//},
-	////ピンク
-	//{
-	//	{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-	//	{4 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-	//	{4 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-	//},
-	////アオ
-	//{
-	//	{19 * MAP_SIZE + (MAP_SIZE / 2),21 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{11 * MAP_SIZE + (MAP_SIZE / 2),21 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{15 * MAP_SIZE + (MAP_SIZE / 2),17 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{19 * MAP_SIZE + (MAP_SIZE / 2),19 * MAP_SIZE + (MAP_SIZE / 2)},
-	//},
-	////オレンジ
-	//{
-	//	{MAP_SIZE + (MAP_SIZE / 2),21 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{9 * MAP_SIZE + (MAP_SIZE / 2),21 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{5 * MAP_SIZE + (MAP_SIZE / 2),17 * MAP_SIZE + (MAP_SIZE / 2)},
-	//	{MAP_SIZE + (MAP_SIZE / 2),19 * MAP_SIZE + (MAP_SIZE / 2)},
-	//},
-
-
 							  /*29×27map用*/
 	//アカ
 	{
@@ -658,6 +665,35 @@ const int ENEMY_BASE::PtrlPoint[4][4][2] =
 		{12 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
 		{8 * MAP_SIZE + (MAP_SIZE / 2),20 * MAP_SIZE + (MAP_SIZE / 2)},
 		{4 * MAP_SIZE + (MAP_SIZE / 2),22 * MAP_SIZE + (MAP_SIZE / 2)},
+	},
+};
+
+//出撃前座標
+const int ENEMY_BASE::SbyPoint[4][3][2]
+{
+	//アカ  ※アカは巡回モードなし
+	{
+		{13 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //初期位置
+		{13 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //上部
+		{13 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)}   //下部
+	},
+	//ピンク
+	{
+		{13 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //初期位置
+		{13 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //上部
+		{13 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //下部
+	},
+	//アオ
+	{
+		{11 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //初期位置
+		{11 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //上部
+		{11 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //下部
+	},
+	//オレンジ
+	{
+		{15 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //初期位置
+		{15 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //上部
+		{15 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //下部
 	},
 };
 
