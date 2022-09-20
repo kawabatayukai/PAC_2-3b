@@ -1,4 +1,5 @@
 #pragma once
+#include<math.h>
 #include"Info.h"
 
 //総エサ数　168の場合
@@ -24,11 +25,27 @@ public:
 	//画像読み込み
 	int LoadImages();
 
+	//フルーツの処理まとめ
+	void FruitControl(int ClearCnt, int FoodCnt);
+
 	//フルーツの出現、描画  　引数(食べたエサ数、クリア回数)
-	void DrawFruit(int FoodCnt, int ClearCnt);
+	//void DrawFruit(int FoodCnt, int ClearCnt);
+	void DrawFruit(int ClearCnt);
 
 	//クリア回数による出現フルーツの変化    DrawFruit内でのみ使用
 	int* FruitToClear(int ClearCnt);
+
+	//クリア回数による出現フルーツの変化 　画像No
+	int FruitNumToClear(int ClearCnt);
+
+	//食べられたときの処理　スコア表示
+	void DrawFruitScore(int ClearCnt);
+
+	//10進数の桁数を返す
+	unsigned GetDigit(unsigned num) { return log10(num) + 1; }
+
+	//数字と桁数から表示する数字を返す
+	int ShowDigit(int digit, int num, int ClearCnt);
 
 	int getMap(int Y, int X);
 
@@ -42,7 +59,7 @@ public:
 
 	void DrawMapScore(int ClearCnt);
 	int FruitCount;
-	void FruitScore(int ClearCnt);
+	//void FruitScore(int ClearCnt);
 
 	int HitCircle();
 
@@ -120,5 +137,16 @@ private:
 	int FruitImgs[8] = { 0 };  //フルーツ画像
 	int DrawTime = 0;          //描画時間
 	int DrawCnt = 0;           //表示回数　2回
+
+	bool DrawFlg_F = false;    //フルーツ描画フラグ
+	bool DrawFlg_S = false;    //スコア描画フラグ
+
+	int NumImgs[10] = { 0 };   //数字画像
+
+	int hit_count = 0;         //当たった瞬間のみを計算
+	int DrawTime_F = 0;        //フルーツ描画時間
+	int DrawTime_S = 0;        //スコア描画時間
+
+	int FruitScore[8];         //フルーツスコア
 };
 extern Stage stage;

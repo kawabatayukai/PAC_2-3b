@@ -385,7 +385,9 @@ void NewGameMain()
 	bait.BaitController(g_player.GetPlayerX() + DRAW_POINT_X, g_player.GetPlayerY() + DRAW_POINT_Y);
 
 	//フルーツの出現
-	stage.DrawFruit(bait.GetBaitCount(), ClearCount);
+	//stage.DrawFruit(bait.GetBaitCount(), ClearCount);
+	stage.FruitControl(ClearCount, bait.GetBaitCount());
+	stage.DrawFruit(ClearCount);
 
 	//プレイヤーの移動・描画を管理
 	g_player.PlayerController(g_KeyFlg, MapData3);
