@@ -13,7 +13,7 @@
 //テスト出力用
 char ColorStr[][7] = { "RED","PINK","BLUE","ORANGE","CLEAR" };
 char DirectStr[][6] = { "LEFT","RIGHT","UP","DOWN" ,"NONE" };
-char ModeStr[][8] = { "STANDBY","PATROL","TRACK","IJIKE","EYE","RANDOM" };
+char ModeStr[][8] = { "STANDBY","PATROL","TRACK","IJIKE","EYE","R_EYE","RANDOM" };
 
 //巣の中の位置　 初期位置ではない（初期位置はアカだけ巣の上）
 int NestPoint[][2] = {
@@ -22,6 +22,9 @@ int NestPoint[][2] = {
 	{8 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},   //ミズ
 	{12 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)}   //オレンジ
 };
+
+//巣の上
+const int ON_NEST[] = { 13 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2) };
 
 //壁より内側　限界点  ※描画上ではDRAW_POINT_X(Y)が加算された座標 　"ピンク"の目標座標はステージ外になることがある
 const int L_END = 4 * MAP_SIZE;
@@ -571,11 +574,25 @@ void ENEMY_BASE::Move_Eye()
 	{
 		eye_flg = false;
 		ijike_flg = false;
+		EnemyMode = MODE::R_EYE;
+	}
+}
+
+//目→イジケ以前のモードに
+void ENEMY_BASE::Move_R_Eye()
+{
+	//巣の上
+	MoveTarget.x = ON_NEST[0];
+	MoveTarget.y = ON_NEST[1];
+
+	//到達後、イジケ以前のモードに戻す
+	if (CheckTarget3() == 3)
+	{
 		EnemyMode = old_mode;
 	}
 }
 
-//イジケ時に食べられる
+//イジケ時元に戻るに食べられる
 void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 {
 	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true;

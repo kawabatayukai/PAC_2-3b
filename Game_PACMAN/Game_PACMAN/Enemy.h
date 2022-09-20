@@ -44,6 +44,7 @@ enum MODE
 	TRACK,      //追跡モード
 	IJIKE,      //イジケ
 	EYE,        //目
+	R_EYE,      //目→イジケ以前のモードに
 	RANDOM      //ランダム
 };
 
@@ -108,6 +109,7 @@ public:
 	void Move_Ijike();                        //イジケ状態の挙動
 
 	void Move_Eye();                          //"目"状態の挙動
+	void Move_R_Eye();                        //目→イジケ以前のモードに
 	void Eaten_OnIjike(float px, float py, float pr, int& score);  //イジケ時に食べられる
 
 	bool CheckHitCircle(float x, float y, float r);                //'引数'と敵との当たり判定

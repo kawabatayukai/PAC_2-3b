@@ -188,7 +188,7 @@ void ENEMY_PINK::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 	{
 		MoveEnemy(MapData);
 	}
-	else if (EnemyMode == MODE::TRACK || EnemyMode == MODE::PATROL || EnemyMode == MODE::EYE || EnemyMode == MODE::IJIKE)
+	else //if (EnemyMode == MODE::TRACK || EnemyMode == MODE::PATROL || EnemyMode == MODE::EYE || EnemyMode == MODE::IJIKE)
 	{
 		if (EnemyMode == MODE::TRACK) {
 			EnemyController();
@@ -331,6 +331,11 @@ void ENEMY_PINK::TargetCtrl(int tpX, int tpY, int tpD)
 	case MODE::EYE:               //目（巣に戻る）
 
 		Move_Eye();
+		break;
+
+	case MODE::R_EYE:        //イジケ以前のモードに戻る
+
+		Move_R_Eye();
 		break;
 
 	default:
