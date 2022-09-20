@@ -402,7 +402,7 @@ void NewGameMain()
 	Red.DrawEnemy();                                          //敵描画 
 	Red.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
-	Red.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
+	Red.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
 	/*DrawFormatString(1100, 700, 0xffffff, "%d", Red.EXC);
 	DrawFormatString(1130, 700, 0xffffff, "%d", Red.EYC);
@@ -436,7 +436,7 @@ void NewGameMain()
 	Pink.DrawEnemy();                                          //敵描画                                         //敵描画
 	Pink.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
-	Pink.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
+	Pink.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
 	//アオ
 	Blue.TargetCtrl(g_player.GetPlayerX(), g_player.GetPlayerY(), g_player.GetPlayerD()); //ターゲットを設定
@@ -445,7 +445,7 @@ void NewGameMain()
 	Blue.DrawEnemy();
 	Blue.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
-	Blue.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
+	Blue.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
 	//オレンジ
 	Orange.TargetCtrl(g_player.GetPlayerX(), g_player.GetPlayerY(), g_player.GetPlayerD()); //ターゲットを設定
@@ -454,7 +454,7 @@ void NewGameMain()
 	Orange.DrawEnemy();
 	Orange.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
-	Orange.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 14.5f, stage.Score);
+	Orange.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
 	
 	

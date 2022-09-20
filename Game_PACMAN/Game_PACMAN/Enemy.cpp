@@ -560,7 +560,7 @@ void ENEMY_BASE::Move_Ijike()
 	}
 
 	//イジケ終了時に以前のモードに戻る
-	if (ijike_flg == false) EnemyMode = old_mode;
+	if (IjikeCount % IjikeTime == 0 && EnemyMode != MODE::R_EYE && EnemyMode != MODE::EYE) EnemyMode = old_mode;
 }
 
 //"目"状態の挙動
@@ -592,7 +592,7 @@ void ENEMY_BASE::Move_R_Eye()
 	}
 }
 
-//イジケ時元に戻るに食べられる
+//イジケ時に食べられる
 void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 {
 	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true;
@@ -610,7 +610,7 @@ bool ENEMY_BASE::CheckHitCircle(float x, float y, float r)
 	float dy = g_enemy.y - y;             //y座標の差分
 	float dis = sqrtf((dx * dx) + (dy * dy));  //2つの円の距離
 
-	if (dis < 14.5f + r) return true;    //2点の距離<=A半径+B半径
+	if (dis < 6.5f + r) return true;    //2点の距離<=A半径+B半径
 	else false;
 }
 

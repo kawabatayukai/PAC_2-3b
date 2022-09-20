@@ -184,11 +184,11 @@ void ENEMY_PINK::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 	//ˆÚ“®‚É‚æ‚é‰æ‘œ•Ï‰»
 	ChangeMoveImages();
 
-	if (EnemyMode == MODE::STANDBY)
+	if (EnemyMode == MODE::STANDBY || EnemyMode == MODE::R_EYE)
 	{
 		MoveEnemy(MapData);
 	}
-	else //if (EnemyMode == MODE::TRACK || EnemyMode == MODE::PATROL || EnemyMode == MODE::EYE || EnemyMode == MODE::IJIKE)
+	else if (EnemyMode == MODE::TRACK || EnemyMode == MODE::PATROL || EnemyMode == MODE::EYE || EnemyMode == MODE::IJIKE)
 	{
 		if (EnemyMode == MODE::TRACK) {
 			EnemyController();
