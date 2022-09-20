@@ -9,6 +9,7 @@ class Title
 {
 private:
 public:
+	int g_KeyFlg;
 	int g_GameTitleFlg;
 	int g_MenuSelect[4];
 	Title();
