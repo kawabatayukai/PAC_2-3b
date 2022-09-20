@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <map>
-#include"Player.h"
+#include"NewPlayer.h"
 #include"A_star.h"
 #include"Image.h"
 #include"Stage.h"
 #include"Enemy.h"
-#include"Enemy2.h"
+#include"Enemy_Red.h"
+#include"Red.h"
+//#include"Enemy2.h"
 
 //#define WIDTH (21)
 //#define HEIGHT (23)
@@ -18,15 +20,17 @@
 //#define GY	(g_player.PYC)
 
 //#define SX	(20)
-//#define SX	(g_enemy.EXC)
+//#define SX	(g_enemy_Red.EXC)
 //#define SY	(21)
-//#define SY	(g_enemy.EYC)
+//#define SY	(g_enemy_Red.EYC)
 
 A_star a_star;
 
 A_star::A_star() {
-	SX = g_enemy.EXC;
-	SY = g_enemy.EYC;
+	SX = Red.GetEnemyX() / MAP_SIZE;
+	SY = Red.GetEnemyY() / MAP_SIZE;
+	//SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
+	//SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
@@ -34,8 +38,8 @@ A_star::A_star() {
 	d = 0;
 	f = 0;
 
-	SX1 = g_enemy.EXC;
-	SY1 = g_enemy.EYC;
+	//SX1 = g_enemy_Red.EXC;
+	//SY1 = g_enemy_Red.EYC;
 
 	Count = 0;
 
@@ -60,15 +64,11 @@ A_star::A_star() {
 	OldYM = 0;
 
 	Timer = 0;
-	aas = 0;
 
 	X2 = 0;
 	XX = 0;
 	Y2 = 0;
 	YY = 0;
-
-	oldGX = 0;
-	oldGY = 0;
 
 //	enum {
 //	SEARCH_NO_CHECK = 0,
@@ -320,16 +320,16 @@ int A_star::Search(int count) {
 			}
 		}*/
 
-		/*if (g_enemy.VectorFlg == 1 && CheckMatrix[i].x == 1) {
+		/*if (g_enemy_Red.VectorFlg == 1 && CheckMatrix[i].x == 1) {
 			continue;
 		}
-		else if (g_enemy.VectorFlg == 2 && CheckMatrix[i].x == -1) {
+		else if (g_enemy_Red.VectorFlg == 2 && CheckMatrix[i].x == -1) {
 			continue;
 		}
-		else if (g_enemy.VectorFlg == 3 && CheckMatrix[i].y == 1) {
+		else if (g_enemy_Red.VectorFlg == 3 && CheckMatrix[i].y == 1) {
 			continue;
 		}
-		else if (g_enemy.VectorFlg == 4 && CheckMatrix[i].y == -1) {
+		else if (g_enemy_Red.VectorFlg == 4 && CheckMatrix[i].y == -1) {
 			continue;
 		}*/
 
@@ -373,19 +373,19 @@ void A_star::TraceRoute(int x, int y)
 {
 	//if (x == SX && y == SY) {
 	if (x == SX && y == SY) {
-		/*if (g_enemy.VectorFlg == 1) {
+		/*if (g_enemy_Red.VectorFlg == 1) {
 			data[SY][SX - 1].status = -1;
 			data[SY][SX - 2].status = -1;
 		}
-		else if (g_enemy.VectorFlg == 2) {
+		else if (g_enemy_Red.VectorFlg == 2) {
 			data[SY][SX + 1].status = -1;
 			data[SY][SX + 2].status = -1;
 		}
-		else if (g_enemy.VectorFlg == 3) {
+		else if (g_enemy_Red.VectorFlg == 3) {
 			data[SY - 1][SX].status = -1;
 			data[SY - 2][SX].status = -1;
 		}
-		else if (g_enemy.VectorFlg == 4) {
+		else if (g_enemy_Red.VectorFlg == 4) {
 			data[SY + 1][SX].status = -1;
 			data[SY + 2][SX].status = -1;
 		}*/
@@ -451,8 +451,10 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 {
 	if (Count == 0) {
 
-		SX = g_enemy.EXC;
-		SY = g_enemy.EYC;
+		SX = Red.GetEnemyX() / MAP_SIZE;
+		SY = Red.GetEnemyY() / MAP_SIZE;
+		/*SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
+		SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;*/
 
 		if (DFlg == false) {
 
@@ -461,29 +463,12 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 				GX = g_player.PXC;
 				GY = g_player.PYC;
 
-				do {
-					Rand = GetRand(20);
-				} while (Rand < 10);
-				aas = GetRand(4);
+				Rand = GetRand(30);
 
 			}
 			else if (GFlg == true) {
-				if (aas == 0) {
-					GX = g_player.PXC + Rand;
-					GY = g_player.PYC + Rand;
-				}
-				else if (aas == 1) {
-					GX = g_player.PXC - Rand;
-					GY = g_player.PYC + Rand;
-				}
-				else if (aas == 2) {
-					GX = g_player.PXC + Rand;
-					GY = g_player.PYC - Rand;
-				}
-				else if (aas == 3) {
-					GX = g_player.PXC - Rand;
-					GY = g_player.PYC - Rand;
-				}
+				GX = g_player.PXC + Rand;
+				GY = g_player.PYC + Rand;
 				if (Time++ >= 180) {
 					Time = 0;
 					GFlg = false;
@@ -504,11 +489,11 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 		//Count = 1;
 	}
 	else if (Count == 1) {
-		/*SX = g_enemy.EXC;
-		SY = g_enemy.EYC;*/
+		SX = Red.GetEnemyX() / MAP_SIZE;
+		SY = Red.GetEnemyY() / MAP_SIZE;
 
-		SX = g_enemy.EXC;
-		SY = g_enemy.EYC;
+		//SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
+		//SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;
 
 		if (DFlg == false) {
 
@@ -579,43 +564,43 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 	a_star.SetDefault();
 	a_star.ResetSearchStatus();
 
-	if (g_enemy.VectorFlg == 1) {
+	if (Red.GetMoveDir() == DIRECTION::LEFT) {
 			data[SY][SX + 1].status = -1;
 			//data[SY][SX + 2].status = -1;
 		}
-		else if (g_enemy.VectorFlg == 2) {
+		else if (Red.GetMoveDir() == DIRECTION::RIGHT) {
 			data[SY][SX - 1].status = -1;
 			//data[SY][SX - 2].status = -1;
 		}
-		else if (g_enemy.VectorFlg == 3) {
+		else if (Red.GetMoveDir() == DIRECTION::UP) {
 			data[SY + 1][SX].status = -1;
 			//data[SY + 2][SX].status = -1;
 		}
-		else if (g_enemy.VectorFlg == 4) {
+		else if (Red.GetMoveDir() == DIRECTION::DOWN) {
 			data[SY - 1][SX].status = -1;
 			//data[SY - 2][SX].status = -1;
 		}
 
 	if (DFlg == false) {
-		if (def_data[g_enemy.EYC][g_enemy.EXC] == 2) {
+		if (def_data[g_enemy_Red.EYC][g_enemy_Red.EXC] == 2) {
 			if (Timer == 0) {
 				XP = SX;
 				YP = SY;
 			}
 			if (Timer <= 180) {
-				if (g_enemy.VectorFlg == 1) {
+				if (g_enemy_Red.VectorFlg == 1) {
 					data[YP][XP + 1].status = -1;
 					data[YP][XP + 2].status = -1;
 				}
-				else if (g_enemy.VectorFlg == 2) {
+				else if (g_enemy_Red.VectorFlg == 2) {
 					data[YP][XP - 1].status = -1;
 					data[YP][XP - 2].status = -1;
 				}
-				else if (g_enemy.VectorFlg == 3) {
+				else if (g_enemy_Red.VectorFlg == 3) {
 					data[YP + 1][XP].status = -1;
 					data[YP + 2][XP].status = -1;
 				}
-				else if (g_enemy.VectorFlg == 4) {
+				else if (g_enemy_Red.VectorFlg == 4) {
 					data[YP - 1][XP].status = -1;
 					data[YP - 2][XP].status = -1;
 				}
@@ -627,23 +612,23 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 		}
 	}
 
-	if (g_enemy.EX <= 429 && g_enemy.EY == 330 && g_enemy.VectorFlg == 1) {
+	/*if (g_enemy_Red.EX <= 429 && g_enemy_Red.EY == 330 && g_enemy_Red.VectorFlg == 1) {
 		data[13][7].status = -1;
 	}
-	if (g_enemy.EX >= 851 && g_enemy.EY == 330 && g_enemy.VectorFlg == 2) {
+	if (g_enemy_Red.EX >= 851 && g_enemy_Red.EY == 330 && g_enemy_Red.VectorFlg == 2) {
 		data[13][19].status = -1;
-	}
+	}*/
 
-	/*if (g_enemy.EY >= 230) {
+	/*if (g_enemy_Red.EY >= 230) {
 		data[8][12].status = -1;
 		data[8][14].status = -1;
 	}
-	if (g_enemy.EY >= 530) {
+	if (g_enemy_Red.EY >= 530) {
 		data[18][12].status = -1;
 		data[18][14].status = -1;
 	}*/
 
-	/*if (g_enemy.EY >= 535) {
+	/*if (g_enemy_Red.EY >= 535) {
 		data[20][13].status = -1;
 		data[20][15].status = -1;
 	}*/
@@ -674,12 +659,14 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 //}
 
 void A_star::A_starInit() {
-	SX = g_enemy.EXC;
-	SY = g_enemy.EYC;
+	//SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
+	//SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;
+	SX = Red.GetEnemyX() / MAP_SIZE;
+	SY = Red.GetEnemyY() / MAP_SIZE;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
 
-	SX1 = g_enemy.EXC;
-	SY1 = g_enemy.EYC;
+	//SX1 = g_enemy_Red.EXC;
+	//SY1 = g_enemy_Red.EYC;
 }

@@ -1,12 +1,19 @@
 #include "DxLib.h"
+
 #include "Stage.h"
-#include "Image.h"
+#include "display.h"
+#include "NewPlayer.h"
+#include "Red.h"
+#include "Pink.h"
+#include "Blue.h"
+#include "Orange.h"
+#include "Info.h"
+#include "display.h"
 
 Stage stage;
 
 Stage::Stage(){
-	Timer = 0;
-	MAP_W_Flg = false;
+	
 }
 
 //map上の"〇マス目"をウィンドウ上の座標に変換
@@ -30,771 +37,184 @@ void Stage::DrawMap()
 	}
 }
 
-int Stage::getMap(int Y,int X) {
+//初期処理
+void Stage::StageInit()
+{
+	DrawTime = 0;
+	DrawCnt = 0;
+	oldLife = 0;
+}
+
+//画像読み込み
+int Stage::LoadImages()
+{
+	if ((LoadDivGraph("images/All_Fruit.png", 8, 8, 1, 30, 30, FruitImgs)) == -1) return -1;
+}
+
+//フルーツの出現、描画  　引数(食べたエサ数、クリア回数)
+void Stage::DrawFruit(int FoodCnt, int ClearCnt)
+{
+	//エサを1回目は70個、2回目は170個取るとフルーツが10秒間だけ表示される
+
+	CIRCLE circleFruit, circleP;
+
+	circleFruit.x = DRAW_POINT_X + MapPointX(13)+15;
+	circleFruit.y = DRAW_POINT_Y + MapPointY(16)+15;
+	circleFruit.r = 6.5f;
+
+	circleP.x = g_player.PX;
+	circleP.y = g_player.PY;
+	circleP.r = 6.5f;
+
+	//DrawCircle(circleFruit.x, circleFruit.y, circleFruit.r, 0xffffff, TRUE);
+
+
+	//  1回目 70個以上                   2回目 170個以上
+	if (FoodCnt >= FirstTime && DrawCnt == 0 || FoodCnt >= SecondTime && DrawCnt == 1)
+	{
+		//if(g_player.Life != oldLife)DrawTime = 0;
+		//10秒間
+		if (++DrawTime < 600 && CheckHit(circleFruit, circleP) == false) DrawGraph(DRAW_POINT_X + MapPointX(13), DRAW_POINT_Y + MapPointY(16), *FruitToClear(ClearCnt), TRUE);
+		else
+		{
+			FruitScore(ClearCnt);
+			/*Fruit[FruitCount] = *FruitToClear(ClearCnt);
+			if (FruitCount < 10) {
+				FruitCount++;
+			}*/
+			DrawCnt++;
+			DrawTime = 0;
+		}
+	}
+}
+
+//クリア回数による出現フルーツの変化    DrawFruit内でのみ使用
+int* Stage::FruitToClear(int ClearCnt)
+{
+	if (ClearCnt == 0) return &FruitImgs[0];                         //クリア回数0     cherry
+	else if (ClearCnt == 1) return &FruitImgs[1];                    //クリア回数1     strawberry
+	else if (ClearCnt == 2 || ClearCnt == 3) return &FruitImgs[2];   //クリア回数2～3  orange
+	else if (ClearCnt == 4 || ClearCnt == 5) return &FruitImgs[3];   //クリア回数4～5  apple
+	else if (ClearCnt == 6 || ClearCnt == 7) return &FruitImgs[4];   //クリア回数6～7  meron
+	else if (ClearCnt == 8 || ClearCnt == 9) return &FruitImgs[5];   //クリア回数8～9  Galaxian
+	else if (ClearCnt == 10 || ClearCnt == 11) return &FruitImgs[6]; //クリア回数10～11  Bell
+	else if (ClearCnt >= 12) return &FruitImgs[7];                   //クリア回数12～　　key
+	else return  &FruitImgs[0];                                      //それ以外はcheryy
+}
+
+int Stage::getMap(int Y, int X) {
 	return MapData[Y][X];
 }
 
-void Stage::DrawMapImage() {
-	DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 90, image.g_StageImagePx[0], TRUE);
-	for (int i = 0; i < 8; i++) {
-		DrawGraph(DRAW_POINT_X + 120 + (MAP_SIZE * i), DRAW_POINT_Y + 90, image.g_StageImagePx[1], TRUE);
-	}
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 90, image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 108, image.g_StageImagePx[33], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePx[26], TRUE);
-	for (int i = 0; i < 9; i++) {
-		DrawGraph(DRAW_POINT_X +90 + (MAP_SIZE * i) + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePx[1], TRUE);
-	}
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9) + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePx[2], TRUE);
-	for (int i = 0; i < 5; i++) {
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 120 + (MAP_SIZE * i), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * i), image.g_StageImagePx[3], TRUE);
-	}
-	DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[6], TRUE);
-	DrawGraph(DRAW_POINT_X + 120, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 150, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[4], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[38], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[7], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[40], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[39], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[37], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[3], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 0), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[20], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[19], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[22], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[20], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[17], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[22], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[8], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[9], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[14], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[10], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[11], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[47], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 9), image.g_StageImagePx[47], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[47], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[13], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[45], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 9), image.g_StageImagePx[45], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[45], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[12], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[38], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[39], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[0], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[20], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[20], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[37], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[40], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[2], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[7], TRUE);
-	
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 20), image.g_StageImagePx[7], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePx[6], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[21], TRUE);
-	DrawGraph(DRAW_POINT_X + 108 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[36], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[9], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[22], TRUE);
-
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[41], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[21], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[44], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[9], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[22], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 4), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[18], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[20], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[18], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 16), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[21], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[24], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[20], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[3], TRUE);
-	
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 20), image.g_StageImagePx[3], TRUE);
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePx[4], TRUE);
-
-	DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[8], TRUE);
-	DrawGraph(DRAW_POINT_X + 72 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[34], TRUE);
-
-	for (int i = 0;i < 19;i++) {
-		DrawGraph(DRAW_POINT_X + 120 + (MAP_SIZE * i), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePx[5], TRUE);
-	}
-
-
-}
-
-void Stage::flashingMapImage() {
-	if (Timer++ < 20) {//Map(青)
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 90, image.g_StageImagePx[0], TRUE);
-		for (int i = 0; i < 8; i++) {
-			DrawGraph(DRAW_POINT_X + 120 + (MAP_SIZE * i), DRAW_POINT_Y + 90, image.g_StageImagePx[1], TRUE);
-		}
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 90, image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 108, image.g_StageImagePx[33], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePx[26], TRUE);
-		for (int i = 0; i < 9; i++) {
-			DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * i) + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePx[1], TRUE);
-		}
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9) + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePx[2], TRUE);
-		for (int i = 0; i < 5; i++) {
-			DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 120 + (MAP_SIZE * i), image.g_StageImagePx[7], TRUE);
-			DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * i), image.g_StageImagePx[3], TRUE);
-		}
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[6], TRUE);
-		DrawGraph(DRAW_POINT_X + 120, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 150, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[4], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[38], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[7], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[40], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[39], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[1], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[37], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[3], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 0), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[19], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[22], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[17], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[22], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[8], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[9], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[14], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[10], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePx[11], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[47], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 9), image.g_StageImagePx[47], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[47], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[13], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePx[45], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 9), image.g_StageImagePx[45], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[45], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[12], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[46], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[38], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[39], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[0], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePx[37], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[40], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[2], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[7], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 20), image.g_StageImagePx[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePx[6], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[21], TRUE);
-		DrawGraph(DRAW_POINT_X + 108 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[36], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[9], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[22], TRUE);
-
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[41], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[21], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[44], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[9], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 4), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[18], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[20], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[18], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 16), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[20], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePx[3], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 20), image.g_StageImagePx[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePx[4], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 72 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePx[34], TRUE);
-
-		for (int i = 0;i < 19;i++) {
-			DrawGraph(DRAW_POINT_X + 120 + (MAP_SIZE * i), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePx[5], TRUE);
-		}
-	}else if(Timer < 40){//Map(白)
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 90, image.g_StageImagePxW[0], TRUE);
-		for (int i = 0; i < 8; i++) {
-			DrawGraph(DRAW_POINT_X + 120 + (MAP_SIZE * i), DRAW_POINT_Y + 90, image.g_StageImagePxW[1], TRUE);
-		}
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 90, image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 108, image.g_StageImagePxW[33], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePxW[26], TRUE);
-		for (int i = 0; i < 9; i++) {
-			DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * i) + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePxW[1], TRUE);
-		}
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9) + (MAP_SIZE * 11), DRAW_POINT_Y + 90, image.g_StageImagePxW[2], TRUE);
-		for (int i = 0; i < 5; i++) {
-			DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 120 + (MAP_SIZE * i), image.g_StageImagePxW[7], TRUE);
-			DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * i), image.g_StageImagePxW[3], TRUE);
-		}
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[6], TRUE);
-		DrawGraph(DRAW_POINT_X + 120, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 150, DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[4], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[38], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[7], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[40], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[39], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[1], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[37], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[3], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 0), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 1), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[19], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[22], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[17], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 6), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[22], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[8], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[9], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 3), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 4), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 5), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[14], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[10], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[15], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 7), image.g_StageImagePxW[11], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[47], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 9), image.g_StageImagePxW[47], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[47], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[13], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 8), image.g_StageImagePxW[45], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 9), image.g_StageImagePxW[45], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[45], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[12], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[46], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[46], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[38], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[5], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[39], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[0], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[20], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[5], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 10), image.g_StageImagePxW[37], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 11), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 12), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[40], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[1], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[2], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePxW[7], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 20), image.g_StageImagePxW[7], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePxW[6], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 1), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[21], TRUE);
-		DrawGraph(DRAW_POINT_X + 108 + (MAP_SIZE * 0), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[36], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[9], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 13), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[22], TRUE);
-
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[41], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[21], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[44], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 9), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[9], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 11), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 10), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[22], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 2), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 3), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 4), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[18], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 6), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 7), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 8), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 5), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[20], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 12), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 13), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 14), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[18], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 16), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 17), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[16], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 18), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[21], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePxW[24], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 15), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[20], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 14), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 15), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 16), image.g_StageImagePxW[3], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 18), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 19), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 20), image.g_StageImagePxW[3], TRUE);
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePxW[4], TRUE);
-
-		DrawGraph(DRAW_POINT_X + 90 + (MAP_SIZE * 19), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[8], TRUE);
-		DrawGraph(DRAW_POINT_X + 72 + (MAP_SIZE * 20), DRAW_POINT_Y + 120 + (MAP_SIZE * 17), image.g_StageImagePxW[34], TRUE);
-
-		for (int i = 0;i < 19;i++) {
-			DrawGraph(DRAW_POINT_X + 120 + (MAP_SIZE * i), DRAW_POINT_Y + 120 + (MAP_SIZE * 21), image.g_StageImagePxW[5], TRUE);
-		}
-	}
-	else {
-		Timer = 0;
-	}
-}
-
 void Stage::DrawMapImageV3() {
-	DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 105, image.g_StageImageV3, TRUE);
+	DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 105, Disp.g_StageImage, TRUE);
 }
 
 void Stage::flashingMapImageV3() {
 	if (Timer++ < 20) {//Map(青)
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 105, image.g_StageImageV3, TRUE);
+		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 105, Disp.g_StageImage, TRUE);
 	}
 	else if (Timer < 40) {//Map(白)
-		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 105, image.g_StageImageV3_W, TRUE);
+		DrawGraph(DRAW_POINT_X + 90, DRAW_POINT_Y + 105, Disp.g_StageImageW, TRUE);
 	}
 	else {
 		Timer = 0;
 	}
+}
+
+void Stage::DrawMapScore(int ClearCnt) {
+	if (flashingTimer++ < 20) {//Map(青)
+		DrawString(DRAW_POINT_X + 105, 5, "1UP", 0xffffff, true);
+	}
+	else if (flashingTimer > 40)
+	{
+		flashingTimer = 0;
+	}
+	DrawFormatString(DRAW_POINT_X+195, 5, 0xffffff, "%02d", Score);
+
+	DrawString(DRAW_POINT_X + 305, 5, "HIGH SCORE", 0xffffff, true);
+	DrawFormatString(DRAW_POINT_X+495, 5, 0xffffff, "%02d", HScore);
+	for (int i = 0;i < g_player.Life;i++) {
+		DrawGraph(DRAW_POINT_X + MapPointX(3 + i) + 15, DRAW_POINT_Y + MapPointY(25) + 15, Disp.PacManImage[1], TRUE);
+	}
+	if (ClearCnt == 0) {
+		DrawGraph(DRAW_POINT_X + MapPointX(21) + 15, DRAW_POINT_Y + MapPointY(25) + 15, *FruitToClear(ClearCnt), TRUE);
+	}else if (ClearCnt < 7) {
+		for (int i = 0;i < ClearCnt+1;i++) {
+				DrawGraph(DRAW_POINT_X + MapPointX(21 - i) + 15, DRAW_POINT_Y + MapPointY(25) + 15, *FruitToClear(i), TRUE);
+		}
+	}
+	else {
+		for (int i = 0;i < 7;i++) {
+				DrawGraph(DRAW_POINT_X + MapPointX(21 - i) + 15, DRAW_POINT_Y + MapPointY(25) + 15, *FruitToClear(i+ ClearCnt-6), TRUE);
+		}
+	}
+	
+	/*for (int i = 0;i < FruitCount;i++) {
+		DrawGraph(DRAW_POINT_X + MapPointX(21-i) + 15, DRAW_POINT_Y + MapPointY(25) + 15, Fruit[i], TRUE);
+	}*/
+}
+
+void Stage::FruitScore(int ClearCnt) {
+	if (ClearCnt == 0)Score += 100;                         //クリア回数0     cherry
+	else if (ClearCnt == 1)Score += 300;                    //クリア回数1     strawberry
+	else if (ClearCnt == 2 || ClearCnt == 3)Score += 500;   //クリア回数2～3  orange
+	else if (ClearCnt == 4 || ClearCnt == 5)Score += 700;   //クリア回数4～5  apple
+	else if (ClearCnt == 6 || ClearCnt == 7)Score += 1000;  //クリア回数6～7  meron
+	else if (ClearCnt == 8 || ClearCnt == 9)Score += 2000;  //クリア回数8～9  Galaxian
+	else if (ClearCnt == 10 || ClearCnt == 11)Score += 3000;//クリア回数10～11  Bell
+	else if (ClearCnt >= 12)Score += 5000;                  //クリア回数12～　　key
+	else Score += 100;                                      //それ以外はcheryy
+}
+
+int Stage::HitCircle() {
+	CIRCLE circleE1, circleE2, circleE3, circleE4, circleP;
+
+	circleE1.x = Red.GetEnemyX() + DRAW_POINT_X;
+	circleE1.y = Red.GetEnemyY() + DRAW_POINT_Y;
+	circleE1.r = 6.5f;
+
+	circleE2.x = Pink.GetEnemyX() + DRAW_POINT_X;
+	circleE2.y = Pink.GetEnemyY() + DRAW_POINT_Y;
+	circleE2.r = 6.5f;
+
+	circleE3.x = Blue.GetEnemyX() + DRAW_POINT_X;
+	circleE3.y = Blue.GetEnemyY() + DRAW_POINT_Y;
+	circleE3.r = 6.5f;
+
+	circleE4.x = Orange.GetEnemyX() + DRAW_POINT_X;
+	circleE4.y = Orange.GetEnemyY() + DRAW_POINT_Y;
+	circleE4.r = 6.5f;
+
+	circleP.x = g_player.PX;
+	circleP.y = g_player.PY;
+	circleP.r = 6.5f;
+
+	//DrawCircle(circleE1.x, circleE1.y, circleE1.r, 0xffffff, TRUE);
+
+	if (Red.GetEnemyMode() != IJIKE && Pink.GetEnemyMode() != IJIKE && Blue.GetEnemyMode() != IJIKE && Orange.GetEnemyMode() != IJIKE) {
+	//敵の当たり判定
+		if (CheckHit(circleE1, circleP) == true || CheckHit(circleE2, circleP) == true || CheckHit(circleE3, circleP) == true || CheckHit(circleE4, circleP) == true) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+}
+
+bool Stage::CheckHit(const CIRCLE& t_circleA, const CIRCLE& t_circleB)
+{
+	float dx = t_circleA.x - t_circleB.x;
+	float dy = t_circleA.y - t_circleB.y;
+	float dr = dx * dx + dy * dy;
+
+	float ar = t_circleA.r + t_circleB.r;
+	float dl = ar * ar;
+	if (dr < dl)
+	{
+		return true;
+	}
+
+	return false;
 }

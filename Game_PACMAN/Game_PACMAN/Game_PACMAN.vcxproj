@@ -129,7 +129,6 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\DxLib</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,7 +148,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\DxLib</AdditionalLibraryDirectories>
-      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -157,30 +155,37 @@
     <ClCompile Include="A_star_CLYDE.cpp" />
     <ClCompile Include="A_star_INKY.cpp" />
     <ClCompile Include="A_star_PINKY.cpp" />
-    <ClCompile Include="bait.cpp" />
+    <ClCompile Include="Bait.cpp" />
+    <ClCompile Include="Blue.cpp" />
+    <ClCompile Include="coffeebreak.cpp" />
+    <ClCompile Include="display.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="Enemy2.cpp" />
-    <ClCompile Include="Enemy3.cpp" />
-    <ClCompile Include="Enemy4.cpp" />
+    <ClCompile Include="Enemy_Red.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="NewPlayer.cpp" />
+    <ClCompile Include="Orange.cpp" />
+    <ClCompile Include="Pink.cpp" />
+    <ClCompile Include="Red.cpp" />
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="A_star.h" />
     <ClInclude Include="A_star_CLYDE.h" />
     <ClInclude Include="A_star_INKY.h" />
     <ClInclude Include="A_star_PINKY.h" />
-    <ClInclude Include="bait.h" />
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="A_star.h" />
+    <ClInclude Include="Bait.h" />
+    <ClInclude Include="Blue.h" />
+    <ClInclude Include="coffeebreak.h" />
+    <ClInclude Include="display.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Enemy2.h" />
-    <ClInclude Include="Enemy3.h" />
-    <ClInclude Include="Enemy4.h" />
+    <ClInclude Include="Enemy_Red.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="NewPlayer.h" />
+    <ClInclude Include="Orange.h" />
+    <ClInclude Include="Pink.h" />
+    <ClInclude Include="Red.h" />
     <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

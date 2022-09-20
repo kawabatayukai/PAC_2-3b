@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <map>
-#include"Player.h"
+#include"NewPlayer.h"
 #include"A_star_CLYDE.h"
 #include"Image.h"
 #include"Stage.h"
 #include"Enemy.h"
-#include"Enemy4.h"
+#include"Orange.h"
+#include"Red.h"
+//#include"Enemy4.h"
 
 //#define WIDTH (21)
 //#define HEIGHT (23)
@@ -18,15 +20,15 @@
 //#define GY	(g_player.PYC)
 
 //#define SX	(20)
-//#define SX	(g_enemy4.EXC)
+//#define SX	(Orange.EXC)
 //#define SY	(21)
-//#define SY	(g_enemy4.EYC)
+//#define SY	(Orange.EYC)
 
 A_star_CLYDE a_star_clyde;
 
 A_star_CLYDE::A_star_CLYDE() {
-	SX = g_enemy4.EXC;
-	SY = g_enemy4.EYC;
+	SX = Orange.EXC / MAP_SIZE;
+	SY = Orange.EYC / MAP_SIZE;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
@@ -34,8 +36,8 @@ A_star_CLYDE::A_star_CLYDE() {
 	d = 0;
 	f = 0;
 
-	SX1 = g_enemy4.EXC;
-	SY1 = g_enemy4.EYC;
+	SX1 = Orange.EXC / MAP_SIZE;
+	SY1 = Orange.EYC / MAP_SIZE;
 
 	Count = 0;
 
@@ -307,16 +309,16 @@ int A_star_CLYDE::Search(int count) {
 		int check_x = CX + CheckMatrix[i].x;
 		int check_y = CY + CheckMatrix[i].y;
 
-		/*if (g_enemy4.VectorFlg == 1 && CheckMatrix[i].x == 1) {
+		/*if (Orange.VectorFlg == 1 && CheckMatrix[i].x == 1) {
 			continue;
 		}
-		else if (g_enemy4.VectorFlg == 2 && CheckMatrix[i].x == -1) {
+		else if (Orange.VectorFlg == 2 && CheckMatrix[i].x == -1) {
 			continue;
 		}
-		else if (g_enemy4.VectorFlg == 3 && CheckMatrix[i].y == 1) {
+		else if (Orange.VectorFlg == 3 && CheckMatrix[i].y == 1) {
 			continue;
 		}
-		else if (g_enemy4.VectorFlg == 4 && CheckMatrix[i].y == -1) {
+		else if (Orange.VectorFlg == 4 && CheckMatrix[i].y == -1) {
 			continue;
 		}*/
 
@@ -360,19 +362,19 @@ void A_star_CLYDE::TraceRoute(int x, int y)
 {
 	//if (x == SX && y == SY) {
 	if (x == SX && y == SY) {
-		/*if (g_enemy4.VectorFlg == 1) {
+		/*if (Orange.VectorFlg == 1) {
 			data[SY][SX - 1].status = -1;
 			data[SY][SX - 2].status = -1;
 		}
-		else if (g_enemy4.VectorFlg == 2) {
+		else if (Orange.VectorFlg == 2) {
 			data[SY][SX + 1].status = -1;
 			data[SY][SX + 2].status = -1;
 		}
-		else if (g_enemy4.VectorFlg == 3) {
+		else if (Orange.VectorFlg == 3) {
 			data[SY - 1][SX].status = -1;
 			data[SY - 2][SX].status = -1;
 		}
-		else if (g_enemy4.VectorFlg == 4) {
+		else if (Orange.VectorFlg == 4) {
 			data[SY + 1][SX].status = -1;
 			data[SY + 2][SX].status = -1;
 		}*/
@@ -438,8 +440,8 @@ int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX
 {
 	if (Count == 0) {
 
-		SX = g_enemy4.EXC;
-		SY = g_enemy4.EYC;
+		SX = Orange.EXC / MAP_SIZE;
+		SY = Orange.EYC / MAP_SIZE;
 
 		GX = g_player.PXC;
 		GY = g_player.PYC;
@@ -494,11 +496,11 @@ int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX
 		//Count = 1;
 	}
 	else if (Count == 1) {
-		/*SX = g_enemy4.EXC;
-		SY = g_enemy4.EYC;*/
+		/*SX = Orange.EXC;
+		SY = Orange.EYC;*/
 
-		SX = g_enemy4.EXC;
-		SY = g_enemy4.EYC;
+		SX = Orange.EXC / MAP_SIZE;
+		SY = Orange.EYC / MAP_SIZE;
 
 		if (DFlg == false) {
 
@@ -509,21 +511,21 @@ int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX
 
 			if (GFlg == false) {
 
-				if (g_player.PXC < g_enemy.EXC) {
-					GX = (g_enemy.EXC - g_player.PXC);
+				if (g_player.PXC < Red.EXC) {
+					GX = (Red.EXC - g_player.PXC);
 				}
-				else if (g_player.PXC > g_enemy.EXC) {
-					GX = g_player.PXC - g_enemy.EXC * 2;
+				else if (g_player.PXC > Red.EXC) {
+					GX = g_player.PXC - Red.EXC * 2;
 				}
 				else {
 					GX = g_player.PXC;
 				}
 
-				if (g_player.PYC < g_enemy.EYC) {
-					GY = g_enemy.EYC - g_player.PYC;
+				if (g_player.PYC < Red.EYC) {
+					GY = Red.EYC - g_player.PYC;
 				}
-				else if (g_player.PYC > g_enemy.EYC) {
-					GY = g_player.PYC + g_enemy.EYC * 2;
+				else if (g_player.PYC > Red.EYC) {
+					GY = g_player.PYC + Red.EYC * 2;
 				}
 				else {
 					GY = g_player.PYC;
@@ -590,43 +592,43 @@ int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX
 	a_star_clyde.SetDefault();
 	a_star_clyde.ResetSearchStatus();
 
-	if (g_enemy4.VectorFlg == 1) {
+	if (Orange.VectorFlg == 1) {
 		data[SY][SX + 1].status = -1;
 		//data[SY][SX + 2].status = -1;
 	}
-	else if (g_enemy4.VectorFlg == 2) {
+	else if (Orange.VectorFlg == 2) {
 		data[SY][SX - 1].status = -1;
 		//data[SY][SX - 2].status = -1;
 	}
-	else if (g_enemy4.VectorFlg == 3) {
+	else if (Orange.VectorFlg == 3) {
 		data[SY + 1][SX].status = -1;
 		//data[SY + 2][SX].status = -1;
 	}
-	else if (g_enemy4.VectorFlg == 4) {
+	else if (Orange.VectorFlg == 4) {
 		data[SY - 1][SX].status = -1;
 		//data[SY - 2][SX].status = -1;
 	}
 
 	if (DFlg == false) {
-		if (def_data[g_enemy4.EYC][g_enemy4.EXC] == 2) {
+		if (def_data[Orange.EYC][Orange.EXC] == 2) {
 			if (Timer == 0) {
 				XP = SX;
 				YP = SY;
 			}
 			if (Timer <= 180) {
-				if (g_enemy4.VectorFlg == 1) {
+				if (Orange.VectorFlg == 1) {
 					data[YP][XP + 1].status = -1;
 					data[YP][XP + 2].status = -1;
 				}
-				else if (g_enemy4.VectorFlg == 2) {
+				else if (Orange.VectorFlg == 2) {
 					data[YP][XP - 1].status = -1;
 					data[YP][XP - 2].status = -1;
 				}
-				else if (g_enemy4.VectorFlg == 3) {
+				else if (Orange.VectorFlg == 3) {
 					data[YP + 1][XP].status = -1;
 					data[YP + 2][XP].status = -1;
 				}
-				else if (g_enemy4.VectorFlg == 4) {
+				else if (Orange.VectorFlg == 4) {
 					data[YP - 1][XP].status = -1;
 					data[YP - 2][XP].status = -1;
 				}
@@ -638,14 +640,14 @@ int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX
 		}
 	}
 
-	if (g_enemy4.EX <= 429 && g_enemy4.EY == 330 && g_enemy4.VectorFlg == 1) {
+	if (Orange.EX <= 429 && Orange.EY == 330 && Orange.VectorFlg == 1) {
 		data[13][7].status = -1;
 	}
-	if (g_enemy4.EX >= 851 && g_enemy4.EY == 330 && g_enemy4.VectorFlg == 2) {
+	if (Orange.EX >= 851 && Orange.EY == 330 && Orange.VectorFlg == 2) {
 		data[13][19].status = -1;
 	}
 
-	/*if (g_enemy4.EY >= 535) {
+	/*if (Orange.EY >= 535) {
 		data[20][13].status = -1;
 		data[20][15].status = -1;
 	}*/
@@ -676,12 +678,12 @@ int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX
 //}
 
 void A_star_CLYDE::A_starInit() {
-	SX = g_enemy4.EXC;
-	SY = g_enemy4.EYC;
+	SX = Orange.EXC / MAP_SIZE;
+	SY = Orange.EYC / MAP_SIZE;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
 
-	SX1 = g_enemy4.EXC;
-	SY1 = g_enemy4.EYC;
+	SX1 = Orange.EXC / MAP_SIZE;
+	SY1 = Orange.EYC / MAP_SIZE;
 }

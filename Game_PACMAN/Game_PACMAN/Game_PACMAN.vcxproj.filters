@@ -13,6 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\Enemy">
+      <UniqueIdentifier>{ab934f81-2ee7-4e46-8858-0bd392eef2a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy\Red">
+      <UniqueIdentifier>{7bc13131-348f-4bcb-94c0-b5618311d23b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy\Pink">
+      <UniqueIdentifier>{cf2d402f-a915-4afb-85a2-2c5c963c4062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy\Blue">
+      <UniqueIdentifier>{8b5ac42f-75c2-4151-b411-5de56809ca43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Enemy\Orange">
+      <UniqueIdentifier>{9995a449-d125-45ae-b993-85f2e92e8a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Player">
+      <UniqueIdentifier>{a57db280-ebe1-4fe9-97ce-bc63e090ca32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Display">
+      <UniqueIdentifier>{75271ab2-a34e-4150-99f4-fba55f2e1430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Bait">
+      <UniqueIdentifier>{e0d3685d-4fce-4280-a371-1ceb3624fdc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,35 +48,47 @@
     <ClCompile Include="Image.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Blue.cpp">
+      <Filter>ソース ファイル\Enemy\Blue</Filter>
+    </ClCompile>
+    <ClCompile Include="Orange.cpp">
+      <Filter>ソース ファイル\Enemy\Orange</Filter>
+    </ClCompile>
+    <ClCompile Include="Pink.cpp">
+      <Filter>ソース ファイル\Enemy\Pink</Filter>
+    </ClCompile>
+    <ClCompile Include="Red.cpp">
+      <Filter>ソース ファイル\Enemy\Red</Filter>
+    </ClCompile>
+    <ClCompile Include="NewPlayer.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="display.cpp">
+      <Filter>ソース ファイル\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Bait.cpp">
+      <Filter>ソース ファイル\Bait</Filter>
     </ClCompile>
     <ClCompile Include="A_star.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Enemy\Red</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Enemy_Red.cpp">
+      <Filter>ソース ファイル\Enemy\Red</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy2.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="bait.cpp">
+    <ClCompile Include="coffeebreak.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="A_star_PINKY.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="A_star_INKY.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy3.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Enemy\Pink</Filter>
     </ClCompile>
     <ClCompile Include="A_star_CLYDE.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Enemy\Orange</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy4.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="A_star_INKY.cpp">
+      <Filter>ソース ファイル\Enemy\Blue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,38 +101,47 @@
     <ClInclude Include="Info.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Enemy.h">
+      <Filter>ソース ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Red.h">
+      <Filter>ソース ファイル\Enemy\Red</Filter>
+    </ClInclude>
+    <ClInclude Include="Pink.h">
+      <Filter>ソース ファイル\Enemy\Pink</Filter>
+    </ClInclude>
+    <ClInclude Include="Orange.h">
+      <Filter>ソース ファイル\Enemy\Orange</Filter>
+    </ClInclude>
+    <ClInclude Include="Blue.h">
+      <Filter>ソース ファイル\Enemy\Blue</Filter>
+    </ClInclude>
+    <ClInclude Include="NewPlayer.h">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="display.h">
+      <Filter>ソース ファイル\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Bait.h">
+      <Filter>ソース ファイル\Bait</Filter>
     </ClInclude>
     <ClInclude Include="A_star.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Enemy\Red</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Enemy_Red.h">
+      <Filter>ソース ファイル\Enemy\Red</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy2.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="bait.h">
+    <ClInclude Include="coffeebreak.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="A_star_PINKY.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="A_star_INKY.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy3.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Enemy\Pink</Filter>
     </ClInclude>
     <ClInclude Include="A_star_CLYDE.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Enemy\Orange</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy4.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="A_star_INKY.h">
+      <Filter>ソース ファイル\Enemy\Blue</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

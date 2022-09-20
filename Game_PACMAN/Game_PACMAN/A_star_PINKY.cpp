@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <map>
-#include"Player.h"
+#include"NewPlayer.h"
 #include"A_star_PINKY.h"
 #include"Image.h"
 #include"Stage.h"
 #include"Enemy.h"
-#include"Enemy2.h"
+#include"Pink.h"
+//#include"Enemy2.h"
 
 //#define WIDTH (21)
 //#define HEIGHT (23)
@@ -25,8 +26,8 @@
 A_star_PINK a_star_pink;
 
 A_star_PINK::A_star_PINK() {
-	SX = g_enemy2.EXC;
-	SY = g_enemy2.EYC;
+	SX = Pink.GetEnemyX() / MAP_SIZE;
+	SY = Pink.GetEnemyY() / MAP_SIZE;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
@@ -34,8 +35,8 @@ A_star_PINK::A_star_PINK() {
 	d = 0;
 	f = 0;
 
-	SX1 = g_enemy2.EXC;
-	SY1 = g_enemy2.EYC;
+	SX1 = Pink.GetEnemyX() / MAP_SIZE;
+	SY1 = Pink.GetEnemyY() / MAP_SIZE;
 
 	Count = 0;
 
@@ -436,8 +437,8 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 {
 	if (Count == 0) {
 
-		SX = g_enemy2.EXC;
-		SY = g_enemy2.EYC;
+		SX = Pink.GetEnemyX() / MAP_SIZE;
+		SY = Pink.GetEnemyY() / MAP_SIZE;
 
 		if (DFlg == false) {
 
@@ -470,8 +471,8 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 		/*SX = g_enemy2.EXC;
 		SY = g_enemy2.EYC;*/
 
-		SX = g_enemy2.EXC;
-		SY = g_enemy2.EYC;
+		SX = Pink.GetEnemyX() / MAP_SIZE;
+		SY = Pink.GetEnemyY() / MAP_SIZE;
 
 		if (DFlg == false) {
 
@@ -566,43 +567,43 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 	a_star_pink.SetDefault();
 	a_star_pink.ResetSearchStatus();
 
-	if (g_enemy2.VectorFlg == 1) {
+	if (Pink.GetMoveDir() == DIRECTION::LEFT) {
 		data[SY][SX + 1].status = -1;
 		//data[SY][SX + 2].status = -1;
 	}
-	else if (g_enemy2.VectorFlg == 2) {
+	else if (Pink.GetMoveDir() == DIRECTION::RIGHT) {
 		data[SY][SX - 1].status = -1;
 		//data[SY][SX - 2].status = -1;
 	}
-	else if (g_enemy2.VectorFlg == 3) {
+	else if (Pink.GetMoveDir() == DIRECTION::UP) {
 		data[SY + 1][SX].status = -1;
 		//data[SY + 2][SX].status = -1;
 	}
-	else if (g_enemy2.VectorFlg == 4) {
+	else if (Pink.GetMoveDir() == DIRECTION::DOWN) {
 		data[SY - 1][SX].status = -1;
 		//data[SY - 2][SX].status = -1;
 	}
 
 	if (DFlg == false) {
-		if (def_data[g_enemy2.EYC][g_enemy2.EXC] == 2) {
+		if (def_data[Pink.EYC][Pink.EXC] == 2) {
 			if (Timer == 0) {
 				XP = SX;
 				YP = SY;
 			}
 			if (Timer <= 180) {
-				if (g_enemy2.VectorFlg == 1) {
+				if (Pink.VectorFlg == 1) {
 					data[YP][XP + 1].status = -1;
 					data[YP][XP + 2].status = -1;
 				}
-				else if (g_enemy2.VectorFlg == 2) {
+				else if (Pink.VectorFlg == 2) {
 					data[YP][XP - 1].status = -1;
 					data[YP][XP - 2].status = -1;
 				}
-				else if (g_enemy2.VectorFlg == 3) {
+				else if (Pink.VectorFlg == 3) {
 					data[YP + 1][XP].status = -1;
 					data[YP + 2][XP].status = -1;
 				}
-				else if (g_enemy2.VectorFlg == 4) {
+				else if (Pink.VectorFlg == 4) {
 					data[YP - 1][XP].status = -1;
 					data[YP - 2][XP].status = -1;
 				}
@@ -614,10 +615,10 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 		}
 	}
 
-	if (g_enemy2.EX <= 429 && g_enemy2.EY == 330 && g_enemy2.VectorFlg == 1) {
+	if (Pink.EX <= 429 && Pink.EY == 330 && Pink.VectorFlg == 1) {
 		data[13][7].status = -1;
 	}
-	if (g_enemy2.EX >= 851 && g_enemy2.EY == 330 && g_enemy2.VectorFlg == 2) {
+	if (Pink.EX >= 851 && Pink.EY == 330 && Pink.VectorFlg == 2) {
 		data[13][19].status = -1;
 	}
 
@@ -652,12 +653,12 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 //}
 
 void A_star_PINK::A_starInit() {
-	SX = g_enemy2.EXC;
-	SY = g_enemy2.EYC;
+	SX = Pink.GetEnemyX() / MAP_SIZE;
+	SY = Pink.GetEnemyY() / MAP_SIZE;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
 
-	SX1 = g_enemy2.EXC;
-	SY1 = g_enemy2.EYC;
+	SX1 = Pink.GetEnemyX() / MAP_SIZE;
+	SY1 = Pink.GetEnemyY() / MAP_SIZE;
 }
