@@ -45,7 +45,10 @@ public:
 	unsigned GetDigit(unsigned num) { return log10(num) + 1; }
 
 	//”š‚ÆŒ…”‚©‚ç•\¦‚·‚é”š‚ğ•Ô‚·
-	int ShowDigit(int digit, int num, int ClearCnt);
+	int ShowDigit(int digit, int num);
+
+	//”š‰æ‘œ‚ğæ“¾
+	int* GetNumImages(int num) { return &NumImgs[num]; }
 
 	int getMap(int Y, int X);
 

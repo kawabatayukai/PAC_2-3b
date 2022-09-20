@@ -116,7 +116,9 @@ void ENEMY_BASE::IjikeControl(int PowerFlg)
 		for (int i = 0; i < ENEMY_MAX; i++)
 		{
 			All_Enemy[i]->ijike_flg = true;
+			All_Enemy[i]->IjikeCount = 0;  //既にイジケ中でも最初から
 		}
+		eaten_count = 0;
 	}
 }
 
@@ -631,7 +633,7 @@ void ENEMY_BASE::Move_Eye()
 	{
 		eye_flg = false;
 		ijike_flg = false;
-		g_enemy.speed=3;
+		g_enemy.speed = 3;
 		EnemyMode = MODE::R_EYE;
 	}
 }
@@ -650,15 +652,50 @@ void ENEMY_BASE::Move_R_Eye()
 	}
 }
 
+
 //イジケ時に食べられる
 void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 {
-	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true,g_enemy.speed=9;
+	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true)
+	{
+		hitflg_count++;
+		eye_flg = true;
+		g_enemy.speed = 9;
+		if (hitflg_count == 1)
+		{
+			eaten_count++;                            //捕食カウンター
+			if (eaten_count == 5) eaten_count = 1;    //
+			score += All_Scores[eaten_count];         //スコアを加算
+			draw_score = All_Scores[eaten_count];     //描画するスコア
+			Score_Posi = { g_enemy.x - 15,g_enemy.y };//スコア描画地点を設定
+			score_flg = true;                         //描画ON
+		}
+	}
+	else hitflg_count = 0;
 
-	//スコア加算
-	//score+= //スコア
+	//スコアの桁数
+	int digit = stage.GetDigit(static_cast<unsigned int>(draw_score));
 
 	//その場にスコア表示
+	if (score_flg == true)
+	{
+
+		if (++score_time < 120)
+		{
+			//画像で表示
+			for (int i = 0; i < digit; i++)
+			{
+				DrawRotaGraph(Score_Posi.x + (i * 9) + DRAW_POINT_X, Score_Posi.y + DRAW_POINT_Y,
+					0.9, 0, *(stage.GetNumImages(stage.ShowDigit(digit - 1 - i, draw_score))), TRUE);
+			}
+			//DrawFormatString(Score_Posi.x + DRAW_POINT_X, Score_Posi.y + DRAW_POINT_Y, 0xffffff, "%d", draw_score);
+		}
+		else
+		{
+			score_flg = false; //スコア表示OFF
+			score_time = 0;    //表示時間リセット
+		}
+	}
 }
 
 //'引数'と敵との当たり判定
@@ -708,6 +745,9 @@ void ENEMY_BASE::DrawAllInfo()
 	}
 
 }
+
+//捕食カウント 全色で共有
+int ENEMY_BASE::eaten_count;
 
 //巡回モード用座標
 const int ENEMY_BASE::PtrlPoint[4][4][2] =

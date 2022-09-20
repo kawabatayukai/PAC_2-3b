@@ -363,14 +363,19 @@ protected:
 	int old_mode = 0;                   //ひとつ前のモード（イジケ状態から復帰時に使用）
 
 
-	int All_Scores[4] = { 200,400,800,1600 };  //イジケ時のスコア
+	int All_Scores[5] = { 0,200,400,800,1600 };  //イジケ時のスコア
 
-	bool hitp_flg = false;    //プレイヤー当たりフラグ true：当たり　false：当たりなし
-
+	M_POINT Score_Posi;       //スコア描画位置（イジケ時捕食の）
+	int draw_score;           //描画するスコア
+	int score_time = 0;       //スコア描画時間
+	bool score_flg = false;   //スコア描画フラグ
+	int hitflg_count;
 
 	/*****************************************************************************/
 											  //アカ 0　ピンク 1　アオ 2　オレンジ 3
 	static ENEMY_BASE* All_Enemy[ENEMY_MAX];  //全ての敵キャラのアドレスを保持 静的メンバ変数
+
+	static int eaten_count;  //捕食カウント
 
 	static const int PtrlPoint[4][4][2];      //巡回モード用座標
 	static const int SbyPoint[4][3][2];       //出撃前座標
