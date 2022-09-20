@@ -568,12 +568,12 @@ void ENEMY_BASE::Move_Eye()
 {
 	//巣の中の初期位置               初  x                    初  y
 	MoveTarget = { SbyPoint[0][0][0],SbyPoint[0][0][0] };
-
 	//巣に到着後
 	if (CheckTarget3() == 3)
 	{
 		eye_flg = false;
 		ijike_flg = false;
+		g_enemy.speed=3;
 		EnemyMode = MODE::R_EYE;
 	}
 }
@@ -595,7 +595,7 @@ void ENEMY_BASE::Move_R_Eye()
 //イジケ時に食べられる
 void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 {
-	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true;
+	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true,g_enemy.speed=9;
 
 	//スコア加算
 	//score+= //スコア

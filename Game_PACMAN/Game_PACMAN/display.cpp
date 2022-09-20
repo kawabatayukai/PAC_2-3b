@@ -13,7 +13,7 @@ int DISPLAY::LoadImages()
 	if ((StartImage = LoadGraph("images/READY.png")) == -1) return -1;
 	if ((OverImage = LoadGraph("images/GAMEOVER.png")) == -1) return -1;
 	if ((LoadDivGraph("images/PacMan.png", 12, 3, 4, 30, 30, PacManImage)) == -1)return -1;
-	//if ((LoadDivGraph("images/PacMan_Damage.png", 12, 3, 4, 30, 30, PacManDamageImage)) == -1)return -1;
+	if ((LoadDivGraph("images/PacMan_Damage.png", 12, 12, 1, 30, 30, PacManDamageImage)) == -1)return -1;
 	if ((g_StageImage = LoadGraph("images/maze_blueV3.1.png")) == -1) return -1;
 	if ((g_StageImageW = LoadGraph("images/maze_blueV3.1_w.png")) == -1) return -1;
 

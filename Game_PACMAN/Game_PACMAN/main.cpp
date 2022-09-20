@@ -535,9 +535,10 @@ void DrawGameOver()
 			DrawGraph(g_player.PX - 15, g_player.PY - 15, Disp.PacManImage[g_player.PacMan_index + g_player.PacMan_dir * 3], TRUE);
 		}
 		else if (Timer <= 180) {//2秒間アニメーション
-
+			g_player.PlayerDestroy();
 		}
 		else {
+			g_player.PacManDamage_wait = 0;
 			Timer = 0;
 			InitFlg = true;
 		}

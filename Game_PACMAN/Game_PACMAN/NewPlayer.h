@@ -60,6 +60,10 @@ public:
 	int Life;
 	int LifeUPFlg;
 
+	int PacManDamage_dir;
+	int PacManDamage_wait;
+	void PlayerDestroy();
+
 	struct BOX
 	{
 		int fLeft[MAP], fTop[MAP], fRight[MAP], fBottom[MAP];

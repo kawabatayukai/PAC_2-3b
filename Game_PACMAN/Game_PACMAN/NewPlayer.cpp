@@ -6,6 +6,10 @@
 //#include "Stage.h"
 #include "display.h"
 #include "Stage.h"
+#include "Red.h"
+#include "Pink.h"
+#include "Blue.h"
+#include "Orange.h"
 #define LEFT 1
 #define RIGHT 2
 #define UP 3
@@ -176,6 +180,7 @@ void Player::PlayerController(int keyFlg, int MapData[MAP_HEIGHT][MAP_WIDTH]) {
 		else {
 			PX -= 3;
 		}
+		//if(Red.GetIjikeTime())
 		PacMan_dir = 0;
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
 		//DrawGraph(PX - 15, PY - 15, PlayerImageL, TRUE);
@@ -632,4 +637,30 @@ int Player::LoadImages()
 	if ((PlayerImageR = LoadGraph("images/01_2R.png")) == -1)return -1;
 	if ((PlayerImageU = LoadGraph("images/01_2U.png")) == -1)return -1;
 	if ((PlayerImageD = LoadGraph("images/01_2D.png")) == -1)return -1;
+}
+
+void Player::PlayerDestroy() {
+	//int i = 100;
+	//PacManDamage_dir = 0;
+	//int PacManDamage_motion[] = { 0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,4,
+	//	5,5,5,5,5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,9,9,9,9,9,9,9,10,10,10,10,10,10,10,
+	//	11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12, };
+	//if (--PacManDamage_wait <= 0)
+	//{
+	//	PacMan_index++;
+	//	PacMan_wait = /*PAC_MAN_SPEED*/40;
+	//	PacMan_index %= 100;
+	//}
+	//for (i = 0; i < 100; i++) {
+	//	int motion_index = PacManDamage_motion[PacMan_index];
+	//	if (FLG_MAX_L == false && KEYFLG == LEFT || FLG_MAX_R == false && KEYFLG == RIGHT || FLG_MAX_U == false
+	//		&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)/*motion_index = 1*/;
+	//	DrawGraph(PX - 15, PY - 15,
+	//		Disp.PacManDamageImage[motion_index/* + PacMan_dir * PAC_MAN_DIR_SLIDE*/], TRUE);
+	//	return;
+	//}
+	PacManDamage_wait++;
+	DrawGraph(PX - 15, PY - 15,
+		Disp.PacManDamageImage[PacManDamage_wait / 10/* + PacMan_dir * PAC_MAN_DIR_SLIDE*/], TRUE);
+
 }

@@ -15,7 +15,7 @@ public:
 	void DrawOverDisp(GAME_STATE* state);    //ゲームオーバー時
 
 	int PacManImage[12];			// 画像用変数
-	int PacManDamageImage[12];			// 画像用変数
+	int PacManDamageImage[13];			// 画像用変数
 	int	g_StageImage;			// 画像用変数
 	int	g_StageImageW;			// 画像用変数
 private:
