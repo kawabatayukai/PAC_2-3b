@@ -9,6 +9,7 @@ Image::Image() {
 	g_T01Image = 0;			// 画像用変数
 	g_T02Image = 0;			// 画像用変数
 	g_T03Image = 0;			// 画像用変数
+	g_T04Image = 0;			// 画像用変数
 	PlayerImageL = 0;
 	PlayerImageR = 0;
 	PlayerImageU = 0;
@@ -37,6 +38,7 @@ int Image::LoadImages()
 	if ((g_T01Image = LoadGraph("images/T01.png")) == -1) return -1;
 	if ((g_T02Image = LoadGraph("images/T02.png")) == -1) return -1;
 	if ((g_T03Image = LoadGraph("images/T03.png")) == -1) return -1;
+	if ((g_T04Image = LoadGraph("images/T04.png")) == -1) return -1;
 	if ((EsaImage = LoadGraph("images/Esa_V2.png")) == -1) return -1;
 	if ((PowerEsaImage = LoadGraph("images/PowerEsa_V2.png")) == -1) return -1;
 	if ((LoadDivGraph("images/PacMan.png", 12, 3, 4, 30, 30, PacManImage)) == -1)return -1;

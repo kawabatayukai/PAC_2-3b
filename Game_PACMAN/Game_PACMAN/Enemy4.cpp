@@ -1,8 +1,8 @@
 #include "DxLib.h"
-#include "Enemy3.h"
+#include "Enemy4.h"
 #include "Info.h"
 #include "Image.h"
-#include "A_star_INKY.h"
+#include "A_star_CLYDE.h"
 #include "Stage.h"
 #include "Player.h"
 #include "Common.h"
@@ -11,10 +11,10 @@
 #define UP 3
 #define DOWN 4
 
-Enemy3 g_enemy3;
+Enemy4 g_enemy4;
 
-Enemy3::Enemy3() {
-	EX = 910;
+Enemy4::Enemy4() {
+	EX = 370;
 	EY = 660;
 	EXC = (EX - DRAW_POINT_X) / 30;
 	EYC = (EY - DRAW_POINT_Y) / 30;
@@ -23,8 +23,8 @@ Enemy3::Enemy3() {
 	DFLG = false;
 }
 
-void Enemy3::EnemyInit() {
-	EX = 910;
+void Enemy4::EnemyInit() {
+	EX = 370;
 	EY = 660;
 	EXC = (EX - DRAW_POINT_X) / 30;
 	EYC = (EY - DRAW_POINT_Y) / 30;
@@ -33,7 +33,7 @@ void Enemy3::EnemyInit() {
 	DFLG = false;
 }
 
-void Enemy3::EnemyController() {
+void Enemy4::EnemyController() {
 	EXC = (EX - DRAW_POINT_X) / 30;
 	EYC = (EY - DRAW_POINT_Y) / 30;
 
@@ -47,7 +47,7 @@ void Enemy3::EnemyController() {
 
 
 
-	if (a_star_inky.data[EYC][EXC - 1].status == 1) {
+	if (a_star_clyde.data[EYC][EXC - 1].status == 1) {
 		if (LC >= 783) {
 			VectorFlg = LEFT;
 			NEXTFLG = 0;
@@ -56,7 +56,7 @@ void Enemy3::EnemyController() {
 			NEXTFLG = LEFT;
 		}
 	}
-	if (a_star_inky.data[EYC][EXC + 1].status == 1) {
+	if (a_star_clyde.data[EYC][EXC + 1].status == 1) {
 		if (RC >= 783) {
 			VectorFlg = RIGHT;
 			NEXTFLG = 0;
@@ -65,7 +65,7 @@ void Enemy3::EnemyController() {
 			NEXTFLG = RIGHT;
 		}
 	}
-	if (a_star_inky.data[EYC - 1][EXC].status == 1) {
+	if (a_star_clyde.data[EYC - 1][EXC].status == 1) {
 		if (UC >= 783) {
 			VectorFlg = UP;
 			NEXTFLG = 0;
@@ -74,7 +74,7 @@ void Enemy3::EnemyController() {
 			NEXTFLG = UP;
 		}
 	}
-	if (a_star_inky.data[EYC + 1][EXC].status == 1) {
+	if (a_star_clyde.data[EYC + 1][EXC].status == 1) {
 		if (DC >= 783) {
 			VectorFlg = DOWN;
 			NEXTFLG = 0;
@@ -84,7 +84,7 @@ void Enemy3::EnemyController() {
 		}
 	}
 
-	if (a_star_inky.data[EYC][EXC].status == 2) {
+	if (a_star_clyde.data[EYC][EXC].status == 2) {
 		if (OldKeyFlg == LEFT) {
 			if (VectorFlg == RIGHT) {
 				VectorFlg = LEFT;
@@ -165,16 +165,16 @@ void Enemy3::EnemyController() {
 		}
 	}*/
 
-	//if (a_star_inky.data[EYC][EXC - 1].status == 1/* && FLG_MAX_L == true*/) {
+	//if (a_star_clyde.data[EYC][EXC - 1].status == 1/* && FLG_MAX_L == true*/) {
 	//	VectorFlg = LEFT;
 	//}
-	//if (a_star_inky.data[EYC][EXC + 1].status == 1/* && FLG_MAX_R == true*/) {
+	//if (a_star_clyde.data[EYC][EXC + 1].status == 1/* && FLG_MAX_R == true*/) {
 	//	VectorFlg = RIGHT;
 	//}
-	//if (a_star_inky.data[EYC - 1][EXC].status == 1/* && FLG_MAX_U == true*/) {
+	//if (a_star_clyde.data[EYC - 1][EXC].status == 1/* && FLG_MAX_U == true*/) {
 	//	VectorFlg = UP;
 	//}
-	//if (a_star_inky.data[EYC + 1][EXC].status == 1/* && FLG_MAX_D == true*/) {
+	//if (a_star_clyde.data[EYC + 1][EXC].status == 1/* && FLG_MAX_D == true*/) {
 	//	VectorFlg = DOWN;
 	//}
 
@@ -190,7 +190,7 @@ void Enemy3::EnemyController() {
 		}
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageL, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T04Image, TRUE);
 		break;
 	case RIGHT:
 		//PX += 3;
@@ -201,7 +201,7 @@ void Enemy3::EnemyController() {
 			EX += 3;
 		}
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T04Image, TRUE);
 		break;
 	case UP:
 		//PY -= 3;
@@ -212,7 +212,7 @@ void Enemy3::EnemyController() {
 			EY -= 3;
 		}
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T04Image, TRUE);
 		break;
 	case DOWN:
 		//PY += 3;
@@ -228,7 +228,7 @@ void Enemy3::EnemyController() {
 	default:
 		//DrawGraph(PX, PY, image.g_PlayerImage, TRUE);
 		//DrawGraph(PX - 15, PY - 15, image.g_PlayerImage, TRUE);
-		DrawGraph(EX - 15, EY - 15, image.g_T02Image, TRUE);
+		DrawGraph(EX - 15, EY - 15, image.g_T04Image, TRUE);
 		break;
 
 	}
@@ -410,7 +410,7 @@ void Enemy3::EnemyController() {
 	if (keyFlg & PAD_INPUT_A)DFLG = false;
 
 
-	if (DFLG == true) {
+	//if (DFLG == true) {
 		for (int i = 0; i < 27; i++) {
 			for (int j = 0; j < 29; j++) {
 				if (MapData[j][i] == 1) {
@@ -427,7 +427,7 @@ void Enemy3::EnemyController() {
 				}
 				//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
 			}
-		}
+		//}
 		DrawFormatString(1150, 220, 0x0000ff, "%d", EYC);
 		DrawFormatString(1150, 230, 0x0000ff, "%d", EY);
 		DrawFormatString(1150, 630, 0x0000ff, "%d", EX);
@@ -436,10 +436,10 @@ void Enemy3::EnemyController() {
 
 	}
 	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
-	DrawGraph(EX - 15, EY - 15, image.g_T03Image, TRUE);
+	DrawGraph(EX - 15, EY - 15, image.g_T04Image, TRUE);
 	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
 
-	//a_star_inky.main(g_player.PXC, g_player.PYC, EXC, EYC);
+	//a_star_clyde.main(g_player.PXC, g_player.PYC, EXC, EYC);
 
 	if (EX <= 340 && EY == 330 && VectorFlg == LEFT) {
 		EX = 940;
@@ -476,14 +476,14 @@ void Enemy3::EnemyController() {
 
 }
 
-float Enemy3::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {
+float Enemy4::DistanceSqrf(const float t_x1, const float t_y1, const float t_x2, const float t_y2) {
 	float dx = t_x2 - t_x1;
 	float dy = t_y2 - t_y1;
 
 	return (dx * dx) + (dy * dy);
 }
 
-bool Enemy3::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
+bool Enemy4::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 	bool nResult = false;
 
 	// ŽlŠpŒ`‚ÌŽl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
@@ -550,7 +550,7 @@ bool Enemy3::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 	return nResult;
 }
 
-bool Enemy3::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
+bool Enemy4::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 	bool nResult = false;
 
 	// ŽlŠpŒ`‚ÌŽl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
@@ -617,7 +617,7 @@ bool Enemy3::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 	return nResult;
 }
 
-bool Enemy3::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
+bool Enemy4::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 {
 	if ((t_direA.fRight[CF] > t_direB.fLeft[I]) &&
 		(t_direA.fLeft[CF] < t_direB.fRight[I]))
@@ -632,10 +632,10 @@ bool Enemy3::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 	return false;
 }
 
-void Enemy3::MapCopy() {
+void Enemy4::MapCopy() {
 	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
-			MapData[h][w] = a_star_inky.data[h][w].status;
+			MapData[h][w] = a_star_clyde.data[h][w].status;
 		}
 	}
 }

@@ -8,8 +8,12 @@
 #include "Player.h"
 #include "A_star.h"
 #include "A_star_PINKY.h"
+#include "A_star_INKY.h"
+#include "A_star_CLYDE.h"
 #include "Enemy.h"
 #include "Enemy2.h"
+#include "Enemy3.h"
+#include "Enemy4.h"
 #include "bait.h"
 
 int	oldKey;				// ëOâÒÇÃì¸óÕÉLÅ[
@@ -46,6 +50,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			g_player.PlayerInit();
 			g_enemy.EnemyInit();
 			g_enemy2.EnemyInit();
+			g_enemy3.EnemyInit();
+			g_enemy4.EnemyInit();
 			a_star.A_starInit();
 			bait.CreateBait();
 			//a_star.SetDefault();
@@ -70,14 +76,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			a_star_pink.main(/*g_player.PXC, g_player.PYC, g_enemy2.EXC, g_enemy2.EYC*/);
 			g_enemy2.MapCopy();
 			g_enemy2.EnemyController();
+			a_star_inky.main();
+			g_enemy3.MapCopy();
+			g_enemy3.EnemyController();
+			a_star_clyde.main();
+			g_enemy4.MapCopy();
+			g_enemy4.EnemyController();
 			bait.BaitController();
 			//DrawPixel(g_player.PX, g_player.PY, 0xff00ff);
 			//DrawBox(g_player.PX, g_player.PY, 1000, 200, 0xff00ff, false);
 			DrawFormatString(1100, 500, 0xffffff, "%d", g_player.PX);
 			DrawFormatString(1100, 550, 0xffffff, "%d", g_player.PY);
+			DrawFormatString(1100, 600, 0xffffff, "%d", nowKey);
 
 			DrawFormatString(1100, 400, 0xffffff, "%d", DRAW_POINT_X);
 			DrawFormatString(1100, 450, 0xffffff, "%d", DRAW_POINT_Y);
+			
+			DrawCircle((a_star.GX * 30) + DRAW_POINT_X+15, (a_star_inky.GY * 30) + DRAW_POINT_Y + 15, 10, GetColor(255, 0, 0));
+			DrawCircle((a_star_pink.oldGX * 30) + DRAW_POINT_X + 15, (a_star_inky.oldGY * 30) + DRAW_POINT_Y + 15, 10, GetColor(255, 0, 128));
+			DrawCircle((a_star_inky.oldGX * 30) + DRAW_POINT_X + 15, (a_star_inky.oldGY * 30) + DRAW_POINT_Y + 15, 10, GetColor(0, 0, 255));
+			DrawCircle((a_star_clyde.oldGX * 30) + DRAW_POINT_X + 15, (a_star_clyde.oldGY * 30) + DRAW_POINT_Y + 15, 10, GetColor(200, 125, 0));
 			//stage.DrawMapImage();
 			if (keyFlg & PAD_INPUT_A)bait.pscore+=10;
 

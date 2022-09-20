@@ -60,7 +60,10 @@ A_star_PINK::A_star_PINK() {
 	OldYM = 0;
 
 	Timer = 0;
+	aas = 0;
 
+	oldGX = 0;
+	oldGY = 0;
 	//	enum {
 	//	SEARCH_NO_CHECK = 0,
 	//	SEARCH_OPEN = 1,
@@ -379,6 +382,8 @@ void A_star_PINK::TraceRoute(int x, int y)
 	f = y;
 
 	if (data[y][x].status == 2) {
+		oldGX = GX;
+		oldGY = GY;
 		DX = d;
 		DY = f;
 		DFlg = true;
@@ -411,8 +416,9 @@ void A_star_PINK::TraceRoute(int x, int y)
 	try {
 		TraceRoute(x + parent_way->x, y + parent_way->y);
 	}
-	catch (int o){
-
+	catch (int o) {
+			GX = (370 - DRAW_POINT_X) / 30;
+			GY = (60 - DRAW_POINT_X) / 30;
 	}
 
 	if (d == GX && f == GY) {
@@ -496,11 +502,30 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 					GX = g_player.PXC;
 					GY = g_player.PYC;
 				}
-				Rand = GetRand(3);
+				do {
+					Rand = GetRand(20);
+				} while (Rand < 10);
+				aas = GetRand(4);
+				
 			}
 			else if (GFlg == true) {
-				GX = g_player.PXC + Rand;
-				GY = g_player.PYC + Rand;
+				if (aas == 0) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 1) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 2) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC - Rand;
+				}
+				else if (aas == 3) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC - Rand;
+				}
+				
 				if (Time++ >= 180) {
 					Time = 0;
 					GFlg = false;
@@ -532,6 +557,11 @@ int A_star_PINK::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 
 	GX = enX;
 	GY = enY;*/
+
+	if (GX <= 0)GX = 1;
+	if (GX >= 27)GX = 26;
+	if (GY <= 0)GY = 1;
+	if (GY >= 29)GY = 28;
 
 	a_star_pink.SetDefault();
 	a_star_pink.ResetSearchStatus();

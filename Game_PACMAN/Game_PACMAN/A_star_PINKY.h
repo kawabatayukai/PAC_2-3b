@@ -134,6 +134,10 @@ public:
 	int OldYM = 0;
 
 	int Timer = 0;
+	int aas = 0;
+
+	int oldGX;
+	int oldGY;
 
 
 	A_star_PINK();

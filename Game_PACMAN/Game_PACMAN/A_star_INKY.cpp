@@ -60,7 +60,10 @@ A_star_INKY::A_star_INKY() {
 	OldYM = 0;
 
 	Timer = 0;
+	aas = 0;
 
+	oldGX = 0;
+	oldGY = 0;
 	//	enum {
 	//	SEARCH_NO_CHECK = 0,
 	//	SEARCH_OPEN = 1,
@@ -379,6 +382,8 @@ void A_star_INKY::TraceRoute(int x, int y)
 	f = y;
 
 	if (data[y][x].status == 2) {
+		oldGX = GX;
+		oldGY = GY;
 		DX = d;
 		DY = f;
 		DFlg = true;
@@ -412,7 +417,8 @@ void A_star_INKY::TraceRoute(int x, int y)
 		TraceRoute(x + parent_way->x, y + parent_way->y);
 	}
 	catch (int o) {
-
+			GX = (370 - DRAW_POINT_X) / 30;
+			GY = (660 - DRAW_POINT_X) / 30;
 	}
 
 	if (d == GX && f == GY) {
@@ -440,7 +446,7 @@ int A_star_INKY::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 				GX = g_player.PXC;
 				GY = g_player.PYC;
 
-				Rand = GetRand(3);
+				Rand = GetRand(30);
 
 			}
 			else if (GFlg == true) {
@@ -476,31 +482,47 @@ int A_star_INKY::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 
 			if (GFlg == false) {
 
-				if (g_player.PX) {//LEFT
-					GX = g_player.PXC - 3;
-					GY = g_player.PYC;
+				if (g_player.PXC < g_enemy.EXC) {
+					GX = (g_enemy.EXC - g_player.PXC);
 				}
-				else if (g_player.KEYFLG == 2) {//RIGHT
-					GX = g_player.PXC + 3;
-					GY = g_player.PYC;
-				}
-				else if (g_player.KEYFLG == 3) {//UP
-					GX = g_player.PXC;
-					GY = g_player.PYC - 3;
-				}
-				else if (g_player.KEYFLG == 4) {//DOWN
-					GX = g_player.PXC;
-					GY = g_player.PYC + 3;
+				else if (g_player.PXC > g_enemy.EXC) {
+					GX = g_player.PXC - g_enemy.EXC*2;
 				}
 				else {
 					GX = g_player.PXC;
+				}
+
+				if (g_player.PYC < g_enemy.EYC) {
+					GY = g_enemy.EYC - g_player.PYC;
+				}
+				else if (g_player.PYC > g_enemy.EYC) {
+					GY = g_player.PYC + g_enemy.EYC*2;
+				}
+				else {
 					GY = g_player.PYC;
 				}
-				Rand = GetRand(3);
+				do {
+					Rand = GetRand(20);
+				} while (Rand < 10);
+				aas = GetRand(4);
 			}
 			else if (GFlg == true) {
-				GX = g_player.PXC + Rand;
-				GY = g_player.PYC + Rand;
+				if (aas == 0) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 1) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 2) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC - Rand;
+				}
+				else if (aas == 3) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC - Rand;
+				}
 				if (Time++ >= 180) {
 					Time = 0;
 					GFlg = false;
@@ -532,6 +554,11 @@ int A_star_INKY::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX,
 
 	GX = enX;
 	GY = enY;*/
+
+	if (GX <= 0)GX = 1;
+	if (GX >= 27)GX = 26;
+	if (GY <= 0)GY = 1;
+	if (GY >= 29)GY = 28;
 
 	a_star_inky.SetDefault();
 	a_star_inky.ResetSearchStatus();

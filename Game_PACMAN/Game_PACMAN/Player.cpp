@@ -226,7 +226,7 @@ void Player::PlayerController() {
 	if (--PacMan_wait <= 0)
 	{
 		PacMan_index++;
-		PacMan_wait = PAC_MAN_SPEED;
+		PacMan_wait = PAC_MAN_SPEED;//‰æ‘œ‚ðØ‚è‘Ö‚¦‚é‘¬“x
 		PacMan_index %= MAX_MOTION_INDEX;
 	}
 	int motion_index = PacMan_motion[PacMan_index];

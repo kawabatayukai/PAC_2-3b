@@ -135,6 +135,16 @@ public:
 
 	int Timer = 0;
 
+	int aas = 0;
+
+	int X2 = 0;
+	int XX = 0;
+	int Y2 = 0;
+	int YY = 0;
+
+	int oldGX;
+	int oldGY;
+
 
 	A_star();
 

@@ -3,11 +3,11 @@
 #include <tchar.h>
 #include <map>
 #include"Player.h"
-#include"A_star.h"
+#include"A_star_CLYDE.h"
 #include"Image.h"
 #include"Stage.h"
 #include"Enemy.h"
-#include"Enemy2.h"
+#include"Enemy4.h"
 
 //#define WIDTH (21)
 //#define HEIGHT (23)
@@ -18,15 +18,15 @@
 //#define GY	(g_player.PYC)
 
 //#define SX	(20)
-//#define SX	(g_enemy.EXC)
+//#define SX	(g_enemy4.EXC)
 //#define SY	(21)
-//#define SY	(g_enemy.EYC)
+//#define SY	(g_enemy4.EYC)
 
-A_star a_star;
+A_star_CLYDE a_star_clyde;
 
-A_star::A_star() {
-	SX = g_enemy.EXC;
-	SY = g_enemy.EYC;
+A_star_CLYDE::A_star_CLYDE() {
+	SX = g_enemy4.EXC;
+	SY = g_enemy4.EYC;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
@@ -34,73 +34,100 @@ A_star::A_star() {
 	d = 0;
 	f = 0;
 
-	SX1 = g_enemy2.EXC;
-	SY1 = g_enemy2.EYC;
+	SX1 = g_enemy4.EXC;
+	SY1 = g_enemy4.EYC;
 
 	Count = 0;
 
-//	enum {
-//	SEARCH_NO_CHECK = 0,
-//	SEARCH_OPEN = 1,
-//	SEARCH_CLOSE = 2,
-//	};
-//
-//	typedef struct {
-//	int x;
-//	int y;
-//	} POINT;
-//
-//	// 8方向のベクトル設定
-//	POINT CheckMatrix[] = {
-//	{  0,  1 },		// 0
-//	//{ -1,  1 },		// 1
-//	{ -1,  0 },		// 2
-//	//{ -1, -1 },	// 3
-//	{  0, -1 },		// 4
-//	//{  1, -1 },		// 5
-//	{  1,  0 },		// 6
-//	//{  1,  1 },		// 7
-//	};
-//
-//	typedef struct
-//{
-//	int no;
-//	int chip;
-//	int status;
-//	int event_no;
-//
-//	int cost;
-//	int SearchStatus;	// 0:未調査 1:オープン 2:クローズ
-//	int parent;		// 親の向き
-//} mapcell;
-//
-//mapcell data[HEIGHT][WIDTH];
-//
-//int def_data[HEIGHT][WIDTH] = {
-//	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-//		{-1,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,-1,},
-//		{-1,0,-1,-1,0,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,0,-1,-1,0,-1,},
-//		{-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,},
-//		{-1,0,-1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,-1,0,-1,},
-//		{-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,},
-//		{-1,-1,-1,-1,0,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,0,-1,-1,-1,-1,},
-//		{0,0,0,-1,0,-1,0,0,0,0,0,0,0,0,0,-1,0,-1,0,0,0,},
-//		{0,0,0,-1,0,-1,0,-1,-1,-1,0,-1,-1,-1,0,-1,0,-1,0,0,0,},
-//		{-1,-1,-1,-1,0,-1,0,-1,0,0,0,0,0,-1,0,-1,0,-1,-1,-1,-1,},
-//		{0,0,0,0,0,0,0,-1,0,0,0,0,0,-1,0,0,0,0,0,0,0,},
-//		{-1,-1,-1,-1,0,-1,0,-1,0,0,0,0,0,-1,0,-1,0,-1,-1,-1,-1,},
-//		{0,0,0,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,0,0,0,},
-//		{0,0,0,-1,0,-1,0,0,0,0,0,0,0,0,0,-1,0,-1,0,0,0,},
-//		{-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,},
-//		{-1,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,-1,},
-//		{-1,0,-1,-1,0,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,0,-1,-1,0,-1,},
-//		{-1,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,-1,},
-//		{-1,-1,0,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,0,-1,-1,},
-//		{-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,},
-//		{-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,},
-//		{-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,},
-//		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-//};
+	Time = 0;
+	GFlg = false;
+
+	Rand = 0;
+
+	DFlg = false;
+
+	DX = 0;
+	DY = 0;
+
+	XP = 0;
+	YP = 0;
+	XM = 0;
+	YM = 0;
+
+	OldXP = 0;
+	OldYP = 0;
+	OldXM = 0;
+	OldYM = 0;
+
+	Timer = 0;
+	aas = 0;
+
+	oldGX = 0;
+	oldGY = 0;
+
+	RandFlg = false;
+	//	enum {
+	//	SEARCH_NO_CHECK = 0,
+	//	SEARCH_OPEN = 1,
+	//	SEARCH_CLOSE = 2,
+	//	};
+	//
+	//	typedef struct {
+	//	int x;
+	//	int y;
+	//	} POINT;
+	//
+	//	// 8方向のベクトル設定
+	//	POINT CheckMatrix[] = {
+	//	{  0,  1 },		// 0
+	//	//{ -1,  1 },		// 1
+	//	{ -1,  0 },		// 2
+	//	//{ -1, -1 },	// 3
+	//	{  0, -1 },		// 4
+	//	//{  1, -1 },		// 5
+	//	{  1,  0 },		// 6
+	//	//{  1,  1 },		// 7
+	//	};
+	//
+	//	typedef struct
+	//{
+	//	int no;
+	//	int chip;
+	//	int status;
+	//	int event_no;
+	//
+	//	int cost;
+	//	int SearchStatus;	// 0:未調査 1:オープン 2:クローズ
+	//	int parent;		// 親の向き
+	//} mapcell;
+	//
+	//mapcell data[HEIGHT][WIDTH];
+	//
+	//int def_data[HEIGHT][WIDTH] = {
+	//	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
+	//		{-1,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,-1,},
+	//		{-1,0,-1,-1,0,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,0,-1,-1,0,-1,},
+	//		{-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,},
+	//		{-1,0,-1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,-1,0,-1,},
+	//		{-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,},
+	//		{-1,-1,-1,-1,0,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,0,-1,-1,-1,-1,},
+	//		{0,0,0,-1,0,-1,0,0,0,0,0,0,0,0,0,-1,0,-1,0,0,0,},
+	//		{0,0,0,-1,0,-1,0,-1,-1,-1,0,-1,-1,-1,0,-1,0,-1,0,0,0,},
+	//		{-1,-1,-1,-1,0,-1,0,-1,0,0,0,0,0,-1,0,-1,0,-1,-1,-1,-1,},
+	//		{0,0,0,0,0,0,0,-1,0,0,0,0,0,-1,0,0,0,0,0,0,0,},
+	//		{-1,-1,-1,-1,0,-1,0,-1,0,0,0,0,0,-1,0,-1,0,-1,-1,-1,-1,},
+	//		{0,0,0,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,0,0,0,},
+	//		{0,0,0,-1,0,-1,0,0,0,0,0,0,0,0,0,-1,0,-1,0,0,0,},
+	//		{-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,},
+	//		{-1,0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,0,0,-1,},
+	//		{-1,0,-1,-1,0,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,0,-1,-1,0,-1,},
+	//		{-1,0,0,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0,0,-1,},
+	//		{-1,-1,0,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,0,-1,-1,},
+	//		{-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,-1,},
+	//		{-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,0,-1,},
+	//		{-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,},
+	//		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
+	//};
 }
 
 //enum {
@@ -166,7 +193,7 @@ A_star::A_star() {
 //		{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
 //};
 
-void A_star::ResetSearchStatus(void)
+void A_star_CLYDE::ResetSearchStatus(void)
 {
 	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
@@ -177,7 +204,7 @@ void A_star::ResetSearchStatus(void)
 	//return;
 }
 
-void A_star::SetDefault(void)
+void A_star_CLYDE::SetDefault(void)
 {
 	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
@@ -188,7 +215,7 @@ void A_star::SetDefault(void)
 	//return;
 }
 
-void A_star::out(void)
+void A_star_CLYDE::out(void)
 {
 	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
@@ -211,7 +238,7 @@ void A_star::out(void)
 }
 
 // マンハッタン距離を斜め移動ありを考慮して求める
-int A_star::GetDistance(int from_x, int from_y, int to_x, int to_y)
+int A_star_CLYDE::GetDistance(int from_x, int from_y, int to_x, int to_y)
 {
 	int cx = from_x - to_x;
 	int cy = from_y - to_y;
@@ -228,7 +255,7 @@ int A_star::GetDistance(int from_x, int from_y, int to_x, int to_y)
 	}
 }
 
-int A_star::BackTrace(int x, int y)
+int A_star_CLYDE::BackTrace(int x, int y)
 {
 	if (x == SX && y == SY) return 1;
 
@@ -241,7 +268,7 @@ int A_star::BackTrace(int x, int y)
 }
 
 // A*で経路探査する
-int A_star::Search(int count) {
+int A_star_CLYDE::Search(int count) {
 
 	int cost_min = 9999;
 	int BackCost = 0;
@@ -276,8 +303,22 @@ int A_star::Search(int count) {
 	BackCost = BackTrace(CX, CY);
 
 	for (int i = 0; i < 4; i++) {
+
 		int check_x = CX + CheckMatrix[i].x;
 		int check_y = CY + CheckMatrix[i].y;
+
+		/*if (g_enemy4.VectorFlg == 1 && CheckMatrix[i].x == 1) {
+			continue;
+		}
+		else if (g_enemy4.VectorFlg == 2 && CheckMatrix[i].x == -1) {
+			continue;
+		}
+		else if (g_enemy4.VectorFlg == 3 && CheckMatrix[i].y == 1) {
+			continue;
+		}
+		else if (g_enemy4.VectorFlg == 4 && CheckMatrix[i].y == -1) {
+			continue;
+		}*/
 
 		if (check_x < 0) continue;
 		if (check_y < 0) continue;
@@ -315,21 +356,72 @@ int A_star::Search(int count) {
 	return Search(count + 1);
 }
 
-void A_star::TraceRoute(int x, int y)
+void A_star_CLYDE::TraceRoute(int x, int y)
 {
 	//if (x == SX && y == SY) {
 	if (x == SX && y == SY) {
+		/*if (g_enemy4.VectorFlg == 1) {
+			data[SY][SX - 1].status = -1;
+			data[SY][SX - 2].status = -1;
+		}
+		else if (g_enemy4.VectorFlg == 2) {
+			data[SY][SX + 1].status = -1;
+			data[SY][SX + 2].status = -1;
+		}
+		else if (g_enemy4.VectorFlg == 3) {
+			data[SY - 1][SX].status = -1;
+			data[SY - 2][SX].status = -1;
+		}
+		else if (g_enemy4.VectorFlg == 4) {
+			data[SY + 1][SX].status = -1;
+			data[SY + 2][SX].status = -1;
+		}*/
+		//data[y][x].status = -1;
 		printf("開始ノード>");
 		return;
 	}
 	d = x;
 	f = y;
 
+	if (data[y][x].status == 2) {
+		oldGX = GX;
+		oldGY = GY;
+		DX = d;
+		DY = f;
+		DFlg = true;
+	}
+
 	POINT* parent_way = &CheckMatrix[data[y][x].parent];
 
 	data[y][x].status = 1;
 
-	TraceRoute(x + parent_way->x, y + parent_way->y);
+	if (y == 14) {
+		if (x <= 4 && &CheckMatrix[1]) {
+			data[14][25].status = -1;
+			//x = 24;
+		}
+		else if (x >= 24 && &CheckMatrix[3]) {
+			data[14][3].status = -1;
+			//x = 4;
+		}
+	}
+
+	/*if (CheckMatrix->x == 1) {
+		OldXP = XP;
+		XP = 1;
+	}
+	if (CheckMatrix->y == 1)
+	if (CheckMatrix->x == -1)
+	if (CheckMatrix->y == -1)
+
+	if(XP>=2)*/
+	try {
+		TraceRoute(x + parent_way->x, y + parent_way->y);
+	}
+	catch (int o) {
+		GX = (370 - DRAW_POINT_X) / 30;
+		GY = (660 - DRAW_POINT_X) / 30;
+	}
 
 	if (d == GX && f == GY) {
 		//TraceRoute(x + parent_way->x, y + parent_way->y);
@@ -342,68 +434,228 @@ void A_star::TraceRoute(int x, int y)
 	return;
 }
 
-int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int enY*/)
+int A_star_CLYDE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int enY*/)
 {
 	if (Count == 0) {
 
-		SX = g_enemy.EXC;
-		SY = g_enemy.EYC;
+		SX = g_enemy4.EXC;
+		SY = g_enemy4.EYC;
 
 		GX = g_player.PXC;
 		GY = g_player.PYC;
-		Count = 1;
+
+		if (SX >= GX - 1 && SX <= GX + 1 && SY >= GY - 1 && SY <= GY + 1) {
+			RandFlg = true;
+		}
+
+		if (RandFlg == false) {
+
+			if (DFlg == false) {
+
+				if (GFlg == false) {
+
+					GX = g_player.PXC;
+					GY = g_player.PYC;
+
+					Rand = GetRand(30);
+
+				}
+				else if (GFlg == true) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC + Rand;
+					if (Time++ >= 180) {
+						Time = 0;
+						GFlg = false;
+					}
+				}
+
+			}
+			else if (DFlg == true) {
+				GX = DX;
+				GY = DY;
+			}
+
+		}
+		else if (RandFlg == true) {
+			GX = (370 - DRAW_POINT_X) / 30;
+			GY = (660 - DRAW_POINT_Y) / 30;
+			if (Time++ >= 180) {
+				Time = 0;
+				RandFlg = false;
+			}
+			if(SX == GX && SY == GY) {
+				Time = 0;
+				RandFlg = false;
+			}
+		}
+
+
+
+		//Count = 1;
 	}
 	else if (Count == 1) {
-		/*SX = g_enemy2.EXC;
-		SY = g_enemy2.EYC;*/
+		/*SX = g_enemy4.EXC;
+		SY = g_enemy4.EYC;*/
 
-		SX = g_enemy2.EXC;
-		SY = g_enemy2.EYC;
+		SX = g_enemy4.EXC;
+		SY = g_enemy4.EYC;
 
-		GX = g_player.PXC;
-		GY = g_player.PYC;
+		if (DFlg == false) {
 
-		if (g_player.KEYFLG == 1) {//LEFT
-			GX = g_player.PXC-3;
-			GY = g_player.PYC;
-		}
-		else if (g_player.KEYFLG == 2) {//RIGHT
-			GX = g_player.PXC+3;
-			GY = g_player.PYC;
-		}
-		else if (g_player.KEYFLG == 3) {//UP
-			GX = g_player.PXC;
-			GY = g_player.PYC-3;
-		}
-		else if (g_player.KEYFLG == 4) {//DOWN
-			GX = g_player.PXC;
-			GY = g_player.PYC+3;
-		}
-		else {
 			GX = g_player.PXC;
 			GY = g_player.PYC;
+
+
+
+			if (GFlg == false) {
+
+				if (g_player.PXC < g_enemy.EXC) {
+					GX = (g_enemy.EXC - g_player.PXC);
+				}
+				else if (g_player.PXC > g_enemy.EXC) {
+					GX = g_player.PXC - g_enemy.EXC * 2;
+				}
+				else {
+					GX = g_player.PXC;
+				}
+
+				if (g_player.PYC < g_enemy.EYC) {
+					GY = g_enemy.EYC - g_player.PYC;
+				}
+				else if (g_player.PYC > g_enemy.EYC) {
+					GY = g_player.PYC + g_enemy.EYC * 2;
+				}
+				else {
+					GY = g_player.PYC;
+				}
+				do {
+					Rand = GetRand(20);
+				} while (Rand < 10);
+				aas = GetRand(4);
+			}
+			else if (GFlg == true) {
+				if (aas == 0) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 1) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 2) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC - Rand;
+				}
+				else if (aas == 3) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC - Rand;
+				}
+				if (Time++ >= 180) {
+					Time = 0;
+					GFlg = false;
+				}
+			}
+		}
+		else if (DFlg == true) {
+			GX = DX;
+			GY = DY;
+		}
+
+		if (SX == GX && SY == GY) {
+			GFlg = true;
+			DFlg = false;
 		}
 		//Count = 0;
 	}
 
-		/*GX = g_player.PXC;
-		GY = g_player.PYC;*/
+	if (SX == GX && SY == GY) {
+		GFlg = true;
+		DFlg = false;
+	}
 
-		/*SX = plX;
-		SY = plY;
+	/*GX = g_player.PXC;
+	GY = g_player.PYC;*/
 
-		GX = enX;
-		GY = enY;*/
+	/*SX = plX;
+	SY = plY;
 
-	a_star.SetDefault();
-	a_star.ResetSearchStatus();
+	GX = enX;
+	GY = enY;*/
 
-	a_star.data[SY][SX].SearchStatus = a_star.SEARCH_OPEN;
+	if (GX <= 0)GX = 1;
+	if (GX >= 27)GX = 26;
+	if (GY <= 0)GY = 1;
+	if (GY >= 29)GY = 28;
 
-	a_star.Search(0);
+	a_star_clyde.SetDefault();
+	a_star_clyde.ResetSearchStatus();
 
-	a_star.TraceRoute(GX, GY);
-	a_star.out();
+	if (g_enemy4.VectorFlg == 1) {
+		data[SY][SX + 1].status = -1;
+		//data[SY][SX + 2].status = -1;
+	}
+	else if (g_enemy4.VectorFlg == 2) {
+		data[SY][SX - 1].status = -1;
+		//data[SY][SX - 2].status = -1;
+	}
+	else if (g_enemy4.VectorFlg == 3) {
+		data[SY + 1][SX].status = -1;
+		//data[SY + 2][SX].status = -1;
+	}
+	else if (g_enemy4.VectorFlg == 4) {
+		data[SY - 1][SX].status = -1;
+		//data[SY - 2][SX].status = -1;
+	}
+
+	if (DFlg == false) {
+		if (def_data[g_enemy4.EYC][g_enemy4.EXC] == 2) {
+			if (Timer == 0) {
+				XP = SX;
+				YP = SY;
+			}
+			if (Timer <= 180) {
+				if (g_enemy4.VectorFlg == 1) {
+					data[YP][XP + 1].status = -1;
+					data[YP][XP + 2].status = -1;
+				}
+				else if (g_enemy4.VectorFlg == 2) {
+					data[YP][XP - 1].status = -1;
+					data[YP][XP - 2].status = -1;
+				}
+				else if (g_enemy4.VectorFlg == 3) {
+					data[YP + 1][XP].status = -1;
+					data[YP + 2][XP].status = -1;
+				}
+				else if (g_enemy4.VectorFlg == 4) {
+					data[YP - 1][XP].status = -1;
+					data[YP - 2][XP].status = -1;
+				}
+				Timer++;
+			}
+			else {
+				Timer = 0;
+			}
+		}
+	}
+
+	if (g_enemy4.EX <= 429 && g_enemy4.EY == 330 && g_enemy4.VectorFlg == 1) {
+		data[13][7].status = -1;
+	}
+	if (g_enemy4.EX >= 851 && g_enemy4.EY == 330 && g_enemy4.VectorFlg == 2) {
+		data[13][19].status = -1;
+	}
+
+	/*if (g_enemy4.EY >= 535) {
+		data[20][13].status = -1;
+		data[20][15].status = -1;
+	}*/
+
+	a_star_clyde.data[SY][SX].SearchStatus = a_star_clyde.SEARCH_OPEN;
+
+	a_star_clyde.Search(0);
+
+	a_star_clyde.TraceRoute(GX, GY);
+	a_star_clyde.out();
 
 	return 0;
 }
@@ -423,13 +675,13 @@ int A_star::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, int 
 //
 //}
 
-void A_star::A_starInit() {
-	SX = g_enemy.EXC;
-	SY = g_enemy.EYC;
+void A_star_CLYDE::A_starInit() {
+	SX = g_enemy4.EXC;
+	SY = g_enemy4.EYC;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;
 
-	SX1 = g_enemy2.EXC;
-	SY1 = g_enemy2.EYC;
+	SX1 = g_enemy4.EXC;
+	SY1 = g_enemy4.EYC;
 }
