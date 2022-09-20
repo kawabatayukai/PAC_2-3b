@@ -33,13 +33,21 @@ const int U_END = 3 * MAP_SIZE;
 const int D_END = 25 * MAP_SIZE;
 
 //目標地点が"コ"の字より外
-const int L_WALL_X = 4 * MAP_SIZE;   //画面左側"コ"の字 ｘ座標
-const int R_WALL_X = 17 * MAP_SIZE;  //画面右側"コ"の字 ｘ座標
+const int L_WALL_X = 7 * MAP_SIZE;   //画面左側"コ"の字 ｘ座標
+const int R_WALL_X = 20 * MAP_SIZE;  //画面右側"コ"の字 ｘ座標
 
-const int U_WALL_Y1 = 6 * MAP_SIZE;  //上"コ"の字 ｙ座標
-const int D_WALL_Y1 = 10 * MAP_SIZE;  //上"コ"の字 ｙ座標
-const int U_WALL_Y2 = 11 * MAP_SIZE; //下"コ"の字 ｙ座標
-const int D_WALL_Y2 = 15 * MAP_SIZE; //下"コ"の字 ｙ座標
+const int U_WALL_Y1 = 9 * MAP_SIZE;  //上"コ"の字 ｙ座標
+const int D_WALL_Y1 = 13 * MAP_SIZE;  //上"コ"の字 ｙ座標
+const int U_WALL_Y2 = 14 * MAP_SIZE; //下"コ"の字 ｙ座標
+const int D_WALL_Y2 = 18 * MAP_SIZE; //下"コ"の字 ｙ座標
+
+//巣の位置（中には入らない　用）
+const int L_NEST_X = 10 * MAP_SIZE; //左ｘ
+const int R_NEST_X = 17 * MAP_SIZE; //右ｘ
+const int U_NEST_Y = 11 * MAP_SIZE; //上ｙ
+const int D_NEST_Y = 16 * MAP_SIZE; //下ｙ
+const int CENTER_X = 13 * MAP_SIZE + (MAP_SIZE / 2); //巣の中心ｘ
+const int CENTER_Y = 13 * MAP_SIZE + (MAP_SIZE / 2); //巣の中心ｙ
 
 ENEMY_BASE* EnemyManager;              //全色の敵を管理
 
@@ -574,6 +582,7 @@ void ENEMY_BASE::Move_Ijike()
 		if (MoveTarget.x > R_END) MoveTarget.x = R_END - (MAP_SIZE / 2);
 		if (MoveTarget.y < U_END) MoveTarget.y = U_END + (MAP_SIZE / 2);
 		if (MoveTarget.y > D_END) MoveTarget.y = D_END - (MAP_SIZE / 2);
+
 		//ターゲット座標が"コ"の字外の場合、ステージ内に戻す
 		//左側上
 		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y1 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
@@ -583,6 +592,17 @@ void ENEMY_BASE::Move_Ijike()
 		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y1 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
 		//右側下
 		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y2 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y2) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+
+		//ターゲット座標が巣の中の場合、ずらす
+		if (MoveTarget.x > L_NEST_X && MoveTarget.x<R_NEST_X && MoveTarget.y>U_NEST_Y && MoveTarget.y < D_NEST_Y)
+		{
+			//中心と比較、x座標を巣の左または右へ
+			if (MoveTarget.x < CENTER_X) MoveTarget.x = L_NEST_X - (MAP_SIZE / 2);
+			else MoveTarget.x = R_NEST_X + (MAP_SIZE / 2);
+			//中心と比較、y座標を巣の上または下へ
+			if (MoveTarget.y < CENTER_Y) MoveTarget.y = U_NEST_Y - (MAP_SIZE / 2);
+			else MoveTarget.y = D_NEST_Y + (MAP_SIZE / 2);
+		}
 
 		TrackPattern++;
 	}
@@ -1269,7 +1289,8 @@ float ENEMY_BASE::DistanceSqrf(const float t_x1, const float t_y1, const float t
 	return (dx * dx) + (dy * dy);
 }
 
-bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
+bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle)
+{
 	bool nResult = false;
 
 	// 四角形の四辺に対して円の半径分だけ足したとき円が重なっていたら
