@@ -34,8 +34,6 @@ public:
 	int X;
 	int Y;
 
-	int oldmode;
-
 private:
 	const int p_speed[4] = { 5,6,7,8 }; //スピード（変化用）
 	const int p_score = 3373;           //スコア  

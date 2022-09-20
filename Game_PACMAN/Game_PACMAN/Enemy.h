@@ -76,7 +76,6 @@ class ENEMY_BASE
 public:
 	ENEMY_BASE(int color);    //コンストラクタ
 	~ENEMY_BASE();                  //デストラクタ
-
 	/*** 純粋仮想関数（基底クラスで関数の内容を定義しない）***/
 
 	virtual int Loadimages() = 0;   //画像読み込み
@@ -85,7 +84,7 @@ public:
 	virtual void DrawEnemy() = 0;   //描画
 
 	/*********************************************************/
-	static void AllEnemyInit();    //すべてのEnemyを初期化
+	void AllEnemyInit(int ClearCnt);    //すべてのEnemyを初期化
 	void DrawAllEnemy();           //すべてのEnemyを描画
 
 	static void SoltieControl(int NowKey, int FoodCount, int ClearCount);   //出撃を管理
@@ -100,7 +99,14 @@ public:
 	void MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY);  //ターゲットの位置に最短経路で移動する
 
 	int CheckTarget3();
+	int CheckRandomPoint();  //ランダム座標との当たり判定　ポイントが壁の中でも
 
+	/****************** イ　ジ　ケ ******************/
+	int GetIjikeTime(int ClearCnt);           //クリア回数からイジケ時間を取得
+
+	void ModeChanger();                       //モード切替え
+	void Move_Ijike();                        //イジケ状態の挙動
+	/************************************************/
 	int GetEnemyX() { return g_enemy.x; }     //x座標を取得
 	int GetEnemyY() { return g_enemy.y; }     //y座標を取得
 
@@ -340,7 +346,15 @@ protected:
 	int mode_count = 0;                 //モードチェンジ(巡回・追跡)用にフレームをカウント
 
 	bool ijike_flg = false;   //"イジケ状態"フラグ true：イジケ　false：イジケなし 
+	bool eye_flg = false;     //目　フラグ
+	int IjikeTime = 0;        //イジケ時間　クリア回数で変化
+	int IjikeWhite = 0;       //イジケ青白切り替え
 	int IjikeCount = 0;       //イジケ状態時間カウント用
+	int TrackPattern = 0;
+	int old_mode = 0;                   //ひとつ前のモード（イジケ状態から復帰時に使用）
+
+
+	int All_Scores[4] = { 200,400,800,1600 };  //イジケ時のスコア
 
 	bool hitp_flg = false;    //プレイヤー当たりフラグ true：当たり　false：当たりなし
 
@@ -352,35 +366,4 @@ protected:
 	static const int PtrlPoint[4][4][2];      //巡回モード用座標
 };
 
-////巡回モード用座標
-//int PtrlPoint[4][4][2] =
-//{
-//	//アカ
-//	{
-//		{19 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{16 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//	    {16 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-//	    {19 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-//	},
-//	//ピンク
-//	{
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//	    {4 * MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//	    {4 * MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-//	    {MAP_SIZE + (MAP_SIZE / 2),5 * MAP_SIZE + (MAP_SIZE / 2)},
-//	},
-//	//アオ
-//	{
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//	},
-//	//オレンジ
-//	{
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//		{MAP_SIZE + (MAP_SIZE / 2),MAP_SIZE + (MAP_SIZE / 2)},
-//	},
-//};
+extern ENEMY_BASE* EnemyManager;              //全色の敵を管理

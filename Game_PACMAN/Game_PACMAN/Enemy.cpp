@@ -37,6 +37,8 @@ const int D_WALL_Y1 = 10 * MAP_SIZE;  //上"コ"の字 ｙ座標
 const int U_WALL_Y2 = 11 * MAP_SIZE; //下"コ"の字 ｙ座標
 const int D_WALL_Y2 = 15 * MAP_SIZE; //下"コ"の字 ｙ座標
 
+ENEMY_BASE* EnemyManager;              //全色の敵を管理
+
 //全てのオブジェクトのアドレスを保持　静的メンバ変数　実数
 ENEMY_BASE* ENEMY_BASE::All_Enemy[ENEMY_MAX];
 
@@ -63,31 +65,6 @@ ENEMY_BASE::~ENEMY_BASE()
 //出撃を管理
 void ENEMY_BASE::SoltieControl(int NowKey, int FoodCount, int ClearCount)
 {
-	//static int count_enemy;
-	//if (NowKey & PAD_INPUT_M) count_enemy++;
-
-	//switch (count_enemy)
-	//{
-	//case 1:
-	//	All_Enemy[0]->SetSortie(); //アカ
-	//	break;
-
-	//case 2:
-	//	All_Enemy[1]->SetSortie(); //ピンク
-	//	break;
-
-	//case 3:
-	//	All_Enemy[2]->SetSortie(); //アオ
-	//	break;
-
-	//case 4:
-	//	All_Enemy[3]->SetSortie(); //オレンジ
-	//	break;
-
-	//default:
-	//	break;
-	//}
-
 	if (ClearCount == 0)                               //クリア0回
 	{
 		//すぐにピンク出撃
@@ -126,7 +103,11 @@ void ENEMY_BASE::SoltieControl(int NowKey, int FoodCount, int ClearCount)
 //イジケ状態ON・OFF
 void ENEMY_BASE::IjikeControl(int PowerFlg)
 {
-	if (PowerFlg == true)
+	static int flg_count;
+	if (PowerFlg == true) flg_count++;
+	else flg_count = 0;
+
+	if (flg_count == 1)
 	{
 		for (int i = 0; i < ENEMY_MAX; i++)
 		{
@@ -136,13 +117,14 @@ void ENEMY_BASE::IjikeControl(int PowerFlg)
 }
 
 //すべてのEnemyを初期化
-void ENEMY_BASE::AllEnemyInit()
+void ENEMY_BASE::AllEnemyInit(int ClearCnt)
 {
 	for (int i = 0; i < ENEMY_MAX; i++)
 	{
 		if (All_Enemy[i] != nullptr)
 		{
 			All_Enemy[i]->InitEnemy();
+			All_Enemy[i]->IjikeTime = GetIjikeTime(ClearCnt);  //現在のイジケ時間をセット
 		}
 		//else break;
 	}
@@ -211,17 +193,33 @@ void ENEMY_BASE::ChangeMoveImages()
 		}
 		else
 		{
-			//イジケ状態の時
-			if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //イジケ青画像でなければ、イジケ青画像にチェンジ
-			std = 8;       //基準をセット
-
-			IjikeCount++;  //イジケ時間をカウント
-
-			//6秒でイジケ終了
-			if (IjikeCount % 360 == 0)
+			//イジケ時間残り2秒以下で青白交互に
+			if (IjikeCount >= (IjikeTime - 120))
 			{
-				ijike_flg = false;
-				IjikeCount = 0;
+				if (IjikeCount % 20 == 0)
+				{
+					if (IjikeWhite == 0) IjikeWhite = 1;
+					else IjikeWhite = 0;
+				}
+
+				if (IjikeWhite == 0)
+				{
+					//イジケ状態の時
+					if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //イジケ青画像でなければ、イジケ青画像にチェンジ
+					std = 8;       //基準をセット
+				}
+				else
+				{
+					//イジケ状態(白)の時
+					if (g_enemy.img != 10 && g_enemy.img != 11) g_enemy.img = 10; //イジケ白画像でなければ、イジケ白画像にチェンジ
+					std = 10;       //基準をセット
+				}
+			}
+			else
+			{
+				//イジケ状態の時
+				if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //イジケ青画像でなければ、イジケ青画像にチェンジ
+				std = 8;       //基準をセット
 			}
 		}
 
@@ -451,6 +449,119 @@ int ENEMY_BASE::CheckTarget3()
 	else return 0;
 }
 
+//ランダム座標との当たり判定　ポイントが壁の中でも
+int ENEMY_BASE::CheckRandomPoint()
+{
+	int ex1 = g_enemy.x - (g_enemy.w / 2); //左
+	int ex2 = g_enemy.x + (g_enemy.w / 2); //右
+	int ey1 = g_enemy.y - (g_enemy.h / 2); //上
+	int ey2 = g_enemy.y + (g_enemy.h / 2); //下
+
+	int tx1 = MoveTarget.x - (MAP_SIZE)-10;
+	int tx2 = MoveTarget.x + (MAP_SIZE)+10;
+	int ty1 = MoveTarget.y - (MAP_SIZE)-10;
+	int ty2 = MoveTarget.y + (MAP_SIZE)+10;
+
+	//if(MoveTarget.x-15<g_enemy.x&&)
+	if (ex1 < tx2 && tx1 < ex2 && ey1 < ty2 && ty1 < ey2)
+	{
+		return 3;
+	}
+	else return 0;
+}
+
+/****************** イ　ジ　ケ ******************/
+
+//クリア回数からイジケ時間を取得
+int ENEMY_BASE::GetIjikeTime(int ClearCnt)
+{
+	//クリア回数と時間との関連性が薄いので強引に・・
+
+	int sec = 0;
+	if (ClearCnt == 0) {
+		sec = 6;
+	}
+	else if (ClearCnt == 1 || ClearCnt == 5 || ClearCnt == 9) {
+		sec = 5;
+	}
+	else if (ClearCnt == 2) {
+		sec = 4;
+	}
+	else if (ClearCnt == 3 || ClearCnt == 13) {
+		sec = 3;
+	}
+	else if (ClearCnt == 4 || ClearCnt == 6 || ClearCnt == 7 || ClearCnt == 10) {
+		sec = 2;
+	}
+	else if (ClearCnt == 8 || ClearCnt == 11 || ClearCnt == 12 || ClearCnt == 14 || ClearCnt == 15) {
+		sec = 1;
+	}
+	else if (ClearCnt >= 16) {
+		sec = 0;
+	}
+	else sec = 6;
+
+	return sec * 60;     //sec秒
+}
+
+//モード切替え
+void ENEMY_BASE::ModeChanger()
+{
+	if (ijike_flg == true)
+	{
+		//一定時間でイジケ終了
+		if (++IjikeCount % IjikeTime == 0)
+		{
+			ijike_flg = false;
+			IjikeCount = 0;
+			TrackPattern = 0;
+		}
+	}
+
+
+	if (EnemyMode != MODE::STANDBY && ijike_flg == true && eye_flg != true) EnemyMode = MODE::IJIKE;
+	else if (eye_flg == true) EnemyMode = MODE::EYE;
+}
+
+//イジケ状態の挙動
+void ENEMY_BASE::Move_Ijike()
+{
+	if (TrackPattern == 0)
+	{
+		//ランダムに動く X 4～22    y 4～24
+		MoveTarget.x = (GetRand(18) + 4) * MAP_SIZE + (MAP_SIZE / 2);
+		MoveTarget.y = (GetRand(20) + 4) * MAP_SIZE + (MAP_SIZE / 2);
+
+		//ターゲット座標がステージ外の場合、ステージ内に戻す
+		if (MoveTarget.x < L_END) MoveTarget.x = L_END + (MAP_SIZE / 2);
+		if (MoveTarget.x > R_END) MoveTarget.x = R_END - (MAP_SIZE / 2);
+		if (MoveTarget.y < U_END) MoveTarget.y = U_END + (MAP_SIZE / 2);
+		if (MoveTarget.y > D_END) MoveTarget.y = D_END - (MAP_SIZE / 2);
+		//ターゲット座標が"コ"の字外の場合、ステージ内に戻す
+		//左側上
+		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y1 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
+		//左側下
+		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y2 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y2)MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
+		//右側上
+		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y1 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+		//右側下
+		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y2 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y2) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+
+		TrackPattern++;
+	}
+	else if (TrackPattern >= 1)
+	{
+		if (TrackPattern >= 1 && CheckRandomPoint() == 3) TrackPattern = 0;
+		else TrackPattern++;
+	}
+
+	//イジケ終了時に以前のモードに戻る
+	if (ijike_flg == false) EnemyMode = old_mode;
+}
+
+
+/************************************************/
+
 int cols[] = { 0xff0000, 0xe9a1d0,0x67a8dd,0xfd7e00 };
 //テスト用　敵全色の情報を表示
 void ENEMY_BASE::DrawAllInfo()
@@ -478,7 +589,7 @@ void ENEMY_BASE::DrawAllInfo()
 			DrawFormatString(x, y + 180, 0xffffff, "Mode : %s", ModeStr[All_Enemy[i]->EnemyMode]);
 			DrawFormatString(x, y + 200, 0xffffff, "TargetX : %d", All_Enemy[i]->MoveTarget.x);
 			DrawFormatString(x, y + 220, 0xffffff, "TargetY : %d", All_Enemy[i]->MoveTarget.y);
-			DrawFormatString(x, y+DRAW_POINT_X, 0xffffff, "TarMapX : %d", All_Enemy[i]->MoveTarget.x / MAP_SIZE);
+			DrawFormatString(x, y + DRAW_POINT_X, 0xffffff, "TarMapX : %d", All_Enemy[i]->MoveTarget.x / MAP_SIZE);
 			DrawFormatString(x, y + 260, 0xffffff, "TarMapY : %d", All_Enemy[i]->MoveTarget.y / MAP_SIZE);
 			DrawFormatString(x, y + 280, 0xffffff, "Speed : %d", All_Enemy[i]->g_enemy.speed);
 		}
@@ -609,46 +720,46 @@ void ENEMY_BASE::EnemyController() {
 		}
 	}
 
-		/*if (MapData[EYC][EXC - 1] == 1) {
-			if (LC >= 783) {
-				MoveDir = DIRECTION::LEFT;
-				MoveDir = LEFT;
-				NEXTFLG = 0;
-			}
-			else if (LC <= 782) {
-				NEXTFLG = LEFT;
-			}
+	/*if (MapData[EYC][EXC - 1] == 1) {
+		if (LC >= 783) {
+			MoveDir = DIRECTION::LEFT;
+			MoveDir = LEFT;
+			NEXTFLG = 0;
 		}
-		if (MapData[EYC][EXC + 1] == 1) {
-			if (RC >= 783) {
-				MoveDir = DIRECTION::RIGHT;
-				MoveDir = RIGHT;
-				NEXTFLG = 0;
-			}
-			else if (RC <= 782) {
-				NEXTFLG = RIGHT;
-			}
+		else if (LC <= 782) {
+			NEXTFLG = LEFT;
 		}
-		if (MapData[EYC - 1][EXC] == 1) {
-			if (UC >= 783) {
-				MoveDir = DIRECTION::UP;
-				MoveDir = UP;
-				NEXTFLG = 0;
-			}
-			else if (UC <= 782) {
-				NEXTFLG = UP;
-			}
+	}
+	if (MapData[EYC][EXC + 1] == 1) {
+		if (RC >= 783) {
+			MoveDir = DIRECTION::RIGHT;
+			MoveDir = RIGHT;
+			NEXTFLG = 0;
 		}
-		if (MapData[EYC + 1][EXC] == 1) {
-			if (DC >= 783) {
-				MoveDir = DIRECTION::DOWN;
-				MoveDir = DOWN;
-				NEXTFLG = 0;
-			}
-			else if (DC <= 782) {
-				NEXTFLG = DOWN;
-			}
-		}*/
+		else if (RC <= 782) {
+			NEXTFLG = RIGHT;
+		}
+	}
+	if (MapData[EYC - 1][EXC] == 1) {
+		if (UC >= 783) {
+			MoveDir = DIRECTION::UP;
+			MoveDir = UP;
+			NEXTFLG = 0;
+		}
+		else if (UC <= 782) {
+			NEXTFLG = UP;
+		}
+	}
+	if (MapData[EYC + 1][EXC] == 1) {
+		if (DC >= 783) {
+			MoveDir = DIRECTION::DOWN;
+			MoveDir = DOWN;
+			NEXTFLG = 0;
+		}
+		else if (DC <= 782) {
+			NEXTFLG = DOWN;
+		}
+	}*/
 
 	//if (MapData[EYC][EXC - 1] == 1) {
 	//	if (LC >= 783) {
@@ -765,8 +876,8 @@ void ENEMY_BASE::EnemyController() {
 
 	CIRCLE			circle;
 
-	circle.x = g_enemy.x+DRAW_POINT_X;
-	circle.y = g_enemy.y+DRAW_POINT_Y;
+	circle.x = g_enemy.x + DRAW_POINT_X;
+	circle.y = g_enemy.y + DRAW_POINT_Y;
 	circle.r = 14.5f;
 
 	DrawFormatString(50, 650, 0x0000ff, "%d", circle.x);
@@ -839,27 +950,27 @@ void ENEMY_BASE::EnemyController() {
 			{
 			case 0://Left
 				boxP[I].fLeft[I] = g_enemy.x - 20 + DRAW_POINT_X;
-				boxP[I].fTop[I] = g_enemy.y - 15+DRAW_POINT_Y;
+				boxP[I].fTop[I] = g_enemy.y - 15 + DRAW_POINT_Y;
 				boxP[I].fRight[I] = g_enemy.x - 15 + 30.0f + DRAW_POINT_X;
-				boxP[I].fBottom[I] = g_enemy.y - 15 + 30.0f+DRAW_POINT_Y;
+				boxP[I].fBottom[I] = g_enemy.y - 15 + 30.0f + DRAW_POINT_Y;
 				break;
 			case 1://Up
 				boxP[I].fLeft[I] = g_enemy.x - 15 + DRAW_POINT_X;
-				boxP[I].fTop[I] = g_enemy.y - 20+DRAW_POINT_Y;
-				boxP[I].fRight[I] = g_enemy.x - 15 + 30.0f+DRAW_POINT_X;
-				boxP[I].fBottom[I] = g_enemy.y - 10 + 25.0f+DRAW_POINT_Y;
+				boxP[I].fTop[I] = g_enemy.y - 20 + DRAW_POINT_Y;
+				boxP[I].fRight[I] = g_enemy.x - 15 + 30.0f + DRAW_POINT_X;
+				boxP[I].fBottom[I] = g_enemy.y - 10 + 25.0f + DRAW_POINT_Y;
 				break;
 			case 2://Right
-				boxP[I].fLeft[I] = g_enemy.x - 15+DRAW_POINT_X;
-				boxP[I].fTop[I] = g_enemy.y - 15+DRAW_POINT_Y;
-				boxP[I].fRight[I] = g_enemy.x - 15 + 35.0f+DRAW_POINT_X;
-				boxP[I].fBottom[I] = g_enemy.y - 15 + 30.0f+DRAW_POINT_Y;
+				boxP[I].fLeft[I] = g_enemy.x - 15 + DRAW_POINT_X;
+				boxP[I].fTop[I] = g_enemy.y - 15 + DRAW_POINT_Y;
+				boxP[I].fRight[I] = g_enemy.x - 15 + 35.0f + DRAW_POINT_X;
+				boxP[I].fBottom[I] = g_enemy.y - 15 + 30.0f + DRAW_POINT_Y;
 				break;
 			case 3://Down
-				boxP[I].fLeft[I] = g_enemy.x - 15+DRAW_POINT_X;
-				boxP[I].fTop[I] = g_enemy.y - 15+DRAW_POINT_Y;
-				boxP[I].fRight[I] = g_enemy.x - 15 + 30.0f+DRAW_POINT_X;
-				boxP[I].fBottom[I] = g_enemy.y - 15 + 35.0f+DRAW_POINT_Y;
+				boxP[I].fLeft[I] = g_enemy.x - 15 + DRAW_POINT_X;
+				boxP[I].fTop[I] = g_enemy.y - 15 + DRAW_POINT_Y;
+				boxP[I].fRight[I] = g_enemy.x - 15 + 30.0f + DRAW_POINT_X;
+				boxP[I].fBottom[I] = g_enemy.y - 15 + 35.0f + DRAW_POINT_Y;
 				break;
 
 			default:
@@ -1189,7 +1300,7 @@ void ENEMY_BASE::MapCopy() {
 		for (int w = 0; w < WIDTH; w++) {
 			//if (P == 0) {
 				//MapData[h][w] = a_star.data[h][w].status;
-				MapData[h][w] = data[h][w].status;
+			MapData[h][w] = data[h][w].status;
 			//}else if (P == 1) {
 			//	//MapData[h][w] = a_star_pink.data[h][w].status;
 			//	MapData[h][w] = data[h][w].status;
@@ -1462,47 +1573,48 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 {
 	static int E = 0;
 
-		SX = g_enemy.x / MAP_SIZE;
-		SY = g_enemy.y / MAP_SIZE;
-		/*SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
-		SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;*/
+	SX = g_enemy.x / MAP_SIZE;
+	SY = g_enemy.y / MAP_SIZE;
+	/*SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
+	SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;*/
 
 
-		if (E == 0) {//赤
+	if (E == 0) {//赤
 
-			if (DFlg == false) {
+		if (DFlg == false) {
 
-				if (GFlg == false) {
+			if (GFlg == false) {
 
-					GX = g_player.PXC;
-					GY = g_player.PYC;
+				GX = g_player.PXC;
+				GY = g_player.PYC;
 
-					Rand = GetRand(5);
+				Rand = GetRand(5);
 
+			}
+			else if (GFlg == true) {
+				GX = g_player.PXC + Rand;
+				GY = g_player.PYC + Rand;
+				if (Time++ >= 180) {
+					Time = 0;
+					GFlg = false;
 				}
-				else if (GFlg == true) {
-					GX = g_player.PXC + Rand;
-					GY = g_player.PYC + Rand;
-					if (Time++ >= 180) {
-						Time = 0;
-						GFlg = false;
-					}
-				}
-
-			}
-			else if (DFlg == true) {
-				GX = DX;
-				GY = DY;
 			}
 
-			if (SX == GX && SY == GY) {
-				GFlg = true;
-				DFlg = false;
-			}
+		}
+		else if (DFlg == true) {
+			GX = DX;
+			GY = DY;
+		}
 
-			//Count = 1;
+		if (SX == GX && SY == GY) {
+			GFlg = true;
+			DFlg = false;
+		}
 
-	}else if(E==1){//ピンク
+		//Count = 1;
+
+	}
+	else if (E == 1) {//ピンク
 		SX = g_enemy.x / MAP_SIZE;
 		SY = g_enemy.y / MAP_SIZE;
 
@@ -1578,139 +1690,139 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 		//Count = 0;
 	}
 	else if (E == 2) {//水色
-			if (DFlg == false) {
+		if (DFlg == false) {
 
-				GX = g_player.PXC;
-				GY = g_player.PYC;
+			GX = g_player.PXC;
+			GY = g_player.PYC;
 
 
 
-				if (GFlg == false) {
+			if (GFlg == false) {
 
-					if (g_player.PXC < Red.EXC) {
-						GX = (Red.EXC - g_player.PXC);
-					}
-					else if (g_player.PXC > Red.EXC) {
-						GX = g_player.PXC - Red.EXC * 2;
-					}
-					else {
-						GX = g_player.PXC;
-					}
-
-					if (g_player.PYC < Red.EYC) {
-						GY = Red.EYC - g_player.PYC;
-					}
-					else if (g_player.PYC > Red.EYC) {
-						GY = g_player.PYC + Red.EYC * 2;
-					}
-					else {
-						GY = g_player.PYC;
-					}
-					do {
-						Rand = GetRand(20);
-					} while (Rand < 10);
-					aas = GetRand(4);
+				if (g_player.PXC < Red.EXC) {
+					GX = (Red.EXC - g_player.PXC);
 				}
-				else if (GFlg == true) {
-					if (aas == 0) {
-						GX = g_player.PXC + Rand;
-						GY = g_player.PYC + Rand;
-					}
-					else if (aas == 1) {
-						GX = g_player.PXC - Rand;
-						GY = g_player.PYC + Rand;
-					}
-					else if (aas == 2) {
-						GX = g_player.PXC + Rand;
-						GY = g_player.PYC - Rand;
-					}
-					else if (aas == 3) {
-						GX = g_player.PXC - Rand;
-						GY = g_player.PYC - Rand;
-					}
-					if (Time++ >= 180) {
-						Time = 0;
-						GFlg = false;
-					}
+				else if (g_player.PXC > Red.EXC) {
+					GX = g_player.PXC - Red.EXC * 2;
 				}
-			}
-			else if (DFlg == true) {
-				GX = DX;
-				GY = DY;
-			}
+				else {
+					GX = g_player.PXC;
+				}
 
-			if (SX == GX && SY == GY) {
-				GFlg = true;
-				DFlg = false;
+				if (g_player.PYC < Red.EYC) {
+					GY = Red.EYC - g_player.PYC;
+				}
+				else if (g_player.PYC > Red.EYC) {
+					GY = g_player.PYC + Red.EYC * 2;
+				}
+				else {
+					GY = g_player.PYC;
+				}
+				do {
+					Rand = GetRand(20);
+				} while (Rand < 10);
+				aas = GetRand(4);
+			}
+			else if (GFlg == true) {
+				if (aas == 0) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 1) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 2) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC - Rand;
+				}
+				else if (aas == 3) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC - Rand;
+				}
+				if (Time++ >= 180) {
+					Time = 0;
+					GFlg = false;
+				}
 			}
 		}
+		else if (DFlg == true) {
+			GX = DX;
+			GY = DY;
+		}
+
+		if (SX == GX && SY == GY) {
+			GFlg = true;
+			DFlg = false;
+		}
+	}
 	else if (E == 3) {//オレンジ
-	if (DFlg == false) {
+		if (DFlg == false) {
 
-		GX = g_player.PXC;
-		GY = g_player.PYC;
+			GX = g_player.PXC;
+			GY = g_player.PYC;
 
 
 
-		if (GFlg == false) {
+			if (GFlg == false) {
 
-			if (g_player.PXC < Red.EXC) {
-				GX = (Red.EXC - g_player.PXC);
-			}
-			else if (g_player.PXC > Red.EXC) {
-				GX = g_player.PXC - Red.EXC * 2;
-			}
-			else {
-				GX = g_player.PXC;
-			}
+				if (g_player.PXC < Red.EXC) {
+					GX = (Red.EXC - g_player.PXC);
+				}
+				else if (g_player.PXC > Red.EXC) {
+					GX = g_player.PXC - Red.EXC * 2;
+				}
+				else {
+					GX = g_player.PXC;
+				}
 
-			if (g_player.PYC < Red.EYC) {
-				GY = Red.EYC - g_player.PYC;
+				if (g_player.PYC < Red.EYC) {
+					GY = Red.EYC - g_player.PYC;
+				}
+				else if (g_player.PYC > Red.EYC) {
+					GY = g_player.PYC + Red.EYC * 2;
+				}
+				else {
+					GY = g_player.PYC;
+				}
+				do {
+					Rand = GetRand(20);
+				} while (Rand < 10);
+				aas = GetRand(4);
 			}
-			else if (g_player.PYC > Red.EYC) {
-				GY = g_player.PYC + Red.EYC * 2;
+			else if (GFlg == true) {
+				if (aas == 0) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 1) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC + Rand;
+				}
+				else if (aas == 2) {
+					GX = g_player.PXC + Rand;
+					GY = g_player.PYC - Rand;
+				}
+				else if (aas == 3) {
+					GX = g_player.PXC - Rand;
+					GY = g_player.PYC - Rand;
+				}
+				if (Time++ >= 180) {
+					Time = 0;
+					GFlg = false;
+				}
 			}
-			else {
-				GY = g_player.PYC;
-			}
-			do {
-				Rand = GetRand(20);
-			} while (Rand < 10);
-			aas = GetRand(4);
 		}
-		else if (GFlg == true) {
-			if (aas == 0) {
-				GX = g_player.PXC + Rand;
-				GY = g_player.PYC + Rand;
-			}
-			else if (aas == 1) {
-				GX = g_player.PXC - Rand;
-				GY = g_player.PYC + Rand;
-			}
-			else if (aas == 2) {
-				GX = g_player.PXC + Rand;
-				GY = g_player.PYC - Rand;
-			}
-			else if (aas == 3) {
-				GX = g_player.PXC - Rand;
-				GY = g_player.PYC - Rand;
-			}
-			if (Time++ >= 180) {
-				Time = 0;
-				GFlg = false;
-			}
+		else if (DFlg == true) {
+			GX = DX;
+			GY = DY;
 		}
-	}
-	else if (DFlg == true) {
-		GX = DX;
-		GY = DY;
-	}
 
-	if (SX == GX && SY == GY) {
-		GFlg = true;
-		DFlg = false;
-	}
-	//Count = 0;
+		if (SX == GX && SY == GY) {
+			GFlg = true;
+			DFlg = false;
+		}
+		//Count = 0;
 	}
 
 

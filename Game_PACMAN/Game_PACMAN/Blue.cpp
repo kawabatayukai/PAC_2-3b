@@ -235,11 +235,10 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 {
 	M_POINT Point = { 0,0 };
 
-	//イジケ
-	//if (ijike_flg == true) EnemyMode = MODE::IJIKE;
+	//イジケ・目状態を設定
+	ModeChanger();
 
 	static int order = 0;
-	static int oldmode;
 
 	int Red_X;
 	int Red_Y;
@@ -250,11 +249,6 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 
 		if (sortie_flg == false)     //出撃不可
 		{
-			////上下に往復
-			//if (CheckTarget() == 3 && g_enemy.y == 285) MoveTarget.y = 345;      //下部
-			//else if (CheckTarget() == 3 && g_enemy.y == 345) MoveTarget.y = 285; //上部
-			//else if (CheckTarget() == 0) MoveTarget = { 255,285 };               //初期位置
-
 			//上下に往復
 			if (CheckTarget() == 3 && g_enemy.y == 375) MoveTarget.y = 435;      //下部
 			else if (CheckTarget() == 3 && g_enemy.y == 435) MoveTarget.y = 375; //上部
@@ -288,7 +282,7 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 		MoveTarget = Point;
 
 		//現在のモードを保持
-		oldmode = EnemyMode;
+		old_mode = EnemyMode;
 
 		//8秒で追跡モードに切り替え
 		if (++mode_count % 480 == 0)
@@ -317,7 +311,7 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 		MoveTarget.y = Point.y;
 
 		//現在のモードを保持
-		oldmode = EnemyMode;
+		old_mode = EnemyMode;
 
 		//20秒で巡回モードに切り替え
 		if (++mode_count % 1200 == 0)
@@ -328,30 +322,10 @@ void ENEMY_BLUE::TargetCtrl(int tpX, int tpY, int tpD)
 		break;
 
 	case MODE::IJIKE:       //イジケ時
-//Point.x = tpX + (MAP_SIZE * ((GetRand(4) + 1) * 3));
-//Point.y = tpY + (MAP_SIZE * ((GetRand(4) + 1) * 3));
 
-//if (ijike_flg == false) EnemyMode = oldmode;
-
-		//とりあえず巡回モード一番目
-		Point = { PtrlPoint[2][order][0] ,PtrlPoint[2][order][1] };
-		MoveTarget = Point;
-		if (ijike_flg == false) EnemyMode = oldmode;
-
+		Move_Ijike();
 		break;
-	case MODE::RANDOM:
-		Point.x = 1;
-		Point.y = 1;
-		if (g_enemy.x == MoveTarget.x && g_enemy.y == MoveTarget.y)
-		{
-			Point.x = GetRand(18) + 1;
-			Point.y = GetRand(20) + 1;
-		}
 
-		MoveTarget.x = (Point.x * MAP_SIZE) + DRAW_POINT_X;
-		MoveTarget.y = (Point.y * MAP_SIZE) + DRAW_POINT_Y;
-
-		break;
 	default:
 		break;
 	}

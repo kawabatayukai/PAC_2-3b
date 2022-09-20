@@ -296,7 +296,7 @@ void DrawGameTitle()
 void GameInit()
 {
 	//すべてのEnemyを初期化 親クラスENEMY_BASEの静的メンバ関数
-	ENEMY_BASE::AllEnemyInit();
+	EnemyManager->AllEnemyInit(ClearCount);
 
 	g_player.PlayerInit();
 	Disp.DispInit();
@@ -539,8 +539,8 @@ void DrawGameOver()
 		if (g_player.Life >= 0) {//残機あり
 			g_player.Life--;
 			stage.oldLife = g_player.Life;
-			//すべてのEnemyを初期化 親クラスENEMY_BASEの静的メンバ関数
-			ENEMY_BASE::AllEnemyInit();
+			//すべてのEnemyを初期化 親クラスENEMY_BASE型ポインタ
+			EnemyManager->AllEnemyInit(ClearCount);
 			g_player.PlayerInit();
 			g_player.Life = stage.oldLife;
 			InitFlg = false;
