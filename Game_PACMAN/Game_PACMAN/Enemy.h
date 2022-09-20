@@ -55,15 +55,28 @@ struct M_POINT
 	int y;
 };
 
+////敵の構造体
+//struct ENEMY
+//{
+//	bool flg;   //描画フラグ
+//	int x;     //X座標
+//	int y;     //Y座標
+//	int w;     //幅
+//	int h;     //高さ
+//	int speed; //スピード
+//	int score; //スコア
+//	int img;   //画像
+//};
+
 //敵の構造体
 struct ENEMY
 {
 	bool flg;   //描画フラグ
-	int x;     //X座標
-	int y;     //Y座標
-	int w;     //幅
-	int h;     //高さ
-	int speed; //スピード
+	float x;     //X座標
+	float y;     //Y座標
+	float w;     //幅
+	float h;     //高さ
+	float speed; //スピード
 	int score; //スコア
 	int img;   //画像
 };
@@ -116,8 +129,8 @@ public:
 	bool CheckHitCircle(float x, float y, float r);                //'引数'と敵との当たり判定
 	/************************************************/
 
-	int GetEnemyX() { return g_enemy.x; }     //x座標を取得
-	int GetEnemyY() { return g_enemy.y; }     //y座標を取得
+	int GetEnemyX() { return static_cast<int>(g_enemy.x); }     //x座標を取得
+	int GetEnemyY() { return static_cast<int>(g_enemy.y); }     //y座標を取得
 
 	int GetMoveDir() { return MoveDir; }     //移動方向を取得
 	void SetMoveDir(int D);     //移動方向を取得

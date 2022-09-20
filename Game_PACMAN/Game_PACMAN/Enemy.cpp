@@ -354,18 +354,18 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 	moveDataSet(MapData, targetX, targetY);
 
 	//敵の(map上の)座標
-	int Mx = g_enemy.x / MAP_SIZE;
-	int My = g_enemy.y / MAP_SIZE;
+	int Mx = static_cast<int>(g_enemy.x / MAP_SIZE);
+	int My = static_cast<int>(g_enemy.y / MAP_SIZE);
 
-	int x1 = ((g_enemy.x - (g_enemy.w / 2)) + 1); //左
-	int x2 = ((g_enemy.x + (g_enemy.w / 2)) - 1); //右
-	int y1 = ((g_enemy.y - (g_enemy.h / 2)) + 1); //上
-	int y2 = ((g_enemy.y + (g_enemy.h / 2)) - 1); //下
+	float x1 = ((g_enemy.x - (g_enemy.w / 2)) + 1); //左
+	float x2 = ((g_enemy.x + (g_enemy.w / 2)) - 1); //右
+	float y1 = ((g_enemy.y - (g_enemy.h / 2)) + 1); //上
+	float y2 = ((g_enemy.y + (g_enemy.h / 2)) - 1); //下
 
-	int Lx = x1 / MAP_SIZE; //マップ上左
-	int Rx = x2 / MAP_SIZE; //マップ上右
-	int Uy = y1 / MAP_SIZE; //マップ上上
-	int Dy = y2 / MAP_SIZE; //マップ上下
+	int Lx = static_cast<int>(x1 / MAP_SIZE); //マップ上左
+	int Rx = static_cast<int>(x2 / MAP_SIZE); //マップ上右
+	int Uy = static_cast<int>(y1 / MAP_SIZE); //マップ上上
+	int Dy = static_cast<int>(y2 / MAP_SIZE); //マップ上下
 
 	//左
 	if (MapData[Dy][Rx - 1] != 1 && MapData[Uy][Rx - 1] != 1 && my_mapdata[My][Rx - 1] < my_mapdata[My][Rx])
@@ -412,67 +412,40 @@ void ENEMY_BASE::MoveShortest2(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, 
 	moveDataSet(MapData, targetX, targetY);
 
 	//�G��(map���)���W
-	int Mx = g_enemy.x / MAP_SIZE;
-	int My = g_enemy.y / MAP_SIZE;
-
-	/*if (a_star.data[g_enemy_Red.EYC][g_enemy_Red.EXC - 1].status == 1) {
-		MoveDir = DIRECTION::LEFT;
-		g_enemy.x -= g_enemy.speed;
-	}
-
-	if (a_star.data[g_enemy_Red.EYC][g_enemy_Red.EXC + 1].status == 1) {
-		MoveDir = DIRECTION::RIGHT;
-		g_enemy.x += g_enemy.speed;
-
-	}
-	if (a_star.data[g_enemy_Red.EYC - 1][g_enemy_Red.EXC].status == 1) {
-		MoveDir = DIRECTION::UP;
-		g_enemy.y -= g_enemy.speed;
-	}
-	if (a_star.data[g_enemy_Red.EYC + 1][g_enemy_Red.EXC].status == 1) {
-		MoveDir = DIRECTION::DOWN;
-		g_enemy.y += g_enemy.speed;
-	}*/
+	int Mx = static_cast<int>(g_enemy.x / MAP_SIZE);
+	int My = static_cast<int>(g_enemy.y / MAP_SIZE);
 
 	//��
 	if (MapData[My][Mx - 1] != 1 && my_mapdata[My][Mx - 1] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::LEFT;
 		g_enemy.x -= g_enemy.speed;
-		//if (ijike_flg == false) g_enemy.x -= g_enemy.speed;
-		//else                    g_enemy.x += g_enemy.speed;
 	}
 	//�E
 	else if (MapData[My][Mx + 1] != 1 && my_mapdata[My][Mx + 1] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::RIGHT;
 		g_enemy.x += g_enemy.speed;
-		//if (ijike_flg == false) g_enemy.x += g_enemy.speed;
-		//else                    g_enemy.x -= g_enemy.speed;
 	}
 	//��
 	else if (MapData[My - 1][Mx] != 1 && my_mapdata[My - 1][Mx] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::UP;
 		g_enemy.y -= g_enemy.speed;
-		//if (ijike_flg == false) g_enemy.y -= g_enemy.speed;
-		//else                    g_enemy.y += g_enemy.speed;
 	}
 	//��
 	else if (MapData[My + 1][Mx] != 1 && my_mapdata[My + 1][Mx] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::DOWN;
 		g_enemy.y += g_enemy.speed;
-		//if (ijike_flg == false) g_enemy.y += g_enemy.speed;
-		//else                    g_enemy.y -= g_enemy.speed;
 	}
 
 	//�߂荞�܂��Ȃ�
 	int x1, x2, y1, y2;
-	x1 = ((g_enemy.x - (g_enemy.w / 2)) + 2);
-	x2 = ((g_enemy.x + (g_enemy.w / 2)) - 2);
-	y1 = ((g_enemy.y - (g_enemy.h / 2)) + 2);
-	y2 = ((g_enemy.y + (g_enemy.h / 2)) - 2);
+	x1 = static_cast<int>((g_enemy.x - (g_enemy.w / 2)) + 2);
+	x2 = static_cast<int>((g_enemy.x + (g_enemy.w / 2)) - 2);
+	y1 = static_cast<int>((g_enemy.y - (g_enemy.h / 2)) + 2);
+	y2 = static_cast<int>((g_enemy.y + (g_enemy.h / 2)) - 2);
 
 	if (MapData[My][Mx - 1] == 1)
 	{
@@ -495,10 +468,10 @@ void ENEMY_BASE::MoveShortest2(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, 
 //当たり判定
 int ENEMY_BASE::CheckTarget3()
 {
-	int ex1 = g_enemy.x - (g_enemy.w / 2); //左
-	int ex2 = g_enemy.x + (g_enemy.w / 2); //右
-	int ey1 = g_enemy.y - (g_enemy.h / 2); //上
-	int ey2 = g_enemy.y + (g_enemy.h / 2); //下
+	float ex1 = g_enemy.x - (g_enemy.w / 2); //左
+	float ex2 = g_enemy.x + (g_enemy.w / 2); //右
+	float ey1 = g_enemy.y - (g_enemy.h / 2); //上
+	float ey2 = g_enemy.y + (g_enemy.h / 2); //下
 
 	int tx1 = MoveTarget.x - (MAP_SIZE / 2);
 	int tx2 = MoveTarget.x + (MAP_SIZE / 2);
@@ -516,10 +489,10 @@ int ENEMY_BASE::CheckTarget3()
 //ランダム座標との当たり判定　ポイントが壁の中でも
 int ENEMY_BASE::CheckRandomPoint()
 {
-	int ex1 = g_enemy.x - (g_enemy.w / 2); //左
-	int ex2 = g_enemy.x + (g_enemy.w / 2); //右
-	int ey1 = g_enemy.y - (g_enemy.h / 2); //上
-	int ey2 = g_enemy.y + (g_enemy.h / 2); //下
+	float ex1 = g_enemy.x - (g_enemy.w / 2); //左
+	float ex2 = g_enemy.x + (g_enemy.w / 2); //右
+	float ey1 = g_enemy.y - (g_enemy.h / 2); //上
+	float ey2 = g_enemy.y + (g_enemy.h / 2); //下
 
 	int tx1 = MoveTarget.x - (MAP_SIZE)-10;
 	int tx2 = MoveTarget.x + (MAP_SIZE)+10;
@@ -633,7 +606,7 @@ void ENEMY_BASE::Move_Eye()
 	{
 		eye_flg = false;
 		ijike_flg = false;
-		g_enemy.speed = 3;
+		g_enemy.speed = 3.0f;
 		EnemyMode = MODE::R_EYE;
 	}
 }
@@ -660,14 +633,14 @@ void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 	{
 		hitflg_count++;
 		eye_flg = true;
-		g_enemy.speed = 9;
+		g_enemy.speed = 9.0f;
 		if (hitflg_count == 1)
 		{
 			eaten_count++;                            //捕食カウンター
 			if (eaten_count == 5) eaten_count = 1;    //
 			score += All_Scores[eaten_count];         //スコアを加算
 			draw_score = All_Scores[eaten_count];     //描画するスコア
-			Score_Posi = { g_enemy.x - 15,g_enemy.y };//スコア描画地点を設定
+			Score_Posi = { static_cast<int>(g_enemy.x) - 15,static_cast<int>(g_enemy.y) };//スコア描画地点を設定
 			score_flg = true;                         //描画ON
 		}
 	}
@@ -729,10 +702,10 @@ void ENEMY_BASE::DrawAllInfo()
 
 			DrawFormatString(x, y + 20, cols[i], "Color : %s", ColorStr[All_Enemy[i]->My_Color]);
 			DrawFormatString(x, y + 40, 0xffffff, "Move : %d", All_Enemy[i]->MoveDir);
-			DrawFormatString(x, y + 60, 0xffffff, "x : %d", All_Enemy[i]->g_enemy.x);
-			DrawFormatString(x, y + 80, 0xffffff, "y : %d", All_Enemy[i]->g_enemy.y);
-			DrawFormatString(x, y + 100, 0xffffff, "mapX : %d", All_Enemy[i]->g_enemy.x / MAP_SIZE);
-			DrawFormatString(x, y + 120, 0xffffff, "mapY : %d", All_Enemy[i]->g_enemy.y / MAP_SIZE);
+			DrawFormatString(x, y + 60, 0xffffff, "x : %f", All_Enemy[i]->g_enemy.x);
+			DrawFormatString(x, y + 80, 0xffffff, "y : %f", All_Enemy[i]->g_enemy.y);
+			DrawFormatString(x, y + 100, 0xffffff, "mapX : %d", static_cast<int>(All_Enemy[i]->g_enemy.x) / MAP_SIZE);
+			DrawFormatString(x, y + 120, 0xffffff, "mapY : %d", static_cast<int>(All_Enemy[i]->g_enemy.y) / MAP_SIZE);
 			DrawFormatString(x, y + 140, 0xffffff, "Direct : %s", DirectStr[All_Enemy[i]->MoveDir]);
 			DrawFormatString(x, y + 160, 0xffffff, "ModeCount : %d", All_Enemy[i]->mode_count / 60);
 			DrawFormatString(x, y + 180, 0xffffff, "Mode : %s", ModeStr[All_Enemy[i]->EnemyMode]);
@@ -740,7 +713,7 @@ void ENEMY_BASE::DrawAllInfo()
 			DrawFormatString(x, y + 220, 0xffffff, "TargetY : %d", All_Enemy[i]->MoveTarget.y);
 			DrawFormatString(x, y + DRAW_POINT_X, 0xffffff, "TarMapX : %d", All_Enemy[i]->MoveTarget.x / MAP_SIZE);
 			DrawFormatString(x, y + 260, 0xffffff, "TarMapY : %d", All_Enemy[i]->MoveTarget.y / MAP_SIZE);
-			DrawFormatString(x, y + 280, 0xffffff, "Speed : %d", All_Enemy[i]->g_enemy.speed);
+			DrawFormatString(x, y + 280, 0xffffff, "Speed : %f", All_Enemy[i]->g_enemy.speed);
 		}
 	}
 
@@ -752,35 +725,35 @@ int ENEMY_BASE::eaten_count;
 //巡回モード用座標
 const int ENEMY_BASE::PtrlPoint[4][4][2] =
 {
-							  /*29×27map用*/
-	//アカ
-	{
-		{22 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
-		{19 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
-		{19 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
-		{22 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
-	},
-	//ピンク
-	{
-		{4 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
-		{7 * MAP_SIZE + (MAP_SIZE / 2), 4 * MAP_SIZE + (MAP_SIZE / 2)},
-		{7 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
-		{4 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
-	},
-	//アオ
-	{
-		{22 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
-		{14 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
-		{18 * MAP_SIZE + (MAP_SIZE / 2),20 * MAP_SIZE + (MAP_SIZE / 2)},
-		{22 * MAP_SIZE + (MAP_SIZE / 2),22 * MAP_SIZE + (MAP_SIZE / 2)},
-	},
-	//オレンジ
-	{
-		{4 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
-		{12 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
-		{8 * MAP_SIZE + (MAP_SIZE / 2),20 * MAP_SIZE + (MAP_SIZE / 2)},
-		{4 * MAP_SIZE + (MAP_SIZE / 2),22 * MAP_SIZE + (MAP_SIZE / 2)},
-	},
+	/*29×27map用*/
+//アカ
+{
+	{22 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
+	{19 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
+	{19 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
+	{22 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
+},
+//ピンク
+{
+	{4 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
+	{7 * MAP_SIZE + (MAP_SIZE / 2), 4 * MAP_SIZE + (MAP_SIZE / 2)},
+	{7 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
+	{4 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
+},
+//アオ
+{
+	{22 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
+	{14 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
+	{18 * MAP_SIZE + (MAP_SIZE / 2),20 * MAP_SIZE + (MAP_SIZE / 2)},
+	{22 * MAP_SIZE + (MAP_SIZE / 2),22 * MAP_SIZE + (MAP_SIZE / 2)},
+},
+//オレンジ
+{
+	{4 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
+	{12 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
+	{8 * MAP_SIZE + (MAP_SIZE / 2),20 * MAP_SIZE + (MAP_SIZE / 2)},
+	{4 * MAP_SIZE + (MAP_SIZE / 2),22 * MAP_SIZE + (MAP_SIZE / 2)},
+},
 };
 
 //出撃前座標
@@ -817,16 +790,16 @@ void ENEMY_BASE::SetMoveDir(int D) {
 }
 
 void ENEMY_BASE::EnemyController() {
-	EX = g_enemy.x;
-	EY = g_enemy.y;
-	EXC = g_enemy.x / MAP_SIZE;
-	EYC = g_enemy.y / MAP_SIZE;
+	EX = static_cast<int>(g_enemy.x);
+	EY = static_cast<int>(g_enemy.y);
+	EXC = static_cast<int>(g_enemy.x) / MAP_SIZE;
+	EYC = static_cast<int>(g_enemy.y) / MAP_SIZE;
 
 	BOX				box[783] = { 0 };
 	BOX1			boxP[4] = { 0 };
 
-	oldX = g_enemy.x;
-	oldY = g_enemy.y;
+	oldX = static_cast<int>(g_enemy.x);
+	oldY = static_cast<int>(g_enemy.y);
 
 	OldKeyFlg = MoveDir;
 
@@ -968,11 +941,11 @@ void ENEMY_BASE::EnemyController() {
 		//PX -= 3;
 		if (FLG_MAX_L == true && NEXTFLG == LEFT) {
 			//EX -= 4;
-			g_enemy.x -= 3;
+			g_enemy.x -= 3.0f;
 		}
 		else {
 			//EX -= 3;
-			g_enemy.x -= 3;
+			g_enemy.x -= 3.0f;
 		}
 		//DrawGraph(PX, PY, image.PlayerImageL, TRUE);
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageL, TRUE);
@@ -982,11 +955,11 @@ void ENEMY_BASE::EnemyController() {
 		//PX += 3;
 		if (FLG_MAX_R == true && NEXTFLG == RIGHT) {
 			//EX += 4;
-			g_enemy.x += 4;
+			g_enemy.x += 4.0f;
 		}
 		else {
 			//EX += 3;
-			g_enemy.x += 3;
+			g_enemy.x += 3.0f;
 		}
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageR, TRUE);
 		//DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
@@ -995,11 +968,11 @@ void ENEMY_BASE::EnemyController() {
 		//PY -= 3;
 		if (FLG_MAX_U == true && NEXTFLG == UP) {
 			//EY -= 4;
-			g_enemy.y -= 4;
+			g_enemy.y -= 4.0f;
 		}
 		else {
 			//EY -= 3;
-			g_enemy.y -= 3;
+			g_enemy.y -= 3.0f;
 		}
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageU, TRUE);
 		//DrawGraph(EX - 15, EY - 15, image.g_T01Image, TRUE);
@@ -1008,11 +981,11 @@ void ENEMY_BASE::EnemyController() {
 		//PY += 3;
 		if (FLG_MAX_D == true && NEXTFLG == DOWN) {
 			//EY += 4;
-			g_enemy.y += 4;
+			g_enemy.y += 4.0f;
 		}
 		else {
 			//EY += 3;
-			g_enemy.y += 3;
+			g_enemy.y += 3.0f;
 		}
 		//DrawGraph(PX, PY, image.PlayerImageD, TRUE);
 		//DrawGraph(PX - 15, PY - 15, image.PlayerImageD, TRUE);
@@ -1027,8 +1000,8 @@ void ENEMY_BASE::EnemyController() {
 
 	CIRCLE			circle;
 
-	circle.x = g_enemy.x + DRAW_POINT_X;
-	circle.y = g_enemy.y + DRAW_POINT_Y;
+	circle.x = g_enemy.x + static_cast<float>(DRAW_POINT_X);
+	circle.y = g_enemy.y + static_cast<float>(DRAW_POINT_Y);
 	circle.r = 14.5f;
 
 	DrawFormatString(50, 650, 0x0000ff, "%d", circle.x);
@@ -1066,8 +1039,8 @@ void ENEMY_BASE::EnemyController() {
 							oldY -= oldY % 10;
 							oldY += 5;
 						}
-						g_enemy.x = oldX;
-						g_enemy.y = oldY;
+						g_enemy.x = static_cast<float>(oldX);
+						g_enemy.y = static_cast<float>(oldY);
 						MoveDir = OldKeyFlg;
 					}
 					else
@@ -1724,8 +1697,8 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 {
 	static int E = 0;
 
-	SX = g_enemy.x / MAP_SIZE;
-	SY = g_enemy.y / MAP_SIZE;
+	SX = static_cast<int>(g_enemy.x) / MAP_SIZE;
+	SY = static_cast<int>(g_enemy.y) / MAP_SIZE;
 	/*SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
 	SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;*/
 
@@ -1766,8 +1739,8 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 
 	}
 	else if (E == 1) {//ピンク
-		SX = g_enemy.x / MAP_SIZE;
-		SY = g_enemy.y / MAP_SIZE;
+		SX = static_cast<int>(g_enemy.x) / MAP_SIZE;
+		SY = static_cast<int>(g_enemy.y) / MAP_SIZE;
 
 		//SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
 		//SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;
@@ -2101,8 +2074,8 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 void ENEMY_BASE::A_starInit() {
 	//SX = (Red.GetEnemyX() - DRAW_POINT_X) / 30;
 	//SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;
-	SX = g_enemy.x / MAP_SIZE;
-	SY = g_enemy.y / MAP_SIZE;
+	SX = static_cast<int>(g_enemy.x) / MAP_SIZE;
+	SY = static_cast<int>(g_enemy.y) / MAP_SIZE;
 
 	GX = g_player.PXC;
 	GY = g_player.PYC;

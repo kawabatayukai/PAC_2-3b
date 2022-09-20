@@ -21,8 +21,6 @@ int ENEMY_ORANGE::Loadimages()
 void ENEMY_ORANGE::InitEnemy()
 {
 	g_enemy.flg = true;
-	//g_enemy.x = 12 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
-	//g_enemy.y = 10 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
 
 	g_enemy.x = 15 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
 	g_enemy.y = 13 * MAP_SIZE + (MAP_SIZE / 2); //巣の中
@@ -61,20 +59,20 @@ void ENEMY_ORANGE::MoveEnemy(int MapData[MAP_HEIGHT][MAP_WIDTH])
 	int Tx = MoveTarget.x;    //追跡対象X　　　追跡モードのみ
 	int Ty = MoveTarget.y;    //   〃　 Y
 
-	int Mx = g_enemy.x / MAP_SIZE;
-	int My = g_enemy.y / MAP_SIZE;
+	int Mx = static_cast<int>(g_enemy.x / MAP_SIZE);
+	int My = static_cast<int>(g_enemy.y / MAP_SIZE);
 
-	int Lx = (g_enemy.x - (g_enemy.w / 2));
-	int Rx = (g_enemy.x + (g_enemy.w / 2));
-	int Uy = (g_enemy.y - (g_enemy.h / 2));
-	int Dy = (g_enemy.y + (g_enemy.h / 2));
+	int Lx = static_cast<int>(g_enemy.x - (g_enemy.w / 2));
+	int Rx = static_cast<int>(g_enemy.x + (g_enemy.w / 2));
+	int Uy = static_cast<int>(g_enemy.y - (g_enemy.h / 2));
+	int Dy = static_cast<int>(g_enemy.y + (g_enemy.h / 2));
 
 	bool hitX = false;  //X軸の一致 ｱﾘ・ﾅｼ
 	bool hitY = false;  //Y軸の一致 ｱﾘ・ﾅｼ
 
 	//敵の座標と目標座標の差（difference）
-	int dx = g_enemy.x - MoveTarget.x;
-	int dy = g_enemy.y - MoveTarget.y;
+	int dx = static_cast<int>(g_enemy.x - MoveTarget.x);
+	int dy = static_cast<int>(g_enemy.y - MoveTarget.y);
 
 	//x,y方向の差を比較、大きく離れている方を優先  絶対値で
 
@@ -154,10 +152,10 @@ void ENEMY_ORANGE::MoveEnemy(int MapData[MAP_HEIGHT][MAP_WIDTH])
 
 	//めり込ませない
 	int x1, x2, y1, y2;
-	x1 = (g_enemy.x - (g_enemy.w / 2));
-	x2 = (g_enemy.x + (g_enemy.w / 2) - 1);
-	y1 = (g_enemy.y - (g_enemy.h / 2) + 1);
-	y2 = (g_enemy.y + (g_enemy.h / 2) - 1);
+	x1 = static_cast<int>(g_enemy.x - (g_enemy.w / 2));
+	x2 = static_cast<int>(g_enemy.x + (g_enemy.w / 2) - 1);
+	y1 = static_cast<int>(g_enemy.y - (g_enemy.h / 2) + 1);
+	y2 = static_cast<int>(g_enemy.y + (g_enemy.h / 2) - 1);
 
 	if (MapData[My][Mx - 1] == 1)
 	{
@@ -221,7 +219,7 @@ void ENEMY_ORANGE::DrawEnemy()
 	if (g_enemy.flg == true)
 	{
 		//シンプル描画
-		DrawRotaGraph(g_enemy.x + DRAW_POINT_X, g_enemy.y + DRAW_POINT_Y, 1.0, 0, enemyimage[g_enemy.img], TRUE);
+		DrawRotaGraphF(g_enemy.x + static_cast<float>(DRAW_POINT_X), g_enemy.y + static_cast<float>(DRAW_POINT_Y), 1.0, 0, enemyimage[g_enemy.img], TRUE);
 	}
 
 	//テスト　

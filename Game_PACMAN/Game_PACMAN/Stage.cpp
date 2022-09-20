@@ -72,12 +72,12 @@ void Stage::FruitControl(int ClearCnt, int FoodCnt)
 {
 	CIRCLE circleFruit, circleP;
 
-	circleFruit.x = DRAW_POINT_X + MapPointX(13) + 15;
-	circleFruit.y = DRAW_POINT_Y + MapPointY(16) + 15;
+	circleFruit.x = static_cast<float>(DRAW_POINT_X + MapPointX(13) + 15);
+	circleFruit.y = static_cast<float>(DRAW_POINT_Y + MapPointY(16) + 15);
 	circleFruit.r = 6.5f;
 
-	circleP.x = g_player.PX;
-	circleP.y = g_player.PY;
+	circleP.x = static_cast<float>(g_player.PX);
+	circleP.y = static_cast<float>(g_player.PY);
 	circleP.r = 6.5f;
 
 	//•\Ž¦‚³‚ê‚Ä‚¢‚é‚Æ‚«‚É“–‚½‚Á‚½
@@ -294,24 +294,24 @@ void Stage::DrawMapScore(int ClearCnt) {
 int Stage::HitCircle() {
 	CIRCLE circleE1, circleE2, circleE3, circleE4, circleP;
 
-	circleE1.x = Red.GetEnemyX() + DRAW_POINT_X;
-	circleE1.y = Red.GetEnemyY() + DRAW_POINT_Y;
+	circleE1.x = static_cast<float>(Red.GetEnemyX() + DRAW_POINT_X);
+	circleE1.y = static_cast<float>(Red.GetEnemyY() + DRAW_POINT_Y);
 	circleE1.r = 6.5f;
 
-	circleE2.x = Pink.GetEnemyX() + DRAW_POINT_X;
-	circleE2.y = Pink.GetEnemyY() + DRAW_POINT_Y;
+	circleE2.x = static_cast<float>(Pink.GetEnemyX() + DRAW_POINT_X);
+	circleE2.y = static_cast<float>(Pink.GetEnemyY() + DRAW_POINT_Y);
 	circleE2.r = 6.5f;
 
-	circleE3.x = Blue.GetEnemyX() + DRAW_POINT_X;
-	circleE3.y = Blue.GetEnemyY() + DRAW_POINT_Y;
+	circleE3.x = static_cast<float>(Blue.GetEnemyX() + DRAW_POINT_X);
+	circleE3.y = static_cast<float>(Blue.GetEnemyY() + DRAW_POINT_Y);
 	circleE3.r = 6.5f;
 
-	circleE4.x = Orange.GetEnemyX() + DRAW_POINT_X;
-	circleE4.y = Orange.GetEnemyY() + DRAW_POINT_Y;
+	circleE4.x = static_cast<float>(Orange.GetEnemyX() + DRAW_POINT_X);
+	circleE4.y = static_cast<float>(Orange.GetEnemyY() + DRAW_POINT_Y);
 	circleE4.r = 6.5f;
 
-	circleP.x = g_player.PX;
-	circleP.y = g_player.PY;
+	circleP.x = static_cast<float>(g_player.PX);
+	circleP.y = static_cast<float>(g_player.PY);
 	circleP.r = 6.5f;
 
 	//DrawCircle(circleE1.x, circleE1.y, circleE1.r, 0xffffff, TRUE);

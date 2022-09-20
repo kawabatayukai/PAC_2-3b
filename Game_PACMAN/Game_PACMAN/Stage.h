@@ -42,7 +42,7 @@ public:
 	void DrawFruitScore(int ClearCnt);
 
 	//10i”‚ÌŒ…”‚ğ•Ô‚·
-	unsigned GetDigit(unsigned num) { return log10(num) + 1; }
+	unsigned GetDigit(unsigned num) { return static_cast<unsigned int>(log10(num) + 1); }
 
 	//”š‚ÆŒ…”‚©‚ç•\¦‚·‚é”š‚ğ•Ô‚·
 	int ShowDigit(int digit, int num);
