@@ -192,6 +192,9 @@ void ENEMY_BLUE::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 		if (EnemyMode == MODE::TRACK) {
 			EnemyController();
 		}
+		else if (EnemyMode == MODE::EYE) {
+			MoveShortest2(MapData, MoveTarget.x, MoveTarget.y);
+		}
 		else {
 			MoveShortest(MapData, MoveTarget.x, MoveTarget.y);
 		}

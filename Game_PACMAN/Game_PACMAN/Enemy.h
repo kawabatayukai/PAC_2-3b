@@ -98,6 +98,7 @@ public:
 	void search(int tx, int ty, int n);  //ターゲットまでの最短経路を探す
 	void moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int playerX, int playerY);   //最短経路を探す準備　コピーマップの初期化と目的地(player)の場所に10(目印)を設定
 	void MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY);  //ターゲットの位置に最短経路で移動する
+	void MoveShortest2(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY);
 
 	int CheckTarget3();
 	int CheckRandomPoint();  //ランダム座標との当たり判定　ポイントが壁の中でも

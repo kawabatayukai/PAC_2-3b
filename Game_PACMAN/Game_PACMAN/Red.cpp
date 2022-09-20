@@ -610,6 +610,9 @@ void ENEMY_RED::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 			EnemyController();
 			//oldmode = EnemyMode;
 		}
+		else if (EnemyMode == MODE::EYE) {
+			MoveShortest2(MapData, MoveTarget.x, MoveTarget.y);
+		}
 		else {
 			MoveShortest(MapData, MoveTarget.x, MoveTarget.y);
 		}

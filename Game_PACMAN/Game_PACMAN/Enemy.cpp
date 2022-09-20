@@ -1,4 +1,4 @@
-#include"DxLib.h"
+ï»¿#include"DxLib.h"
 #include<math.h>
 #include"Enemy.h"
 //#include"A_star.h"
@@ -10,101 +10,101 @@
 #include"NewPlayer.h"
 #include"Red.h"
 
-//ƒeƒXƒgo—Í—p
+//ãƒ†ã‚¹ãƒˆå‡ºåŠ›ç”¨
 char ColorStr[][7] = { "RED","PINK","BLUE","ORANGE","CLEAR" };
 char DirectStr[][6] = { "LEFT","RIGHT","UP","DOWN" ,"NONE" };
 char ModeStr[][8] = { "STANDBY","PATROL","TRACK","IJIKE","EYE","R_EYE","RANDOM" };
 
-//‘ƒ‚Ì’†‚ÌˆÊ’u@ ‰ŠúˆÊ’u‚Å‚Í‚È‚¢i‰ŠúˆÊ’u‚ÍƒAƒJ‚¾‚¯‘ƒ‚Ìãj
+//å·£ã®ä¸­ã®ä½ç½®ã€€ åˆæœŸä½ç½®ã§ã¯ãªã„ï¼ˆåˆæœŸä½ç½®ã¯ã‚¢ã‚«ã ã‘å·£ã®ä¸Šï¼‰
 int NestPoint[][2] = {
-	{10 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},  //ƒAƒJ
-	{10 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},  //ƒsƒ“ƒN
-	{8 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},   //ƒ~ƒY
-	{12 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)}   //ƒIƒŒƒ“ƒW
+	{10 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},  //ã‚¢ã‚«
+	{10 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},  //ãƒ”ãƒ³ã‚¯
+	{8 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)},   //ãƒŸã‚º
+	{12 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2)}   //ã‚ªãƒ¬ãƒ³ã‚¸
 };
 
-//‘ƒ‚Ìã
+//å·£ã®ä¸Š
 const int ON_NEST[] = { 13 * MAP_SIZE + (MAP_SIZE / 2),10 * MAP_SIZE + (MAP_SIZE / 2) };
 
-//•Ç‚æ‚è“à‘¤@ŒÀŠE“_  ¦•`‰æã‚Å‚ÍDRAW_POINT_X(Y)‚ª‰ÁZ‚³‚ê‚½À•W @"ƒsƒ“ƒN"‚Ì–Ú•WÀ•W‚ÍƒXƒe[ƒWŠO‚É‚È‚é‚±‚Æ‚ª‚ ‚é
+//å£ã‚ˆã‚Šå†…å´ã€€é™ç•Œç‚¹  â€»æç”»ä¸Šã§ã¯DRAW_POINT_X(Y)ãŒåŠ ç®—ã•ã‚ŒãŸåº§æ¨™ ã€€"ãƒ”ãƒ³ã‚¯"ã®ç›®æ¨™åº§æ¨™ã¯ã‚¹ãƒ†ãƒ¼ã‚¸å¤–ã«ãªã‚‹ã“ã¨ãŒã‚ã‚‹
 const int L_END = 4 * MAP_SIZE;
 const int R_END = 23 * MAP_SIZE;
 const int U_END = 3 * MAP_SIZE;
 const int D_END = 25 * MAP_SIZE;
 
-//–Ú•W’n“_‚ª"ƒR"‚Ìš‚æ‚èŠO
-const int L_WALL_X = 4 * MAP_SIZE;   //‰æ–Ê¶‘¤"ƒR"‚Ìš ‚˜À•W
-const int R_WALL_X = 17 * MAP_SIZE;  //‰æ–Ê‰E‘¤"ƒR"‚Ìš ‚˜À•W
+//ç›®æ¨™åœ°ç‚¹ãŒ"ã‚³"ã®å­—ã‚ˆã‚Šå¤–
+const int L_WALL_X = 4 * MAP_SIZE;   //ç”»é¢å·¦å´"ã‚³"ã®å­— ï½˜åº§æ¨™
+const int R_WALL_X = 17 * MAP_SIZE;  //ç”»é¢å³å´"ã‚³"ã®å­— ï½˜åº§æ¨™
 
-const int U_WALL_Y1 = 6 * MAP_SIZE;  //ã"ƒR"‚Ìš ‚™À•W
-const int D_WALL_Y1 = 10 * MAP_SIZE;  //ã"ƒR"‚Ìš ‚™À•W
-const int U_WALL_Y2 = 11 * MAP_SIZE; //‰º"ƒR"‚Ìš ‚™À•W
-const int D_WALL_Y2 = 15 * MAP_SIZE; //‰º"ƒR"‚Ìš ‚™À•W
+const int U_WALL_Y1 = 6 * MAP_SIZE;  //ä¸Š"ã‚³"ã®å­— ï½™åº§æ¨™
+const int D_WALL_Y1 = 10 * MAP_SIZE;  //ä¸Š"ã‚³"ã®å­— ï½™åº§æ¨™
+const int U_WALL_Y2 = 11 * MAP_SIZE; //ä¸‹"ã‚³"ã®å­— ï½™åº§æ¨™
+const int D_WALL_Y2 = 15 * MAP_SIZE; //ä¸‹"ã‚³"ã®å­— ï½™åº§æ¨™
 
-ENEMY_BASE* EnemyManager;              //‘SF‚Ì“G‚ğŠÇ—
+ENEMY_BASE* EnemyManager;              //å…¨è‰²ã®æ•µã‚’ç®¡ç†
 
-//‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚ÌƒAƒhƒŒƒX‚ğ•Û@Ã“Iƒƒ“ƒo•Ï”@À”
+//å…¨ã¦ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ä¿æŒã€€é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°ã€€å®Ÿæ•°
 ENEMY_BASE* ENEMY_BASE::All_Enemy[ENEMY_MAX];
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 ENEMY_BASE::ENEMY_BASE(int color) : My_Color(color)
 {
-	//”z—ñ‚Ì“Á’è‚ÌˆÊ’u‚É©‚ç‚ÌƒAƒhƒŒƒX‚ğ‘ã“ü
-	//ƒAƒJ0  ƒsƒ“ƒN1  ƒAƒI2  ƒIƒŒƒ“ƒW3
+	//é…åˆ—ã®ç‰¹å®šã®ä½ç½®ã«è‡ªã‚‰ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ä»£å…¥
+	//ã‚¢ã‚«0  ãƒ”ãƒ³ã‚¯1  ã‚¢ã‚ª2  ã‚ªãƒ¬ãƒ³ã‚¸3
 	All_Enemy[My_Color] = this;
 
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 ENEMY_BASE::~ENEMY_BASE()
 {
 	for (int i = 0; i < ENEMY_MAX; i++)
 	{
-		//©•ª©g‚ª‚¢‚ê‚Îíœ
+		//è‡ªåˆ†è‡ªèº«ãŒã„ã‚Œã°å‰Šé™¤
 		if (All_Enemy[i] == this) All_Enemy[i] = nullptr;
 		break;
 	}
 }
 
-//oŒ‚‚ğŠÇ—
+//å‡ºæ’ƒã‚’ç®¡ç†
 void ENEMY_BASE::SoltieControl(int NowKey, int FoodCount, int ClearCount)
 {
-	if (ClearCount == 0)                               //ƒNƒŠƒA0‰ñ
+	if (ClearCount == 0)                               //ã‚¯ãƒªã‚¢0å›
 	{
-		//‚·‚®‚Éƒsƒ“ƒNoŒ‚
+		//ã™ãã«ãƒ”ãƒ³ã‚¯å‡ºæ’ƒ
 		All_Enemy[1]->SetSortie();
 
-		//ƒGƒT‚ğ30ŒÂˆÈã‚Æ‚é‚ÆƒAƒIoŒ‚    @@@@20ŒÂ
+		//ã‚¨ã‚µã‚’30å€‹ä»¥ä¸Šã¨ã‚‹ã¨ã‚¢ã‚ªå‡ºæ’ƒ    ã€€ã€€ã€€ã€€20å€‹
 		if (FoodCount >= 20 && All_Enemy[1]->GetEnemyMode() != MODE::STANDBY) All_Enemy[2]->SetSortie();
 
-		//ƒGƒT‚ğ90ŒÂˆÈã‚Æ‚é‚ÆƒIƒŒƒ“ƒWoŒ‚@@@@60ŒÂ
+		//ã‚¨ã‚µã‚’90å€‹ä»¥ä¸Šã¨ã‚‹ã¨ã‚ªãƒ¬ãƒ³ã‚¸å‡ºæ’ƒã€€ã€€ã€€ã€€60å€‹
 		if (FoodCount >= 60 && All_Enemy[2]->GetEnemyMode() != MODE::STANDBY) All_Enemy[3]->SetSortie();
 	}
-	else if (ClearCount == 1)                          //ƒNƒŠƒA1‰ñ
+	else if (ClearCount == 1)                          //ã‚¯ãƒªã‚¢1å›
 	{
-		//‚·‚®‚Éƒsƒ“ƒNEƒAƒIoŒ‚
+		//ã™ãã«ãƒ”ãƒ³ã‚¯ãƒ»ã‚¢ã‚ªå‡ºæ’ƒ
 		All_Enemy[1]->SetSortie();
 		All_Enemy[2]->SetSortie();
 
-		//ƒGƒT‚ğ50ŒÂˆÈã‚Æ‚é‚ÆƒIƒŒƒ“ƒWoŒ‚@@@@35ŒÂ
+		//ã‚¨ã‚µã‚’50å€‹ä»¥ä¸Šã¨ã‚‹ã¨ã‚ªãƒ¬ãƒ³ã‚¸å‡ºæ’ƒã€€ã€€ã€€ã€€35å€‹
 		if (FoodCount >= 35 && All_Enemy[2]->GetEnemyMode() != MODE::STANDBY) All_Enemy[3]->SetSortie();
 	}
-	else if (ClearCount >= 2)                          //ƒNƒŠƒA2‰ñ`
+	else if (ClearCount >= 2)                          //ã‚¯ãƒªã‚¢2å›ï½
 	{
-		//‚·‚®‚Éƒsƒ“ƒNA…FAƒIƒŒƒ“ƒW‚Ì‡‚ÉoŒ‚
+		//ã™ãã«ãƒ”ãƒ³ã‚¯ã€æ°´è‰²ã€ã‚ªãƒ¬ãƒ³ã‚¸ã®é †ã«å‡ºæ’ƒ
 
-		//ƒsƒ“ƒNoŒ‚
+		//ãƒ”ãƒ³ã‚¯å‡ºæ’ƒ
 		All_Enemy[1]->SetSortie();
 
-		//ƒsƒ“ƒN‚Ìƒ‚[ƒh‚ªØ‚è‘Ö‚í‚èŸ‘æƒAƒIoŒ‚
+		//ãƒ”ãƒ³ã‚¯ã®ãƒ¢ãƒ¼ãƒ‰ãŒåˆ‡ã‚Šæ›¿ã‚ã‚Šæ¬¡ç¬¬ã‚¢ã‚ªå‡ºæ’ƒ
 		if (All_Enemy[1]->GetEnemyMode() != MODE::STANDBY) All_Enemy[2]->SetSortie();
-		//ƒsƒ“ƒN‚Ìƒ‚[ƒh‚ªØ‚è‘Ö‚í‚èŸ‘æƒAƒIoŒ‚
+		//ãƒ”ãƒ³ã‚¯ã®ãƒ¢ãƒ¼ãƒ‰ãŒåˆ‡ã‚Šæ›¿ã‚ã‚Šæ¬¡ç¬¬ã‚¢ã‚ªå‡ºæ’ƒ
 		if (All_Enemy[2]->GetEnemyMode() != MODE::STANDBY) All_Enemy[3]->SetSortie();
 	}
 
 }
 
-//ƒCƒWƒPó‘ÔONEOFF
+//ã‚¤ã‚¸ã‚±çŠ¶æ…‹ONãƒ»OFF
 void ENEMY_BASE::IjikeControl(int PowerFlg)
 {
 	static int flg_count;
@@ -120,7 +120,7 @@ void ENEMY_BASE::IjikeControl(int PowerFlg)
 	}
 }
 
-//‚·‚×‚Ä‚ÌEnemy‚ğ‰Šú‰»
+//ã™ã¹ã¦ã®Enemyã‚’åˆæœŸåŒ–
 void ENEMY_BASE::AllEnemyInit(int ClearCnt)
 {
 	for (int i = 0; i < ENEMY_MAX; i++)
@@ -128,14 +128,14 @@ void ENEMY_BASE::AllEnemyInit(int ClearCnt)
 		if (All_Enemy[i] != nullptr)
 		{
 			All_Enemy[i]->InitEnemy();
-			All_Enemy[i]->IjikeTime = GetIjikeTime(ClearCnt);  //Œ»İ‚ÌƒCƒWƒPŠÔ‚ğƒZƒbƒg
+			All_Enemy[i]->IjikeTime = GetIjikeTime(ClearCnt);  //ç¾åœ¨ã®ã‚¤ã‚¸ã‚±æ™‚é–“ã‚’ã‚»ãƒƒãƒˆ
 		}
 		//else break;
 	}
 	return;
 }
 
-//‚·‚×‚Ä‚ÌEnemy‚ğ•`‰æ
+//ã™ã¹ã¦ã®Enemyã‚’æç”»
 void ENEMY_BASE::DrawAllEnemy()
 {
 	for (int i = 0; i < ENEMY_MAX; i++)
@@ -147,45 +147,45 @@ void ENEMY_BASE::DrawAllEnemy()
 	}
 }
 
-//ˆÚ“®‚É‚æ‚é‰æ‘œƒ`ƒFƒ“ƒW `2–‡‚Ì‰æ‘œ‚ğŒğŒİ‚É`
+//ç§»å‹•ã«ã‚ˆã‚‹ç”»åƒãƒã‚§ãƒ³ã‚¸ ï½2æšã®ç”»åƒã‚’äº¤äº’ã«ï½
 void ENEMY_BASE::ChangeMoveImages()
 {
-	//‰æ‘œ”z—ñenemyimage
-	//¶Œü‚« 0,1@‰EŒü‚« 2,3@ãŒü‚« 4,5@‰ºŒü‚« 6,7@ƒCƒWƒPÂ 8,9@ƒCƒWƒP”’ 10,11@–Ú 12`15
+	//ç”»åƒé…åˆ—enemyimage
+	//å·¦å‘ã 0,1ã€€å³å‘ã 2,3ã€€ä¸Šå‘ã 4,5ã€€ä¸‹å‘ã 6,7ã€€ã‚¤ã‚¸ã‚±é’ 8,9ã€€ã‚¤ã‚¸ã‚±ç™½ 10,11ã€€ç›® 12ï½15
 
-	int std = 0;  //Šî€‚Æ‚È‚é‰æ‘œNo @std ‚Æ std+1 ‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦‚é
-	MoveCount++;  //Ø‚è‘Ö‚¦—p‚ÉƒtƒŒ[ƒ€‚ğƒJƒEƒ“ƒg
+	int std = 0;  //åŸºæº–ã¨ãªã‚‹ç”»åƒNo ã€€std ã¨ std+1 ã‚’äº¤äº’ã«åˆ‡ã‚Šæ›¿ãˆã‚‹
+	MoveCount++;  //åˆ‡ã‚Šæ›¿ãˆç”¨ã«ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ã‚«ã‚¦ãƒ³ãƒˆ
 
-	//"–Ú"‚Ìó‘Ô‚É‚ÍƒAƒjƒ[ƒVƒ‡ƒ“‚ª‚È‚¢
+	//"ç›®"ã®çŠ¶æ…‹æ™‚ã«ã¯ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒãªã„
 	if (EnemyMode != MODE::EYE)
 	{
-		//²¼Ş¹ó‘Ô‚Å‚È‚¢
+		//ï½²ï½¼ï¾ï½¹çŠ¶æ…‹ã§ãªã„
 		if (ijike_flg != true)
 		{
 			switch (MoveDir)
 			{
 			case DIRECTION::LEFT:
 
-				if (g_enemy.img != 0 && g_enemy.img != 1) g_enemy.img = 0; //¶Œü‚«‰æ‘œ‚Å‚È‚¯‚ê‚ÎA¶Œü‚«‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-				std = 0; //Šî€‚ğƒZƒbƒg
+				if (g_enemy.img != 0 && g_enemy.img != 1) g_enemy.img = 0; //å·¦å‘ãç”»åƒã§ãªã‘ã‚Œã°ã€å·¦å‘ãç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+				std = 0; //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 				break;
 
 			case DIRECTION::RIGHT:
 
-				if (g_enemy.img != 2 && g_enemy.img != 3) g_enemy.img = 2; //‰EŒü‚«‰æ‘œ‚Å‚È‚¯‚ê‚ÎA‰EŒü‚«‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-				std = 2; //Šî€‚ğƒZƒbƒg
+				if (g_enemy.img != 2 && g_enemy.img != 3) g_enemy.img = 2; //å³å‘ãç”»åƒã§ãªã‘ã‚Œã°ã€å³å‘ãç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+				std = 2; //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 				break;
 
 			case DIRECTION::UP:
 
-				if (g_enemy.img != 4 && g_enemy.img != 5) g_enemy.img = 4; //ãŒü‚«‰æ‘œ‚Å‚È‚¯‚ê‚ÎAãŒü‚«‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-				std = 4; //Šî€‚ğƒZƒbƒg
+				if (g_enemy.img != 4 && g_enemy.img != 5) g_enemy.img = 4; //ä¸Šå‘ãç”»åƒã§ãªã‘ã‚Œã°ã€ä¸Šå‘ãç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+				std = 4; //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 				break;
 
 			case DIRECTION::DOWN:
 
-				if (g_enemy.img != 6 && g_enemy.img != 7) g_enemy.img = 6; //‰ºŒü‚«‰æ‘œ‚Å‚È‚¯‚ê‚ÎA‰ºŒü‚«‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-				std = 6; //Šî€‚ğƒZƒbƒg
+				if (g_enemy.img != 6 && g_enemy.img != 7) g_enemy.img = 6; //ä¸‹å‘ãç”»åƒã§ãªã‘ã‚Œã°ã€ä¸‹å‘ãç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+				std = 6; //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 				break;
 
 			case DIRECTION::NONE:
@@ -197,7 +197,7 @@ void ENEMY_BASE::ChangeMoveImages()
 		}
 		else
 		{
-			//ƒCƒWƒPŠÔc‚è2•bˆÈ‰º‚ÅÂ”’ŒğŒİ‚É
+			//ã‚¤ã‚¸ã‚±æ™‚é–“æ®‹ã‚Š2ç§’ä»¥ä¸‹ã§é’ç™½äº¤äº’ã«
 			if (IjikeCount >= (IjikeTime - 120))
 			{
 				if (IjikeCount % 20 == 0)
@@ -208,58 +208,58 @@ void ENEMY_BASE::ChangeMoveImages()
 
 				if (IjikeWhite == 0)
 				{
-					//ƒCƒWƒPó‘Ô‚Ì
-					if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //ƒCƒWƒPÂ‰æ‘œ‚Å‚È‚¯‚ê‚ÎAƒCƒWƒPÂ‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-					std = 8;       //Šî€‚ğƒZƒbƒg
+					//ã‚¤ã‚¸ã‚±çŠ¶æ…‹ã®æ™‚
+					if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //ã‚¤ã‚¸ã‚±é’ç”»åƒã§ãªã‘ã‚Œã°ã€ã‚¤ã‚¸ã‚±é’ç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+					std = 8;       //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 				}
 				else
 				{
-					//ƒCƒWƒPó‘Ô(”’)‚Ì
-					if (g_enemy.img != 10 && g_enemy.img != 11) g_enemy.img = 10; //ƒCƒWƒP”’‰æ‘œ‚Å‚È‚¯‚ê‚ÎAƒCƒWƒP”’‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-					std = 10;       //Šî€‚ğƒZƒbƒg
+					//ã‚¤ã‚¸ã‚±çŠ¶æ…‹(ç™½)ã®æ™‚
+					if (g_enemy.img != 10 && g_enemy.img != 11) g_enemy.img = 10; //ã‚¤ã‚¸ã‚±ç™½ç”»åƒã§ãªã‘ã‚Œã°ã€ã‚¤ã‚¸ã‚±ç™½ç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+					std = 10;       //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 				}
 			}
 			else
 			{
-				//ƒCƒWƒPó‘Ô‚Ì
-				if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //ƒCƒWƒPÂ‰æ‘œ‚Å‚È‚¯‚ê‚ÎAƒCƒWƒPÂ‰æ‘œ‚Éƒ`ƒFƒ“ƒW
-				std = 8;       //Šî€‚ğƒZƒbƒg
+				//ã‚¤ã‚¸ã‚±çŠ¶æ…‹ã®æ™‚
+				if (g_enemy.img != 8 && g_enemy.img != 9) g_enemy.img = 8; //ã‚¤ã‚¸ã‚±é’ç”»åƒã§ãªã‘ã‚Œã°ã€ã‚¤ã‚¸ã‚±é’ç”»åƒã«ãƒã‚§ãƒ³ã‚¸
+				std = 8;       //åŸºæº–ã‚’ã‚»ãƒƒãƒˆ
 			}
 		}
 
-		//5ƒtƒŒ[ƒ€–ˆ‚É‰æ‘œØ‚è‘Ö‚¦
+		//5ãƒ•ãƒ¬ãƒ¼ãƒ æ¯ã«ç”»åƒåˆ‡ã‚Šæ›¿ãˆ
 		if (MoveCount % 5 == 0)
 		{
 			if (g_enemy.img == std)
 			{
-				g_enemy.img = std + 1;  //‰æ‘œ0‚Ì,‰æ‘œ1‚É
+				g_enemy.img = std + 1;  //ç”»åƒ0ã®æ™‚,ç”»åƒ1ã«
 				MoveCount = 0;
 			}
 			else if (g_enemy.img = std + 1)
 			{
-				g_enemy.img = std;      //‰æ‘œ1‚Ì,‰æ‘œ2‚É
+				g_enemy.img = std;      //ç”»åƒ1ã®æ™‚,ç”»åƒ2ã«
 				MoveCount = 0;
 			}
 		}
 	}
-	else   //–Ú‚Ìó‘Ô
+	else   //ç›®ã®çŠ¶æ…‹
 	{
 		switch (MoveDir)
 		{
 		case DIRECTION::LEFT:
-			if (g_enemy.img != 12) g_enemy.img = 12; //¶Œü‚«‰æ‘œ(–Ú)‚Å‚È‚¯‚ê‚ÎA¶Œü‚«‰æ‘œ(–Ú)‚Éƒ`ƒFƒ“ƒW
+			if (g_enemy.img != 12) g_enemy.img = 12; //å·¦å‘ãç”»åƒ(ç›®)ã§ãªã‘ã‚Œã°ã€å·¦å‘ãç”»åƒ(ç›®)ã«ãƒã‚§ãƒ³ã‚¸
 			break;
 
 		case DIRECTION::RIGHT:
-			if (g_enemy.img != 13) g_enemy.img = 13; //‰EŒü‚«‰æ‘œ(–Ú)‚Å‚È‚¯‚ê‚ÎA‰EŒü‚«‰æ‘œ(–Ú)‚Éƒ`ƒFƒ“ƒW
+			if (g_enemy.img != 13) g_enemy.img = 13; //å³å‘ãç”»åƒ(ç›®)ã§ãªã‘ã‚Œã°ã€å³å‘ãç”»åƒ(ç›®)ã«ãƒã‚§ãƒ³ã‚¸
 			break;
 
 		case DIRECTION::UP:
-			if (g_enemy.img != 14) g_enemy.img = 14; //ãŒü‚«‰æ‘œ(–Ú)‚Å‚È‚¯‚ê‚ÎAãŒü‚«‰æ‘œ(–Ú)‚Éƒ`ƒFƒ“ƒW
+			if (g_enemy.img != 14) g_enemy.img = 14; //ä¸Šå‘ãç”»åƒ(ç›®)ã§ãªã‘ã‚Œã°ã€ä¸Šå‘ãç”»åƒ(ç›®)ã«ãƒã‚§ãƒ³ã‚¸
 			break;
 
 		case DIRECTION::DOWN:
-			if (g_enemy.img != 15) g_enemy.img = 15; //‰ºŒü‚«‰æ‘œ(–Ú)‚Å‚È‚¯‚ê‚ÎA‰ºŒü‚«‰æ‘œ(–Ú)‚Éƒ`ƒFƒ“ƒW
+			if (g_enemy.img != 15) g_enemy.img = 15; //ä¸‹å‘ãç”»åƒ(ç›®)ã§ãªã‘ã‚Œã°ã€ä¸‹å‘ãç”»åƒ(ç›®)ã«ãƒã‚§ãƒ³ã‚¸
 			break;
 		case DIRECTION::NONE:
 			break;
@@ -270,32 +270,32 @@ void ENEMY_BASE::ChangeMoveImages()
 }
 
 
-//ƒ^[ƒQƒbƒg‚Ü‚Å‚ÌÅ’ZŒo˜H‚ğ’T‚·
-//             ƒ^[ƒQƒbƒg‚ÌˆÊ’u‚ğ"‚"‚Æ‚µA—£‚ê‚é‚É‚Â‚ê‚‚ğ‰ÁZ
-//             ˆø”tx,ty‚Íƒ}ƒbƒvãÀ•W  ŒÄ‚Ño‚µ‚Å"/MAP_SIZE"‚ª•K—v 
+//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¾ã§ã®æœ€çŸ­çµŒè·¯ã‚’æ¢ã™
+//             ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®ã‚’"ï½"ã¨ã—ã€é›¢ã‚Œã‚‹ã«ã¤ã‚Œï½ã‚’åŠ ç®—
+//             å¼•æ•°tx,tyã¯ãƒãƒƒãƒ—ä¸Šåº§æ¨™  å‘¼ã³å‡ºã—ã§"/MAP_SIZE"ãŒå¿…è¦ 
 void ENEMY_BASE::search(int tx, int ty, int b)
 {
 	int n = b;
 	n += 1;
-	//¶
+	//å·¦
 	if (my_mapdata[ty][tx - 1] == 0 || my_mapdata[ty][tx - 1] >= n)
 	{
 		my_mapdata[ty][tx - 1] = n;
 		search(tx - 1, ty, n);
 	}
-	//‰E
+	//å³
 	if (my_mapdata[ty][tx + 1] == 0 || my_mapdata[ty][tx + 1] >= n)
 	{
 		my_mapdata[ty][tx + 1] = n;
 		search(tx + 1, ty, n);
 	}
-	//ã
+	//ä¸Š
 	if (my_mapdata[ty - 1][tx] == 0 || my_mapdata[ty - 1][tx] >= n)
 	{
 		my_mapdata[ty - 1][tx] = n;
 		search(tx, ty - 1, n);
 	}
-	//‰º
+	//ä¸‹
 	if (my_mapdata[ty + 1][tx] == 0 || my_mapdata[ty + 1][tx] >= n)
 	{
 		my_mapdata[ty + 1][tx] = n;
@@ -305,7 +305,7 @@ void ENEMY_BASE::search(int tx, int ty, int b)
 	return;
 }
 
-//Å’ZŒo˜H‚ğ’T‚·€”õ
+//æœ€çŸ­çµŒè·¯ã‚’æ¢ã™æº–å‚™
 void ENEMY_BASE::moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY)
 {
 	for (int i = 0; i < MAP_HEIGHT; i++)
@@ -322,36 +322,94 @@ void ENEMY_BASE::moveDataSet(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, in
 		}
 	}
 
-	//ƒ^[ƒQƒbƒgÀ•W‚ªƒXƒe[ƒWŠO‚Ìê‡AƒXƒe[ƒW“à‚É–ß‚·
+	//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåº§æ¨™ãŒã‚¹ãƒ†ãƒ¼ã‚¸å¤–ã®å ´åˆã€ã‚¹ãƒ†ãƒ¼ã‚¸å†…ã«æˆ»ã™
 	if (targetX < L_END) targetX = L_END + (MAP_SIZE / 2);
 	if (targetX > R_END) targetX = R_END - (MAP_SIZE / 2);
 	if (targetY < U_END) targetY = U_END + (MAP_SIZE / 2);
 	if (targetY > D_END) targetY = D_END - (MAP_SIZE / 2);
 
-	////ƒ^[ƒQƒbƒgÀ•W‚ª"ƒR"‚ÌšŠO‚Ìê‡AƒXƒe[ƒW“à‚É–ß‚·
-	////¶‘¤ã
+	////ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåº§æ¨™ãŒ"ã‚³"ã®å­—å¤–ã®å ´åˆã€ã‚¹ãƒ†ãƒ¼ã‚¸å†…ã«æˆ»ã™
+	////å·¦å´ä¸Š
 	//if (targetX< L_WALL_X && targetY>U_WALL_Y1 && targetX < L_WALL_X && targetY < D_WALL_Y1) targetX = L_WALL_X + (MAP_SIZE / 2);
-	////¶‘¤‰º
+	////å·¦å´ä¸‹
 	//if (targetX< L_WALL_X && targetY>U_WALL_Y2 && targetX < L_WALL_X && targetY < D_WALL_Y2) targetX = L_WALL_X + (MAP_SIZE / 2);
-	////‰E‘¤ã
+	////å³å´ä¸Š
 	//if (targetX > R_WALL_X && targetY > U_WALL_Y1 && targetX > R_WALL_X && targetY < D_WALL_Y1) targetX = R_WALL_X - (MAP_SIZE / 2);
-	////‰E‘¤‰º
+	////å³å´ä¸‹
 	//if (targetX > R_WALL_X && targetY > U_WALL_Y2 && targetX > R_WALL_X && targetY < D_WALL_Y2) targetX = R_WALL_X - (MAP_SIZE / 2);
 
-	//ƒ}ƒbƒvã‚Ìƒ^[ƒQƒbƒg‚ÌˆÊ’u‚É–Úˆó(10)‚ğƒZƒbƒg
+	//ãƒãƒƒãƒ—ä¸Šã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®ã«ç›®å°(10)ã‚’ã‚»ãƒƒãƒˆ
 	my_mapdata[targetY / MAP_SIZE][targetX / MAP_SIZE] = 10;
 
-	//"10"‚ğŠî€‚ÉAÅ’ZŒo˜H‚ğ’T‚·
+	//"10"ã‚’åŸºæº–ã«ã€æœ€çŸ­çµŒè·¯ã‚’æ¢ã™
 	search((targetX / MAP_SIZE), (targetY / MAP_SIZE), 10);
 }
 
-//ƒ^[ƒQƒbƒg‚ÌˆÊ’u‚ÉÅ’ZŒo˜H‚ÅˆÚ“®‚·‚é
+//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®ã«æœ€çŸ­çµŒè·¯ã§ç§»å‹•ã™ã‚‹
 void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY)
 {
-	//Œo˜H’Tõ—pmap‚Ì‰Šú‰»Eƒ^[ƒQƒbƒg‚ÌˆÊ’u‚ğİ’è
+	//çµŒè·¯æ¢ç´¢ç”¨mapã®åˆæœŸåŒ–ãƒ»ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®ã‚’è¨­å®š
 	moveDataSet(MapData, targetX, targetY);
 
-	//“G‚Ì(mapã‚Ì)À•W
+	//æ•µã®(mapä¸Šã®)åº§æ¨™
+	int Mx = g_enemy.x / MAP_SIZE;
+	int My = g_enemy.y / MAP_SIZE;
+
+	int x1 = ((g_enemy.x - (g_enemy.w / 2)) + 1); //å·¦
+	int x2 = ((g_enemy.x + (g_enemy.w / 2)) - 1); //å³
+	int y1 = ((g_enemy.y - (g_enemy.h / 2)) + 1); //ä¸Š
+	int y2 = ((g_enemy.y + (g_enemy.h / 2)) - 1); //ä¸‹
+
+	int Lx = x1 / MAP_SIZE; //ãƒãƒƒãƒ—ä¸Šå·¦
+	int Rx = x2 / MAP_SIZE; //ãƒãƒƒãƒ—ä¸Šå³
+	int Uy = y1 / MAP_SIZE; //ãƒãƒƒãƒ—ä¸Šä¸Š
+	int Dy = y2 / MAP_SIZE; //ãƒãƒƒãƒ—ä¸Šä¸‹
+
+	//å·¦
+	if (MapData[Dy][Rx - 1] != 1 && MapData[Uy][Rx - 1] != 1 && my_mapdata[My][Rx - 1] < my_mapdata[My][Rx])
+	{
+		if ((My * MAP_SIZE) <= y1 && (My * MAP_SIZE) + MAP_SIZE >= y2)
+		{
+			MoveDir = DIRECTION::LEFT;
+			g_enemy.x -= g_enemy.speed;
+		}
+	}
+	//å³
+	else if (MapData[Dy][Lx + 1] != 1 && MapData[Uy][Lx + 1] != 1 && my_mapdata[My][Lx + 1] < my_mapdata[My][Lx])
+	{
+		if ((My * MAP_SIZE) <= y1 && (My * MAP_SIZE) + MAP_SIZE >= y2)
+		{
+			MoveDir = DIRECTION::RIGHT;
+			g_enemy.x += g_enemy.speed;
+		}
+
+	}
+	//ä¸Š
+	else if (MapData[Dy - 1][Mx] != 1 && my_mapdata[Dy - 1][Mx] < my_mapdata[Dy][Mx])
+	{
+		if ((Mx * MAP_SIZE) <= x1 && (Mx * MAP_SIZE) + MAP_SIZE >= x2)
+		{
+			MoveDir = DIRECTION::UP;
+			g_enemy.y -= g_enemy.speed;
+		}
+	}
+	//ä¸‹
+	else if (MapData[Uy + 1][Mx] != 1 && my_mapdata[Uy + 1][Mx] < my_mapdata[Uy][Mx])
+	{
+		if ((Mx * MAP_SIZE) <= x1 && (Mx * MAP_SIZE) + MAP_SIZE >= x2)
+		{
+			MoveDir = DIRECTION::DOWN;
+			g_enemy.y += g_enemy.speed;
+		}
+	}
+}
+
+void ENEMY_BASE::MoveShortest2(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, int targetY)
+{
+	//ï¿½oï¿½Hï¿½Tï¿½ï¿½ï¿½pmapï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Eï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½ÌˆÊ’uï¿½ï¿½İ’ï¿½
+	moveDataSet(MapData, targetX, targetY);
+
+	//ï¿½Gï¿½ï¿½(mapï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½W
 	int Mx = g_enemy.x / MAP_SIZE;
 	int My = g_enemy.y / MAP_SIZE;
 
@@ -374,7 +432,7 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 		g_enemy.y += g_enemy.speed;
 	}*/
 
-	//¶
+	//ï¿½ï¿½
 	if (MapData[My][Mx - 1] != 1 && my_mapdata[My][Mx - 1] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::LEFT;
@@ -382,7 +440,7 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 		//if (ijike_flg == false) g_enemy.x -= g_enemy.speed;
 		//else                    g_enemy.x += g_enemy.speed;
 	}
-	//‰E
+	//ï¿½E
 	else if (MapData[My][Mx + 1] != 1 && my_mapdata[My][Mx + 1] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::RIGHT;
@@ -390,7 +448,7 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 		//if (ijike_flg == false) g_enemy.x += g_enemy.speed;
 		//else                    g_enemy.x -= g_enemy.speed;
 	}
-	//ã
+	//ï¿½ï¿½
 	else if (MapData[My - 1][Mx] != 1 && my_mapdata[My - 1][Mx] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::UP;
@@ -398,7 +456,7 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 		//if (ijike_flg == false) g_enemy.y -= g_enemy.speed;
 		//else                    g_enemy.y += g_enemy.speed;
 	}
-	//‰º
+	//ï¿½ï¿½
 	else if (MapData[My + 1][Mx] != 1 && my_mapdata[My + 1][Mx] < my_mapdata[My][Mx])
 	{
 		MoveDir = DIRECTION::DOWN;
@@ -407,7 +465,7 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 		//else                    g_enemy.y -= g_enemy.speed;
 	}
 
-	//‚ß‚è‚Ü‚¹‚È‚¢
+	//ï¿½ß‚èï¿½Ü‚ï¿½ï¿½È‚ï¿½
 	int x1, x2, y1, y2;
 	x1 = ((g_enemy.x - (g_enemy.w / 2)) + 2);
 	x2 = ((g_enemy.x + (g_enemy.w / 2)) - 2);
@@ -432,13 +490,13 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 	}
 }
 
-//“–‚½‚è”»’è
+//å½“ãŸã‚Šåˆ¤å®š
 int ENEMY_BASE::CheckTarget3()
 {
-	int ex1 = g_enemy.x - (g_enemy.w / 2); //¶
-	int ex2 = g_enemy.x + (g_enemy.w / 2); //‰E
-	int ey1 = g_enemy.y - (g_enemy.h / 2); //ã
-	int ey2 = g_enemy.y + (g_enemy.h / 2); //‰º
+	int ex1 = g_enemy.x - (g_enemy.w / 2); //å·¦
+	int ex2 = g_enemy.x + (g_enemy.w / 2); //å³
+	int ey1 = g_enemy.y - (g_enemy.h / 2); //ä¸Š
+	int ey2 = g_enemy.y + (g_enemy.h / 2); //ä¸‹
 
 	int tx1 = MoveTarget.x - (MAP_SIZE / 2);
 	int tx2 = MoveTarget.x + (MAP_SIZE / 2);
@@ -453,13 +511,13 @@ int ENEMY_BASE::CheckTarget3()
 	else return 0;
 }
 
-//ƒ‰ƒ“ƒ_ƒ€À•W‚Æ‚Ì“–‚½‚è”»’è@ƒ|ƒCƒ“ƒg‚ª•Ç‚Ì’†‚Å‚à
+//ãƒ©ãƒ³ãƒ€ãƒ åº§æ¨™ã¨ã®å½“ãŸã‚Šåˆ¤å®šã€€ãƒã‚¤ãƒ³ãƒˆãŒå£ã®ä¸­ã§ã‚‚
 int ENEMY_BASE::CheckRandomPoint()
 {
-	int ex1 = g_enemy.x - (g_enemy.w / 2); //¶
-	int ex2 = g_enemy.x + (g_enemy.w / 2); //‰E
-	int ey1 = g_enemy.y - (g_enemy.h / 2); //ã
-	int ey2 = g_enemy.y + (g_enemy.h / 2); //‰º
+	int ex1 = g_enemy.x - (g_enemy.w / 2); //å·¦
+	int ex2 = g_enemy.x + (g_enemy.w / 2); //å³
+	int ey1 = g_enemy.y - (g_enemy.h / 2); //ä¸Š
+	int ey2 = g_enemy.y + (g_enemy.h / 2); //ä¸‹
 
 	int tx1 = MoveTarget.x - (MAP_SIZE)-10;
 	int tx2 = MoveTarget.x + (MAP_SIZE)+10;
@@ -474,12 +532,12 @@ int ENEMY_BASE::CheckRandomPoint()
 	else return 0;
 }
 
-/****************** ƒC@ƒW@ƒP ******************/
+/****************** ã‚¤ã€€ã‚¸ã€€ã‚± ******************/
 
-//ƒNƒŠƒA‰ñ”‚©‚çƒCƒWƒPŠÔ‚ğæ“¾
+//ã‚¯ãƒªã‚¢å›æ•°ã‹ã‚‰ã‚¤ã‚¸ã‚±æ™‚é–“ã‚’å–å¾—
 int ENEMY_BASE::GetIjikeTime(int ClearCnt)
 {
-	//ƒNƒŠƒA‰ñ”‚ÆŠÔ‚Æ‚ÌŠÖ˜A«‚ª”–‚¢‚Ì‚Å‹­ˆø‚ÉEE
+	//ã‚¯ãƒªã‚¢å›æ•°ã¨æ™‚é–“ã¨ã®é–¢é€£æ€§ãŒè–„ã„ã®ã§å¼·å¼•ã«ãƒ»ãƒ»
 
 	int sec = 0;
 	if (ClearCnt == 0) {
@@ -505,15 +563,15 @@ int ENEMY_BASE::GetIjikeTime(int ClearCnt)
 	}
 	else sec = 6;
 
-	return sec * 60;     //sec•b
+	return sec * 60;     //secç§’
 }
 
-//ƒ‚[ƒhØ‘Ö‚¦
+//ãƒ¢ãƒ¼ãƒ‰åˆ‡æ›¿ãˆ
 void ENEMY_BASE::ModeChanger()
 {
 	if (ijike_flg == true)
 	{
-		//ˆê’èŠÔ‚ÅƒCƒWƒPI—¹
+		//ä¸€å®šæ™‚é–“ã§ã‚¤ã‚¸ã‚±çµ‚äº†
 		if (++IjikeCount % IjikeTime == 0)
 		{
 			ijike_flg = false;
@@ -527,28 +585,28 @@ void ENEMY_BASE::ModeChanger()
 	else if (eye_flg == true) EnemyMode = MODE::EYE;
 }
 
-//ƒCƒWƒPó‘Ô‚Ì‹““®
+//ã‚¤ã‚¸ã‚±çŠ¶æ…‹ã®æŒ™å‹•
 void ENEMY_BASE::Move_Ijike()
 {
 	if (TrackPattern == 0)
 	{
-		//ƒ‰ƒ“ƒ_ƒ€‚É“®‚­ X 4`22    y 4`24
+		//ãƒ©ãƒ³ãƒ€ãƒ ã«å‹•ã X 4ï½22    y 4ï½24
 		MoveTarget.x = (GetRand(18) + 4) * MAP_SIZE + (MAP_SIZE / 2);
 		MoveTarget.y = (GetRand(20) + 4) * MAP_SIZE + (MAP_SIZE / 2);
 
-		//ƒ^[ƒQƒbƒgÀ•W‚ªƒXƒe[ƒWŠO‚Ìê‡AƒXƒe[ƒW“à‚É–ß‚·
+		//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåº§æ¨™ãŒã‚¹ãƒ†ãƒ¼ã‚¸å¤–ã®å ´åˆã€ã‚¹ãƒ†ãƒ¼ã‚¸å†…ã«æˆ»ã™
 		if (MoveTarget.x < L_END) MoveTarget.x = L_END + (MAP_SIZE / 2);
 		if (MoveTarget.x > R_END) MoveTarget.x = R_END - (MAP_SIZE / 2);
 		if (MoveTarget.y < U_END) MoveTarget.y = U_END + (MAP_SIZE / 2);
 		if (MoveTarget.y > D_END) MoveTarget.y = D_END - (MAP_SIZE / 2);
-		//ƒ^[ƒQƒbƒgÀ•W‚ª"ƒR"‚ÌšŠO‚Ìê‡AƒXƒe[ƒW“à‚É–ß‚·
-		//¶‘¤ã
+		//ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåº§æ¨™ãŒ"ã‚³"ã®å­—å¤–ã®å ´åˆã€ã‚¹ãƒ†ãƒ¼ã‚¸å†…ã«æˆ»ã™
+		//å·¦å´ä¸Š
 		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y1 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
-		//¶‘¤‰º
+		//å·¦å´ä¸‹
 		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y2 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y2)MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
-		//‰E‘¤ã
+		//å³å´ä¸Š
 		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y1 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
-		//‰E‘¤‰º
+		//å³å´ä¸‹
 		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y2 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y2) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
 
 		TrackPattern++;
@@ -559,16 +617,16 @@ void ENEMY_BASE::Move_Ijike()
 		else TrackPattern++;
 	}
 
-	//ƒCƒWƒPI—¹‚ÉˆÈ‘O‚Ìƒ‚[ƒh‚É–ß‚é
+	//ã‚¤ã‚¸ã‚±çµ‚äº†æ™‚ã«ä»¥å‰ã®ãƒ¢ãƒ¼ãƒ‰ã«æˆ»ã‚‹
 	if (IjikeCount % IjikeTime == 0 && EnemyMode != MODE::R_EYE && EnemyMode != MODE::EYE) EnemyMode = old_mode;
 }
 
-//"–Ú"ó‘Ô‚Ì‹““®
+//"ç›®"çŠ¶æ…‹ã®æŒ™å‹•
 void ENEMY_BASE::Move_Eye()
 {
-	//‘ƒ‚Ì’†‚Ì‰ŠúˆÊ’u               ‰  x                    ‰  y
+	//å·£ã®ä¸­ã®åˆæœŸä½ç½®               åˆ  x                    åˆ  y
 	MoveTarget = { SbyPoint[0][0][0],SbyPoint[0][0][0] };
-	//‘ƒ‚É“’…Œã
+	//å·£ã«åˆ°ç€å¾Œ
 	if (CheckTarget3() == 3)
 	{
 		eye_flg = false;
@@ -578,46 +636,46 @@ void ENEMY_BASE::Move_Eye()
 	}
 }
 
-//–Ú¨ƒCƒWƒPˆÈ‘O‚Ìƒ‚[ƒh‚É
+//ç›®â†’ã‚¤ã‚¸ã‚±ä»¥å‰ã®ãƒ¢ãƒ¼ãƒ‰ã«
 void ENEMY_BASE::Move_R_Eye()
 {
-	//‘ƒ‚Ìã
+	//å·£ã®ä¸Š
 	MoveTarget.x = ON_NEST[0];
 	MoveTarget.y = ON_NEST[1];
 
-	//“’BŒãAƒCƒWƒPˆÈ‘O‚Ìƒ‚[ƒh‚É–ß‚·
+	//åˆ°é”å¾Œã€ã‚¤ã‚¸ã‚±ä»¥å‰ã®ãƒ¢ãƒ¼ãƒ‰ã«æˆ»ã™
 	if (CheckTarget3() == 3)
 	{
 		EnemyMode = old_mode;
 	}
 }
 
-//ƒCƒWƒP‚ÉH‚×‚ç‚ê‚é
+//ã‚¤ã‚¸ã‚±æ™‚ã«é£Ÿã¹ã‚‰ã‚Œã‚‹
 void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 {
 	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true) eye_flg = true,g_enemy.speed=9;
 
-	//ƒXƒRƒA‰ÁZ
-	//score+= //ƒXƒRƒA
+	//ã‚¹ã‚³ã‚¢åŠ ç®—
+	//score+= //ã‚¹ã‚³ã‚¢
 
-	//‚»‚Ìê‚ÉƒXƒRƒA•\¦
+	//ãã®å ´ã«ã‚¹ã‚³ã‚¢è¡¨ç¤º
 }
 
-//'ˆø”'‚Æ“G‚Æ‚Ì“–‚½‚è”»’è
+//'å¼•æ•°'ã¨æ•µã¨ã®å½“ãŸã‚Šåˆ¤å®š
 bool ENEMY_BASE::CheckHitCircle(float x, float y, float r)
 {
-	float dx = g_enemy.x - x;             //xÀ•W‚Ì·•ª
-	float dy = g_enemy.y - y;             //yÀ•W‚Ì·•ª
-	float dis = sqrtf((dx * dx) + (dy * dy));  //2‚Â‚Ì‰~‚Ì‹——£
+	float dx = g_enemy.x - x;             //xåº§æ¨™ã®å·®åˆ†
+	float dy = g_enemy.y - y;             //yåº§æ¨™ã®å·®åˆ†
+	float dis = sqrtf((dx * dx) + (dy * dy));  //2ã¤ã®å††ã®è·é›¢
 
-	if (dis < 6.5f + r) return true;    //2“_‚Ì‹——£<=A”¼Œa+B”¼Œa
+	if (dis < 6.5f + r) return true;    //2ç‚¹ã®è·é›¢<=AåŠå¾„+BåŠå¾„
 	else false;
 }
 
 /************************************************/
 
 int cols[] = { 0xff0000, 0xe9a1d0,0x67a8dd,0xfd7e00 };
-//ƒeƒXƒg—p@“G‘SF‚Ìî•ñ‚ğ•\¦
+//ãƒ†ã‚¹ãƒˆç”¨ã€€æ•µå…¨è‰²ã®æƒ…å ±ã‚’è¡¨ç¤º
 void ENEMY_BASE::DrawAllInfo()
 {
 	int x = 100;
@@ -651,32 +709,32 @@ void ENEMY_BASE::DrawAllInfo()
 
 }
 
-//„‰ñƒ‚[ƒh—pÀ•W
+//å·¡å›ãƒ¢ãƒ¼ãƒ‰ç”¨åº§æ¨™
 const int ENEMY_BASE::PtrlPoint[4][4][2] =
 {
-							  /*29~27map—p*/
-	//ƒAƒJ
+							  /*29Ã—27mapç”¨*/
+	//ã‚¢ã‚«
 	{
 		{22 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
 		{19 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
 		{19 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
 		{22 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
 	},
-	//ƒsƒ“ƒN
+	//ãƒ”ãƒ³ã‚¯
 	{
 		{4 * MAP_SIZE + (MAP_SIZE / 2),4 * MAP_SIZE + (MAP_SIZE / 2)},
 		{7 * MAP_SIZE + (MAP_SIZE / 2), 4 * MAP_SIZE + (MAP_SIZE / 2)},
 		{7 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
 		{4 * MAP_SIZE + (MAP_SIZE / 2),8 * MAP_SIZE + (MAP_SIZE / 2)},
 	},
-	//ƒAƒI
+	//ã‚¢ã‚ª
 	{
 		{22 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
 		{14 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
 		{18 * MAP_SIZE + (MAP_SIZE / 2),20 * MAP_SIZE + (MAP_SIZE / 2)},
 		{22 * MAP_SIZE + (MAP_SIZE / 2),22 * MAP_SIZE + (MAP_SIZE / 2)},
 	},
-	//ƒIƒŒƒ“ƒW
+	//ã‚ªãƒ¬ãƒ³ã‚¸
 	{
 		{4 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
 		{12 * MAP_SIZE + (MAP_SIZE / 2),24 * MAP_SIZE + (MAP_SIZE / 2)},
@@ -685,32 +743,32 @@ const int ENEMY_BASE::PtrlPoint[4][4][2] =
 	},
 };
 
-//oŒ‚‘OÀ•W
+//å‡ºæ’ƒå‰åº§æ¨™
 const int ENEMY_BASE::SbyPoint[4][3][2]
 {
-	//ƒAƒJ  ¦ƒAƒJ‚Í„‰ñƒ‚[ƒh‚È‚µ
+	//ã‚¢ã‚«  â€»ã‚¢ã‚«ã¯å·¡å›ãƒ¢ãƒ¼ãƒ‰ãªã—
 	{
-		{13 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //‰ŠúˆÊ’u
-		{13 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ã•”
-		{13 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)}   //‰º•”
+		{13 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //åˆæœŸä½ç½®
+		{13 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸Šéƒ¨
+		{13 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)}   //ä¸‹éƒ¨
 	},
-	//ƒsƒ“ƒN
+	//ãƒ”ãƒ³ã‚¯
 	{
-		{13 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //‰ŠúˆÊ’u
-		{13 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ã•”
-		{13 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //‰º•”
+		{13 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //åˆæœŸä½ç½®
+		{13 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸Šéƒ¨
+		{13 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸‹éƒ¨
 	},
-	//ƒAƒI
+	//ã‚¢ã‚ª
 	{
-		{11 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //‰ŠúˆÊ’u
-		{11 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ã•”
-		{11 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //‰º•”
+		{11 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //åˆæœŸä½ç½®
+		{11 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸Šéƒ¨
+		{11 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸‹éƒ¨
 	},
-	//ƒIƒŒƒ“ƒW
+	//ã‚ªãƒ¬ãƒ³ã‚¸
 	{
-		{15 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //‰ŠúˆÊ’u
-		{15 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ã•”
-		{15 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //‰º•”
+		{15 * MAP_SIZE + (MAP_SIZE / 2),13 * MAP_SIZE + (MAP_SIZE / 2)},  //åˆæœŸä½ç½®
+		{15 * MAP_SIZE + (MAP_SIZE / 2),12 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸Šéƒ¨
+		{15 * MAP_SIZE + (MAP_SIZE / 2),14 * MAP_SIZE + (MAP_SIZE / 2)},  //ä¸‹éƒ¨
 	},
 };
 
@@ -1201,7 +1259,7 @@ float ENEMY_BASE::DistanceSqrf(const float t_x1, const float t_y1, const float t
 bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 	bool nResult = false;
 
-	// lŠpŒ`‚Ìl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
+	// å››è§’å½¢ã®å››è¾ºã«å¯¾ã—ã¦å††ã®åŠå¾„åˆ†ã ã‘è¶³ã—ãŸã¨ãå††ãŒé‡ãªã£ã¦ã„ãŸã‚‰
 	if ((t_circle.x > t_box.fLeft[CF] - t_circle.r) &&
 		(t_circle.x < t_box.fRight[CF] + t_circle.r) &&
 		(t_circle.y > t_box.fTop[CF] - t_circle.r) &&
@@ -1211,10 +1269,10 @@ bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 		float fl = t_circle.r * t_circle.r;
 
 
-		// ¶
+		// å·¦
 		if (t_circle.x < t_box.fLeft[CF])
 		{
-			// ¶ã
+			// å·¦ä¸Š
 			if ((t_circle.y < t_box.fTop[CF]))
 			{
 				if ((DistanceSqrf(t_box.fLeft[CF], t_box.fTop[CF], t_circle.x, t_circle.y) >= fl))
@@ -1224,7 +1282,7 @@ bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 			}
 			else
 			{
-				// ¶‰º
+				// å·¦ä¸‹
 				if ((t_circle.y > t_box.fBottom[CF]))
 				{
 					if ((DistanceSqrf(t_box.fLeft[CF], t_box.fBottom[CF], t_circle.x, t_circle.y) >= fl))
@@ -1236,10 +1294,10 @@ bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 		}
 		else
 		{
-			// ‰E
+			// å³
 			if (t_circle.x > t_box.fRight[CF])
 			{
-				// ‰Eã
+				// å³ä¸Š
 				if ((t_circle.y < t_box.fTop[CF]))
 				{
 					if ((DistanceSqrf(t_box.fRight[CF], t_box.fTop[CF], t_circle.x, t_circle.y) >= fl))
@@ -1249,7 +1307,7 @@ bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 				}
 				else
 				{
-					// ‰E‰º
+					// å³ä¸‹
 					if ((t_circle.y > t_box.fBottom[CF]))
 					{
 						if ((DistanceSqrf(t_box.fRight[CF], t_box.fBottom[CF], t_circle.x, t_circle.y) >= fl))
@@ -1268,7 +1326,7 @@ bool ENEMY_BASE::CheckHit(const BOX& t_box, const CIRCLE& t_circle) {
 bool ENEMY_BASE::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 	bool nResult = false;
 
-	// lŠpŒ`‚Ìl•Ó‚É‘Î‚µ‚Ä‰~‚Ì”¼Œa•ª‚¾‚¯‘«‚µ‚½‚Æ‚«‰~‚ªd‚È‚Á‚Ä‚¢‚½‚ç
+	// å››è§’å½¢ã®å››è¾ºã«å¯¾ã—ã¦å††ã®åŠå¾„åˆ†ã ã‘è¶³ã—ãŸã¨ãå††ãŒé‡ãªã£ã¦ã„ãŸã‚‰
 	if ((t_circle.x > t_box.fLeft[I] - t_circle.r) &&
 		(t_circle.x < t_box.fRight[I] + t_circle.r) &&
 		(t_circle.y > t_box.fTop[I] - t_circle.r) &&
@@ -1278,10 +1336,10 @@ bool ENEMY_BASE::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 		float fl = t_circle.r * t_circle.r;
 
 
-		// ¶
+		// å·¦
 		if (t_circle.x < t_box.fLeft[I])
 		{
-			// ¶ã
+			// å·¦ä¸Š
 			if ((t_circle.y < t_box.fTop[I]))
 			{
 				if ((DistanceSqrf(t_box.fLeft[I], t_box.fTop[I], t_circle.x, t_circle.y) >= fl))
@@ -1291,7 +1349,7 @@ bool ENEMY_BASE::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 			}
 			else
 			{
-				// ¶‰º
+				// å·¦ä¸‹
 				if ((t_circle.y > t_box.fBottom[I]))
 				{
 					if ((DistanceSqrf(t_box.fLeft[I], t_box.fBottom[I], t_circle.x, t_circle.y) >= fl))
@@ -1303,10 +1361,10 @@ bool ENEMY_BASE::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 		}
 		else
 		{
-			// ‰E
+			// å³
 			if (t_circle.x > t_box.fRight[I])
 			{
-				// ‰Eã
+				// å³ä¸Š
 				if ((t_circle.y < t_box.fTop[I]))
 				{
 					if ((DistanceSqrf(t_box.fRight[I], t_box.fTop[I], t_circle.x, t_circle.y) >= fl))
@@ -1316,7 +1374,7 @@ bool ENEMY_BASE::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 				}
 				else
 				{
-					// ‰E‰º
+					// å³ä¸‹
 					if ((t_circle.y > t_box.fBottom[I]))
 					{
 						if ((DistanceSqrf(t_box.fRight[I], t_box.fBottom[I], t_circle.x, t_circle.y) >= fl))
@@ -1416,7 +1474,7 @@ void ENEMY_BASE::out(void)
 	//return;
 }
 
-// ƒ}ƒ“ƒnƒbƒ^ƒ“‹——£‚ğÎ‚ßˆÚ“®‚ ‚è‚ğl—¶‚µ‚Ä‹‚ß‚é
+// ãƒãƒ³ãƒãƒƒã‚¿ãƒ³è·é›¢ã‚’æ–œã‚ç§»å‹•ã‚ã‚Šã‚’è€ƒæ…®ã—ã¦æ±‚ã‚ã‚‹
 int ENEMY_BASE::GetDistance(int from_x, int from_y, int to_x, int to_y)
 {
 	int cx = from_x - to_x;
@@ -1425,7 +1483,7 @@ int ENEMY_BASE::GetDistance(int from_x, int from_y, int to_x, int to_y)
 	if (cx < 0) cx *= -1;
 	if (cy < 0) cy *= -1;
 
-	// „’èˆÚ“®ƒRƒXƒg‚ğŒvZ
+	// æ¨å®šç§»å‹•ã‚³ã‚¹ãƒˆã‚’è¨ˆç®—
 	if (cx < cy) {
 		return (cx + (cy - cx));
 	}
@@ -1446,7 +1504,7 @@ int ENEMY_BASE::BackTrace(int x, int y)
 	) + 1;
 }
 
-// A*‚ÅŒo˜H’T¸‚·‚é
+// A*ã§çµŒè·¯æ¢æŸ»ã™ã‚‹
 int ENEMY_BASE::Search(int count) {
 
 	int cost_min = 9999;
@@ -1456,9 +1514,9 @@ int ENEMY_BASE::Search(int count) {
 
 	mapcell* n = NULL;
 
-	// ƒRƒXƒg‚ªÅ¬‚ÌƒI[ƒvƒ“ƒm[ƒh‚ğ’T‚·
-	// TODO: ‚±‚±‚ğ‘Sƒ}ƒX’T¸‚µ‚È‚¢‚æ‚¤‚É‚·‚é‚ÆA
-	//       ‚à‚Á‚Æ‘‚­‚È‚é‚©‚à
+	// ã‚³ã‚¹ãƒˆãŒæœ€å°ã®ã‚ªãƒ¼ãƒ—ãƒ³ãƒãƒ¼ãƒ‰ã‚’æ¢ã™
+	// TODO: ã“ã“ã‚’å…¨ãƒã‚¹æ¢æŸ»ã—ãªã„ã‚ˆã†ã«ã™ã‚‹ã¨ã€
+	//       ã‚‚ã£ã¨æ—©ããªã‚‹ã‹ã‚‚
 	for (int h = 0; h < HEIGHT; h++) {
 		for (int w = 0; w < WIDTH; w++) {
 
@@ -1473,10 +1531,10 @@ int ENEMY_BASE::Search(int count) {
 		}
 	}
 
-	// ƒI[ƒvƒ“ƒm[ƒh‚ª‚È‚¯‚ê‚ÎI—¹(ƒS[ƒ‹‚ªŒ©‚Â‚©‚ç‚È‚¢)
+	// ã‚ªãƒ¼ãƒ—ãƒ³ãƒãƒ¼ãƒ‰ãŒãªã‘ã‚Œã°çµ‚äº†(ã‚´ãƒ¼ãƒ«ãŒè¦‹ã¤ã‹ã‚‰ãªã„)
 	if (n == NULL) return -9;
 
-	// ƒm[ƒh‚ğƒNƒ[ƒY‚·‚é
+	// ãƒãƒ¼ãƒ‰ã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹
 	n->SearchStatus = SEARCH_CLOSE;
 
 	BackCost = BackTrace(CX, CY);
@@ -1514,7 +1572,7 @@ int ENEMY_BASE::Search(int count) {
 		if (check_x >= WIDTH) continue;
 		if (check_y >= HEIGHT) continue;
 
-		// ’Ê‚ê‚È‚¢‚Æ‚±‚ë‚ğ‚æ‚¯‚é
+		// é€šã‚Œãªã„ã¨ã“ã‚ã‚’ã‚ˆã‘ã‚‹
 		if (data[check_y][check_x].status == -1) continue;
 
 		int estimate_cost = BackCost + GetDistance(check_x, check_y, GX, GY) + 1;
@@ -1536,7 +1594,7 @@ int ENEMY_BASE::Search(int count) {
 		}
 	}
 
-	// Œ©‚Â‚©‚Á‚½‚ç’TõI—¹
+	// è¦‹ã¤ã‹ã£ãŸã‚‰æ¢ç´¢çµ‚äº†
 	if (CX == GX && CY == GY) {
 		return -1;
 	}
@@ -1565,7 +1623,7 @@ void ENEMY_BASE::TraceRoute(int x, int y)
 			data[SY + 2][SX].status = -1;
 		}*/
 		//data[y][x].status = -1;
-		printf("ŠJnƒm[ƒh>");
+		printf("é–‹å§‹ãƒãƒ¼ãƒ‰>");
 		return;
 	}
 	d = x;
@@ -1613,7 +1671,7 @@ void ENEMY_BASE::TraceRoute(int x, int y)
 
 	if (d == GX && f == GY) {
 		//TraceRoute(x + parent_way->x, y + parent_way->y);
-		printf("ƒS[ƒ‹\n");
+		printf("ã‚´ãƒ¼ãƒ«\n");
 		return;
 	}
 	else {
@@ -1632,7 +1690,7 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 	SY = (Red.GetEnemyY() - DRAW_POINT_Y) / 30;*/
 
 
-	if (E == 0) {//Ô
+	if (E == 0) {//èµ¤
 
 		if (DFlg == false) {
 
@@ -1667,7 +1725,7 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 		//Count = 1;
 
 	}
-	else if (E == 1) {//ƒsƒ“ƒN
+	else if (E == 1) {//ãƒ”ãƒ³ã‚¯
 		SX = g_enemy.x / MAP_SIZE;
 		SY = g_enemy.y / MAP_SIZE;
 
@@ -1742,7 +1800,7 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 		}
 		//Count = 0;
 	}
-	else if (E == 2) {//…F
+	else if (E == 2) {//æ°´è‰²
 		if (DFlg == false) {
 
 			GX = g_player.PXC;
@@ -1809,7 +1867,7 @@ int ENEMY_BASE::_tmain(/*int argc, _TCHAR* argv[]*//*int plX, int plY, int enX, 
 			DFlg = false;
 		}
 	}
-	else if (E == 3) {//ƒIƒŒƒ“ƒW
+	else if (E == 3) {//ã‚ªãƒ¬ãƒ³ã‚¸
 		if (DFlg == false) {
 
 			GX = g_player.PXC;
