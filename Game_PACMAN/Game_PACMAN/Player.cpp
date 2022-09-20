@@ -612,7 +612,7 @@ bool Player::CheckHitBOX(const BOX& t_direA, const BOX1& t_direB)
 
 void Player :: PlayerDestroy()
 {
-	int i = 100;
+	/*int i = 0;
 	PacManDamage_dir = 0;
 	int PacManDamage_motion[] = { 0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,4,
 		5,5,5,5,5,5,5,6,6,6,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,9,9,9,9,9,9,9,10,10,10,10,10,10,10,
@@ -623,12 +623,13 @@ void Player :: PlayerDestroy()
 		PacMan_wait = PAC_MAN_SPEED;
 		PacMan_index %= 100;
 	}
-	for (i = 0; i < 100; i++) {
-		int motion_index = PacManDamage_motion[PacMan_index];
-		if (FLG_MAX_L == false && KEYFLG == LEFT || FLG_MAX_R == false && KEYFLG == RIGHT || FLG_MAX_U == false
-			&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)/*motion_index = 1*/;
+	for (i = 0; i < 100; i++) {*/
+		//int motion_index = PacManDamage_motion[PacMan_index];
+		/*if (FLG_MAX_L == false && KEYFLG == LEFT || FLG_MAX_R == false && KEYFLG == RIGHT || FLG_MAX_U == false*/
+			//&& KEYFLG == UP || FLG_MAX_D == false && KEYFLG == DOWN || KEYFLG == 0)/*motion_index = 1*/;
+	PacManDamage_wait++;
 		DrawGraph(PX - 15, PY - 15,
-			image.PacManDestroy[motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE], TRUE);
-		return;
-	}
+			image.PacManDestroy[PacManDamage_wait/12 /*motion_index + PacMan_dir * PAC_MAN_DIR_SLIDE*/], TRUE);
+		//return;
+	//}
 }
