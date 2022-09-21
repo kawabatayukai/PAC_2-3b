@@ -14,6 +14,10 @@ public:
 
 	void PlayIjikeEat();
 	void PlayEnemyEye();
+	void PlayFruitEat();
+	void PlayIjikeMove();
+	void StopIjikeMove();
+
 
 private:
 	int PlayerMove;  //プレイヤー移動
@@ -24,6 +28,8 @@ private:
 
 	int IjikeEat;    //イジケを捕食
 	int EnemyEye;    //目状態で巣に戻る
+	int FruitEat;
+	int IjikeMove;   //イジケ時
 };
 
 extern Sounds sound;

@@ -451,6 +451,16 @@ void NewGameMain()
 			PlaySoundMem(PowerSE, DX_PLAYTYPE_BACK);
 		}
 	}*/
+
+	//Œø‰Ê‰¹
+	if (Red.GetEnemyMode() != MODE::IJIKE && Pink.GetEnemyMode() != MODE::IJIKE && Blue.GetEnemyMode() != MODE::IJIKE && Orange.GetEnemyMode() != MODE::IJIKE)
+	{
+		if (Red.GetEnemyMode() != MODE::EYE && Pink.GetEnemyMode() != MODE::EYE && Blue.GetEnemyMode() != MODE::EYE && Orange.GetEnemyMode() != MODE::EYE)
+		{
+			sound.PlayPlayerMove();
+		}
+	}
+
 	//“G‚Ì“–‚½‚è”»’è‚ÍStage‚É
 	if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
 	{
