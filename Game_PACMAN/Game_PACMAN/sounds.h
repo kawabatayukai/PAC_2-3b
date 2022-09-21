@@ -8,6 +8,7 @@ public:
 	void PlayPlayerMove();
 	void PlayPlayerEat();
 	void StopPlayerEat();
+	void PlayerDestroySound();
 
 	void PlayIjikeEat();
 	void PlayEnemyEye();
@@ -15,6 +16,7 @@ public:
 private:
 	int PlayerMove;  //プレイヤー移動
 	int PlayerEat;   //エサを食べる
+	int PlayerDestroy;  //プレイヤー消滅音
 
 	int IjikeEat;    //イジケを捕食
 	int EnemyEye;    //目状態で巣に戻る

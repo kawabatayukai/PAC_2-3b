@@ -8,6 +8,7 @@ int Sounds::LoadSounds()
 {
 	if ((PlayerMove = LoadSoundMem("sounds/Normal.wav")) == -1) return -1;   //プレイヤー移動
 	if ((PlayerEat = LoadSoundMem("sounds/playeat.wav")) == -1) return -1;    //エサを食べる
+	if ((PlayerDestroy = LoadSoundMem("sounds/PlayerDestroy .wav")) == -1) return -1;    //プレイヤー消滅音
 	//if ((IjikeEat = LoadSoundMem("sounds/")) == -1) return -1;     //イジケを捕食
 	//if ((EnemyEye = LoadSoundMem("sounds/")) == -1) return -1;     //目状態で巣に戻る
 	//if (( = LoadSoundMem("sounds/")) == -1) return -1;
@@ -29,6 +30,11 @@ void Sounds::PlayPlayerEat()
 void Sounds::StopPlayerEat()
 {
 	StopSoundMem(PlayerEat);
+}
+
+void Sounds::PlayerDestroySound()
+{
+	PlaySoundMem(PlayerDestroy, DX_PLAYTYPE_BACK);
 }
 
 void Sounds::PlayIjikeEat()

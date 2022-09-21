@@ -669,6 +669,7 @@ void DrawGameOver()
 			Pink.DrawEnemy();
 			Blue.DrawEnemy();
 			Orange.DrawEnemy();
+			sound.PlayerDestroySound();
 			DrawGraph(g_player.PX - 15, g_player.PY - 15, Disp.PacManImage[g_player.PacMan_index + g_player.PacMan_dir * 3], TRUE);
 		}
 		else if (Timer <= 180) {//2秒間アニメーション
