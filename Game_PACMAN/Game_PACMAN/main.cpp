@@ -12,6 +12,7 @@
 
 #include"Enemy_Red.h"
 #include"display.h"
+#include"fps.h"
 //#include"A_star.h"
 //#include"A_star_PINKY.h"
 //#include"A_star_INKY.h"
@@ -276,6 +277,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			break;
 		}
 
+		fps.Update();
+		fps.Wait();
 
 		//— ‰æ–Ê‚Ì“à—e‚ð•\‰æ–Ê‚É”½‰f
 		ScreenFlip();

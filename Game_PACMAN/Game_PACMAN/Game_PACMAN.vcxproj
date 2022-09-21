@@ -161,6 +161,7 @@
     <ClCompile Include="display.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy_Red.cpp" />
+    <ClCompile Include="fps.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NewPlayer.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="display.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy_Red.h" />
+    <ClInclude Include="fps.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="NewPlayer.h" />
