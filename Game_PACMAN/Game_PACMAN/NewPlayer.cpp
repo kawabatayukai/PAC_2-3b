@@ -278,7 +278,7 @@ void Player::PlayerController(int keyFlg, int MapData[MAP_HEIGHT][MAP_WIDTH]) {
 			try {
 
 
-				if (MapData[I][J] != 0) {
+				if (MapData[I][J] != 0 || I == 11&& J == 13) {
 					box[C].fLeft[CF] = DRAW_POINT_X + (J * 30);
 					box[C].fTop[CF] = DRAW_POINT_Y + (I * 30);
 					box[C].fRight[CF] = DRAW_POINT_X + (J * 30) + 30;
