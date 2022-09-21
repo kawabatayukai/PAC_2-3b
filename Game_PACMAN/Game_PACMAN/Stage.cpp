@@ -9,6 +9,7 @@
 #include "Orange.h"
 #include "Info.h"
 #include "display.h"
+#include"sounds.h"
 
 Stage stage;
 
@@ -339,6 +340,7 @@ int Stage::HitCircle() {
 	if (Red.GetEnemyMode() != IJIKE) {//赤
 		if (Red.GetEnemyMode() != EYE) {
 			if (CheckHit(circleE1, circleP) == true) {
+				
 				return true;
 			}
 		}
@@ -346,6 +348,7 @@ int Stage::HitCircle() {
 	if (Pink.GetEnemyMode() != IJIKE) {//ピンク
 		if (Pink.GetEnemyMode() != EYE) {
 			if (CheckHit(circleE2, circleP) == true) {
+				
 				return true;
 			}
 		}
@@ -353,6 +356,7 @@ int Stage::HitCircle() {
 	if (Blue.GetEnemyMode() != IJIKE) {//水色
 		if (Blue.GetEnemyMode() != EYE) {
 			if (CheckHit(circleE3, circleP) == true) {
+				
 				return true;
 			}
 		}
@@ -360,6 +364,7 @@ int Stage::HitCircle() {
 	if (Orange.GetEnemyMode() != IJIKE) {//オレンジ
 		if (Orange.GetEnemyMode() != EYE) {
 			if (CheckHit(circleE4, circleP) == true) {
+				
 				return true;
 			}
 		}
