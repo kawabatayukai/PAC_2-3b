@@ -463,8 +463,8 @@ void Player::PlayerController(int keyFlg, int MapData[MAP_HEIGHT][MAP_WIDTH]) {
 	DrawFormatString(50, 500, 0xFFFFFF, "%d", DRAW_POINT_X);
 	DrawFormatString(50, 550, 0xFFFFFF, "%d", DRAW_POINT_Y);*/
 
-	DrawFormatString(1000, 500, 0xFFFFFF, "%d", PXC);
-	DrawFormatString(1000, 550, 0xFFFFFF, "%d", PYC);
+	/*DrawFormatString(1000, 500, 0xFFFFFF, "%d", PXC);
+	DrawFormatString(1000, 550, 0xFFFFFF, "%d", PYC);*/
 
 	if (stage.Score >= 10000) {
 		if (LifeUPFlg == false) {

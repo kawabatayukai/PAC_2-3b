@@ -1122,10 +1122,10 @@ void ENEMY_BASE::EnemyController() {
 	circle.y = g_enemy.y + static_cast<float>(DRAW_POINT_Y);
 	circle.r = 14.5f;
 
-	DrawFormatString(50, 650, 0x0000ff, "%d", circle.x);
+	/*DrawFormatString(50, 650, 0x0000ff, "%d", circle.x);
 	DrawFormatString(50, 680, 0x0000ff, "%d", circle.y);
 	DrawFormatString(100, 650, 0x0000ff, "%d", g_enemy.x);
-	DrawFormatString(100, 680, 0x0000ff, "%d", g_enemy.y);
+	DrawFormatString(100, 680, 0x0000ff, "%d", g_enemy.y);*/
 
 	C = 0;
 	CF = 0;
@@ -1321,7 +1321,7 @@ void ENEMY_BASE::EnemyController() {
 		//		else if (MapData[j][i] == 0) {
 		//			DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xffffff, "%d", MapData[j][i]);
 		//		}
-		//		else if (MapData[j][i] == 2) {
+		//		else if (MapData[j][i] == 2) {z
 		//			DrawFormatString(10 + (i * 20), 20 + (j * 20), 0xff00ff, "%d", MapData[j][i]);
 		//		}
 		//		else {
@@ -1330,10 +1330,10 @@ void ENEMY_BASE::EnemyController() {
 		//		//DrawFormatString(10 + (i * 30), 20 + (j * 30), 0xffffff, "%d" ,stage.getMap[j][i]);
 		//	}
 		//}
-	DrawFormatString(1100, 20, 0x0000ff, "%d", EYC);
+	/*DrawFormatString(1100, 20, 0x0000ff, "%d", EYC);
 	DrawFormatString(1100, 30, 0x0000ff, "%d", EY);
 	DrawFormatString(1100, 60, 0x0000ff, "%d", MoveDir);
-	DrawFormatString(1100, 80, 0x0000ff, "%d", NextKeyFlg);
+	DrawFormatString(1100, 80, 0x0000ff, "%d", NextKeyFlg);*/
 
 	//DrawCircle(circle.x, circle.y, circle.r, GetColor(255, 255, 255));
 
