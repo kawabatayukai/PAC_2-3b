@@ -712,6 +712,7 @@ void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 {
 	if (CheckHitCircle(px, py, pr) == true && ijike_flg == true)
 	{
+		
 		hitflg_count++;
 		eye_flg = true;
 		g_enemy.speed = 9.0f;

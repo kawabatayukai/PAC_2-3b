@@ -26,6 +26,12 @@ int	g_KeyFlg;				// 入力キー情報
 
 int ClearCount = 0;         //クリア回数　ファイル分け対象
 
+bool EatFlg = false;
+bool StandbyRedFlg = false;
+bool StandbyPinkFlg = false;
+bool StandbyBlueFlg = false;
+bool StandbyOrangeFlg = false;
+
 int g_GameTitleImage = 0;
 GAME_STATE g_GameState = GAME_STATE::DRAW_TITLE;
 
@@ -326,6 +332,11 @@ void GameInit()
 //スタート時
 void GameStarter()
 {
+	EatFlg = false;
+	StandbyRedFlg = false;
+	StandbyPinkFlg = false;
+	StandbyBlueFlg = false;
+	StandbyOrangeFlg = false;
 	stage.DrawMapImageV3();
 	//DrawMap();
 	Disp.DrawStartDisp(&g_GameState, &Pink);
@@ -411,7 +422,7 @@ void NewGameMain()
 	stage.DrawFruit(ClearCount);
 
 	//プレイヤーの移動・描画を管理
-	g_player.PlayerController(g_KeyFlg, MapData3);
+	if (EatFlg == false)g_player.PlayerController(g_KeyFlg, MapData3);
 
 	//アカ
 	Red.TargetCtrl(g_player.GetPlayerX(), g_player.GetPlayerY(), g_player.GetPlayerD()); //ターゲットを設定
@@ -421,7 +432,7 @@ void NewGameMain()
 	//}
 	//Red.EnemyController();
 	Red.DrawEnemy();                                          //敵描画 
-	Red.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	if (EatFlg == false)Red.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
 	Red.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
@@ -455,7 +466,7 @@ void NewGameMain()
 	if (Pink.GetEnemyMode() == TRACK) Pink.main();
 		Pink.MapCopy();
 	Pink.DrawEnemy();                                          //敵描画                                         //敵描画
-	Pink.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	if (EatFlg == false)Pink.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
 	Pink.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
@@ -464,7 +475,7 @@ void NewGameMain()
 	if (Blue.GetEnemyMode() == TRACK) Blue.main();
 		Blue.MapCopy();
 	Blue.DrawEnemy();
-	Blue.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	if (EatFlg == false)Blue.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
 	Blue.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
@@ -473,9 +484,9 @@ void NewGameMain()
 	if (Orange.GetEnemyMode() == TRACK) Orange.main();
 		Orange.MapCopy();
 	Orange.DrawEnemy();
-	Orange.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
+	if (EatFlg == false)Orange.MoveEnemy2(MapData3);                                 //ターゲットに基づく移動
 	//イジケの時食われる
-	Orange.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
+	if(EatFlg==false)Orange.Eaten_OnIjike((float)g_player.GetPlayerX(), (float)g_player.GetPlayerY(), 6.5f, stage.Score);
 
 	
 	
@@ -501,12 +512,72 @@ void NewGameMain()
 	//テスト　クリア処理
 	if (bait.GetBaitCount() == BAIT_MAX || g_KeyFlg & PAD_INPUT_A)
 	{
-		ClearCount++;
 		//ClearCount+=15;
 		//g_GameState = GAME_STATE::GAME_INIT;
 		g_GameState = GAME_STATE::GAME_CLEAR;
+		
+	}
+	
+	if (StandbyRedFlg == false) {
+	if (Red.GetEnemyMode() == EYE) {
+			static int EatTime = 0;
+			EatFlg = true;
+			if (EatTime++ > 40) {
+				EatFlg = false;
+				EatTime = 0;
+				StandbyRedFlg = true;
+			}
+		}
 	}
 
+	if (StandbyPinkFlg == false) {
+	if (Pink.GetEnemyMode() == EYE) {
+			static int EatTime = 0;
+			EatFlg = true;
+			if (EatTime++ > 40) {
+				EatFlg = false;
+				EatTime = 0;
+				StandbyPinkFlg = true;
+			}
+		}
+	}
+
+	if (StandbyBlueFlg == false) {
+	if (Blue.GetEnemyMode() == EYE) {
+			static int EatTime = 0;
+			EatFlg = true;
+			if (EatTime++ > 40) {
+				EatFlg = false;
+				EatTime = 0;
+				StandbyBlueFlg = true;
+			}
+		}
+	}
+
+	if (StandbyOrangeFlg == false) {
+	if (Orange.GetEnemyMode() == EYE) {
+			static int EatTime = 0;
+			EatFlg = true;
+			if (EatTime++ > 40) {
+				EatFlg = false;
+				EatTime = 0;
+				StandbyOrangeFlg = true;
+			}
+		}
+	}
+
+	if (Red.GetEnemyMode() == STANDBY) {
+		StandbyRedFlg = false;
+	}
+	if (Pink.GetEnemyMode() == STANDBY) {
+		StandbyPinkFlg = false;
+	}
+	if (Blue.GetEnemyMode() == STANDBY) {
+		StandbyBlueFlg = false;
+	}
+	if (Orange.GetEnemyMode() == STANDBY) {
+		StandbyOrangeFlg = false;
+	}
 	////敵の当たり判定はStageに
 	//if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
 	//{
@@ -531,6 +602,7 @@ void DrawGameClear()
 		timer = 0;
 	}*/
 	stage.DrawMapImageV3();
+	stage.DrawMapScore(ClearCount);
 	DrawGraph(g_player.PX - 15, g_player.PY - 15, Disp.PacManImage[g_player.PacMan_index + g_player.PacMan_dir * 3], TRUE);
 	if (timer++ <= 280) {
 		if (timer >= 80)stage.flashingMapImageV3();
@@ -538,6 +610,7 @@ void DrawGameClear()
 	}
 	else {
 		timer = 0;
+		ClearCount++;
 		g_GameState = GAME_STATE::COFFEE;
 		//g_GameState = GAME_STATE::GAME_INIT;
 	}
@@ -549,6 +622,7 @@ void DrawGameOver()
 {
 	//DrawMap();
 	stage.DrawMapImageV3();
+	stage.DrawMapScore(ClearCount);
 	if (InitFlg == false) {
 		static int Timer = 0;
 		Timer++;

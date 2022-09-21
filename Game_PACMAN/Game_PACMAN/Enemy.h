@@ -340,6 +340,8 @@ public:
 
 	int aas = 0;
 
+	int EatenTimer = 0;
+
 	void ResetSearchStatus(void);
 	void SetDefault(void);
 	void out(void);
