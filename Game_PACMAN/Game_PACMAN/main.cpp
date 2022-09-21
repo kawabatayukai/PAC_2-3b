@@ -565,21 +565,21 @@ void NewGameMain()
 	ENEMY_BASE::IjikeControl(bait.GetPowerFlg());  //イジケ状態を管理
 
 	ENEMY_BASE::SoltieControl(g_KeyFlg, bait.GetBaitCount(), ClearCount);  //敵の出撃を管理
-	ENEMY_BASE::DrawAllInfo();            //敵の情報を表示
+	//ENEMY_BASE::DrawAllInfo();            //敵の情報を表示
 
-	DrawFormatString(30, 320, 0xffffff, "playerX : %d", g_player.GetPlayerX());
-	DrawFormatString(30, 340, 0xffffff, "playerY : %d", g_player.GetPlayerY());
+	//DrawFormatString(30, 320, 0xffffff, "playerX : %d", g_player.GetPlayerX());
+	//DrawFormatString(30, 340, 0xffffff, "playerY : %d", g_player.GetPlayerY());
 
-	if (g_KeyFlg & PAD_INPUT_A) {
-		stage.Score += 1000;
-	}
-	if (stage.HScore < stage.Score)stage.HScore = stage.Score;
+	//if (g_KeyFlg & PAD_INPUT_A) {
+	//	stage.Score += 1000;
+	//}
+	//if (stage.HScore < stage.Score)stage.HScore = stage.Score;
 
 	//DrawMap();                         //マップ描画テスト
 	//DrawSquare();                      //テスト用　枠表示
-
+	SetFontSize(20);
 	//テスト　クリア処理
-	if (bait.GetBaitCount() == BAIT_MAX || g_KeyFlg & PAD_INPUT_A)
+	if (bait.GetBaitCount() == BAIT_MAX )
 	{
 		//ClearCount+=15;
 		//g_GameState = GAME_STATE::GAME_INIT;

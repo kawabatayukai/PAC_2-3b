@@ -207,16 +207,16 @@ void ENEMY_RED::MoveEnemy2(int MapData[MAP_HEIGHT][MAP_WIDTH])
 //描画
 void ENEMY_RED::DrawEnemy()
 {
-	//テスト　目標位置
-	SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 128);
-	DrawCircle(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + DRAW_POINT_Y, 8, 0xff00ff, TRUE);
+	////テスト　目標位置
+	//SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 128);
+	//DrawCircle(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + DRAW_POINT_Y, 8, 0xff00ff, TRUE);
 
-	//テスト　目標～敵間
-	SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 200);
-	DrawLine(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + DRAW_POINT_Y, g_enemy.x + DRAW_POINT_X, g_enemy.y + DRAW_POINT_Y, 0x00ffff);
-	DrawLine(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + DRAW_POINT_Y, MoveTarget.x + DRAW_POINT_X, MoveTarget.y + (g_enemy.y - MoveTarget.y) + DRAW_POINT_Y, 0x00ffff);
-	DrawLine(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + (g_enemy.y - MoveTarget.y) + DRAW_POINT_Y, g_enemy.x + DRAW_POINT_X, g_enemy.y + DRAW_POINT_Y, 0x00ffff);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	////テスト　目標～敵間
+	//SetDrawBlendMode(DX_BLENDGRAPHTYPE_ALPHA, 200);
+	//DrawLine(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + DRAW_POINT_Y, g_enemy.x + DRAW_POINT_X, g_enemy.y + DRAW_POINT_Y, 0x00ffff);
+	//DrawLine(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + DRAW_POINT_Y, MoveTarget.x + DRAW_POINT_X, MoveTarget.y + (g_enemy.y - MoveTarget.y) + DRAW_POINT_Y, 0x00ffff);
+	//DrawLine(MoveTarget.x + DRAW_POINT_X, MoveTarget.y + (g_enemy.y - MoveTarget.y) + DRAW_POINT_Y, g_enemy.x + DRAW_POINT_X, g_enemy.y + DRAW_POINT_Y, 0x00ffff);
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	if (g_enemy.flg == true)
 	{
