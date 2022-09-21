@@ -319,6 +319,7 @@ void DrawGameTitle()
 	
 	if (g_KeyFlg &PAD_INPUT_A)
 	{
+		sound.InputSE();
 		switch (select)
 		{
 		case 0:
