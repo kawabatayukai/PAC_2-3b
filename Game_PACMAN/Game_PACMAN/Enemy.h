@@ -127,6 +127,7 @@ public:
 	void Eaten_OnIjike(float px, float py, float pr, int& score);  //イジケ時に食べられる
 
 	bool CheckHitCircle(float x, float y, float r);                //'引数'と敵との当たり判定
+	bool CheckStopEnemy(); //静止チェック
 	/************************************************/
 
 	int GetEnemyX() { return static_cast<int>(g_enemy.x); }     //x座標を取得
@@ -358,6 +359,9 @@ protected:
 	const int My_Color = ENEMY_COLOR::CLEAR; //固有色
 	ENEMY g_enemy;             //敵のデータ
 	int MoveCount = 0;         //画像変化用にフレームをカウント
+
+	float old_pointX;    //ひとつ前の座標
+	float old_pointY;    //ひとつ前の座標
 
 	int MoveDir;                              //移動方向
 	M_POINT MoveTarget;                       //移動目標

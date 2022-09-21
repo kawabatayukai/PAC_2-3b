@@ -142,6 +142,7 @@ void ENEMY_BASE::AllEnemyInit(int ClearCnt)
 		{
 			All_Enemy[i]->InitEnemy();
 			All_Enemy[i]->IjikeTime = GetIjikeTime(ClearCnt);  //現在のイジケ時間をセット
+			All_Enemy[i]->TrackPattern = 0;
 		}
 		//else break;
 	}
@@ -368,10 +369,10 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 	int Mx = static_cast<int>(g_enemy.x) / MAP_SIZE;
 	int My = static_cast<int>(g_enemy.y) / MAP_SIZE;
 
-	int x1 = (static_cast<int>(g_enemy.x - (g_enemy.w / 2)) + 1); //左
-	int x2 = (static_cast<int>(g_enemy.x + (g_enemy.w / 2)) - 1); //右
-	int y1 = (static_cast<int>(g_enemy.y - (g_enemy.h / 2)) + 1); //上
-	int y2 = (static_cast<int>(g_enemy.y + (g_enemy.h / 2)) - 1); //下
+	int x1 = (static_cast<int>(g_enemy.x - (g_enemy.w / 2)) + 2); //左
+	int x2 = (static_cast<int>(g_enemy.x + (g_enemy.w / 2)) - 2); //右
+	int y1 = (static_cast<int>(g_enemy.y - (g_enemy.h / 2)) + 2); //上
+	int y2 = (static_cast<int>(g_enemy.y + (g_enemy.h / 2)) - 2); //下
 
 	int Lx = static_cast<int>(x1 / MAP_SIZE); //マップ上左
 	int Rx = static_cast<int>(x2 / MAP_SIZE); //マップ上右
@@ -549,7 +550,7 @@ int ENEMY_BASE::GetIjikeTime(int ClearCnt)
 	}
 	else sec = 6;
 
-	return sec * 60;     //sec秒
+	return sec * 960;     //sec秒
 }
 
 //モード切替え
@@ -596,15 +597,26 @@ void ENEMY_BASE::Move_Ijike()
 		if (MoveTarget.y < U_END) MoveTarget.y = U_END + (MAP_SIZE / 2);
 		if (MoveTarget.y > D_END) MoveTarget.y = D_END - (MAP_SIZE / 2);
 
-		////ターゲット座標が"コ"の字外の場合、ステージ内に戻す
-		////左側上
-		//if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y1 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
-		////左側下
-		//if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y2 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y2)MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
-		////右側上
-		//if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y1 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
-		////右側下
-		//if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y2 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y2) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+		if (MoveTarget.x < L_END && MoveTarget.y < U_END)
+		{
+			MoveTarget.x = L_END + (MAP_SIZE / 2);
+			MoveTarget.y = U_END + (MAP_SIZE / 2);
+		}
+		if (MoveTarget.x < L_END && MoveTarget.y > D_END)
+		{
+			MoveTarget.x = L_END + (MAP_SIZE / 2);
+			MoveTarget.y = D_END - (MAP_SIZE / 2);
+		}
+		if (MoveTarget.x > R_END && MoveTarget.y < U_END)
+		{
+			MoveTarget.x = R_END - (MAP_SIZE / 2);
+			MoveTarget.y = U_END + (MAP_SIZE / 2);
+		}
+		if (MoveTarget.x > R_END && MoveTarget.y > D_END)
+		{
+			MoveTarget.x = R_END - (MAP_SIZE / 2);
+			MoveTarget.y = D_END - (MAP_SIZE / 2);
+		}
 
 		/**********************  ターゲット座標が"コ"の字外の場合、ステージ内に戻す  **********************/
 		/*** L1 ***/
@@ -644,11 +656,15 @@ void ENEMY_BASE::Move_Ijike()
 			else MoveTarget.y = D_NEST_Y + (MAP_SIZE / 2);
 		}
 
+		//ひとつ前の座標
+		old_pointX = g_enemy.x;
+		old_pointY = g_enemy.y;
+
 		TrackPattern++;
 	}
 	else if (TrackPattern >= 1)
 	{
-		if (TrackPattern >= 1 && CheckRandomPoint() == 3) TrackPattern = 0;
+		if (TrackPattern >= 1 && CheckRandomPoint() == 3 || TrackPattern >= 1 && CheckStopEnemy() == true) TrackPattern = 0;
 		else TrackPattern++;
 	}
 
@@ -750,6 +766,13 @@ bool ENEMY_BASE::CheckHitCircle(float x, float y, float r)
 
 	if (dis < 6.5f + r) return true;    //2点の距離<=A半径+B半径
 	else false;
+}
+
+//静止チェック
+bool ENEMY_BASE::CheckStopEnemy()
+{
+	if (fabsf(g_enemy.x - old_pointX) < g_enemy.speed - 1 && fabsf(g_enemy.y - old_pointY) < g_enemy.speed - 1) return true;
+	else return false;
 }
 
 /************************************************/
