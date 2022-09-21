@@ -316,17 +316,57 @@ int Stage::HitCircle() {
 
 	//DrawCircle(circleE1.x, circleE1.y, circleE1.r, 0xffffff, TRUE);
 
-	if (Red.GetEnemyMode() != IJIKE && Pink.GetEnemyMode() != IJIKE && Blue.GetEnemyMode() != IJIKE && Orange.GetEnemyMode() != IJIKE) {
-		if (Red.GetEnemyMode() != EYE && Pink.GetEnemyMode() != EYE && Blue.GetEnemyMode() != EYE && Orange.GetEnemyMode() != EYE) {
-			//敵の当たり判定
-			if (CheckHit(circleE1, circleP) == true || CheckHit(circleE2, circleP) == true || CheckHit(circleE3, circleP) == true || CheckHit(circleE4, circleP) == true) {
+	//if (Red.GetEnemyMode() != IJIKE && Pink.GetEnemyMode() != IJIKE && Blue.GetEnemyMode() != IJIKE && Orange.GetEnemyMode() != IJIKE) {
+	//	if (Red.GetEnemyMode() != EYE && Pink.GetEnemyMode() != EYE && Blue.GetEnemyMode() != EYE && Orange.GetEnemyMode() != EYE) {
+	//		//敵の当たり判定
+	//		if (CheckHit(circleE1, circleP) == true || CheckHit(circleE2, circleP) == true || CheckHit(circleE3, circleP) == true || CheckHit(circleE4, circleP) == true) {
+	//			return true;
+	//		}
+	//		else {
+	//			return false;
+	//		}
+	//	}
+
+	//}
+	if (Red.GetEnemyMode() != IJIKE) {//赤
+		if (Red.GetEnemyMode() != EYE) {
+			if (CheckHit(circleE1, circleP) == true) {
 				return true;
 			}
 			else {
 				return false;
 			}
 		}
-
+	}
+	if (Pink.GetEnemyMode() != IJIKE) {//ピンク
+		if (Pink.GetEnemyMode() != EYE) {
+			if (CheckHit(circleE2, circleP) == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	if (Blue.GetEnemyMode() != IJIKE) {//水色
+		if (Blue.GetEnemyMode() != EYE) {
+			if (CheckHit(circleE3, circleP) == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	if (Orange.GetEnemyMode() != IJIKE) {//オレンジ
+		if (Orange.GetEnemyMode() != EYE) {
+			if (CheckHit(circleE4, circleP) == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 }
 

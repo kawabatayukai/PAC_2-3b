@@ -481,6 +481,7 @@ void NewGameMain()
 	if (bait.GetBaitCount() == BAIT_MAX || g_KeyFlg & PAD_INPUT_A)
 	{
 		ClearCount++;
+		//ClearCount+=15;
 		//g_GameState = GAME_STATE::GAME_INIT;
 		g_GameState = GAME_STATE::GAME_CLEAR;
 	}
