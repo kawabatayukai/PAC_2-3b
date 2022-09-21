@@ -43,6 +43,10 @@ GAME_STATE g_GameState = GAME_STATE::DRAW_TITLE;
 
 int InitFlg = false;
 
+int EatSE;
+int EMoveSE;
+int PowerSE;
+
 //関数
 void DrawGameTitle();    //タイトル描画
 void GameInit();         //初期処理
@@ -283,7 +287,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//裏画面の内容を表画面に反映
 		ScreenFlip();
 
-		//if (keyFlg == 1024) DxLib_End();
+		if (g_KeyFlg == 1024) DxLib_End();
 	}
 
 	DxLib::DxLib_End();				// ＤＸライブラリ使用の終了処理
@@ -433,6 +437,17 @@ void GameMain()
 
 void NewGameMain()
 {
+	if (bait.GetPowerFlg() == false) {
+		if (CheckSoundMem(EMoveSE) == 0) {
+			PlaySoundMem(EMoveSE, DX_PLAYTYPE_BACK);
+		}
+
+	}
+	else if (bait.GetPowerFlg() == true) {
+		if (CheckSoundMem(PowerSE) == 0) {
+			PlaySoundMem(PowerSE, DX_PLAYTYPE_BACK);
+		}
+	}
 	//敵の当たり判定はStageに
 	if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
 	{
@@ -755,4 +770,7 @@ int LoadSounds()
 {
 	if ((Disp.LoadSounds()) == -1) return -1;
 	if ((sound.LoadSounds()) == -1) return -1;
+	if ((EatSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
+	if ((EMoveSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
+	if ((PowerSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
 }
