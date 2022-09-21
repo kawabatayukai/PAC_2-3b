@@ -167,6 +167,7 @@
     <ClCompile Include="Orange.cpp" />
     <ClCompile Include="Pink.cpp" />
     <ClCompile Include="Red.cpp" />
+    <ClCompile Include="sounds.cpp" />
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="Orange.h" />
     <ClInclude Include="Pink.h" />
     <ClInclude Include="Red.h" />
+    <ClInclude Include="sounds.h" />
     <ClInclude Include="Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -292,22 +292,42 @@ void DrawGameTitle()
 	SetFontThickness(9);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_EDGE_8X8);
 
-	DrawString(460, 360, "GAME START", 0xffffff);
-	DrawString(460, 420, "GAME END", 0xffffff);
-	if (g_NowKey & PAD_INPUT_A) {
-		ClearCount = 0;
-		stage.FruitCount = 0;
-		g_player.LifeUPFlg = false;
-		InitFlg = false;
-		g_GameState = GAME_STATE::GAME_INIT;
+	DrawString(460, 360, "GAME START", 0x0000ff);
+	DrawString(460, 420, "GAME END", 0x0000ff);
+	static int select = 0;
+	if (g_KeyFlg & PAD_INPUT_UP)
+	{
+		select--;
+		if (select < 0)select = 1;
 	}
-	if (g_NowKey & PAD_INPUT_B) {
-		ClearCount = 0;
-		stage.FruitCount = 0;
-		g_player.LifeUPFlg = false;
-		InitFlg = false;
-		g_GameState = GAME_STATE::GAME_END;
+	if (g_KeyFlg & PAD_INPUT_DOWN)
+	{
+		select++;
+		if (select > 1)select = 0;
 	}
+
+	
+	if (g_KeyFlg &PAD_INPUT_A)
+	{
+		switch (select)
+		{
+		case 0:
+			ClearCount = 0;
+			stage.FruitCount = 0;
+			g_player.LifeUPFlg = false;
+			InitFlg = false;
+			g_GameState = GAME_STATE::GAME_INIT;
+			break;
+		case 1:
+			g_GameState = GAME_STATE::GAME_END;
+			break;
+		default:
+			break;
+		}
+	}
+	//DrawTriangle(240, 40 * select, 260, 40 * select, 240, 40 * select, GetColor(255, 0, 0), TRUE);
+	DrawCircle(400, 380 + select * 60, 20, 0xf3e400,true);
+	//DrawFormatString(0, 0, 0xffffff, "%d", select);
 }
 
 //èâä˙èàóù
@@ -679,7 +699,7 @@ void DrawGameEnd()
 	static int limit = 180;
 	if (limit-- > 0) {
 		DrawGraph(150, 30, g_GameTitleImage, FALSE);
-		SetFontSize(24);
+		//SetFontSize(24);
 		DrawString(400, 360, "Thank you for Playing Game", 0x0000ff, 0);
 		//É^ÉCÉÄÇÃâ¡éZèàóù&èIóπ(3ïbå„)
 	}else

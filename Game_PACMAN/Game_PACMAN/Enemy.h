@@ -99,6 +99,7 @@ public:
 
 	/*********************************************************/
 	void AllEnemyInit(int ClearCnt);    //すべてのEnemyを初期化
+
 	void DrawAllEnemy();           //すべてのEnemyを描画
 
 	static void SoltieControl(int NowKey, int FoodCount, int ClearCount);   //出撃を管理
@@ -115,6 +116,8 @@ public:
 
 	int CheckTarget3();
 	int CheckRandomPoint();  //ランダム座標との当たり判定　ポイントが壁の中でも
+
+	float GetEnemySpeed(int ClearCnt);          //クリア回数からスピードを取得
 
 	/****************** イ　ジ　ケ ******************/
 	int GetIjikeTime(int ClearCnt);           //クリア回数からイジケ時間を取得

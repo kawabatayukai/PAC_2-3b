@@ -143,6 +143,7 @@ void ENEMY_BASE::AllEnemyInit(int ClearCnt)
 			All_Enemy[i]->InitEnemy();
 			All_Enemy[i]->IjikeTime = GetIjikeTime(ClearCnt);  //現在のイジケ時間をセット
 			All_Enemy[i]->TrackPattern = 0;
+			All_Enemy[i]->g_enemy.speed = GetEnemySpeed(ClearCnt);
 		}
 		//else break;
 	}
@@ -517,6 +518,23 @@ int ENEMY_BASE::CheckRandomPoint()
 		return 3;
 	}
 	else return 0;
+}
+
+const float MIN_SPEED = 2.0f;  //最低スピード
+const float PLUS_SPEED = 0.3f; //増加スピード
+
+//クリア回数からスピードを取得
+float ENEMY_BASE::GetEnemySpeed(int ClearCnt)
+{
+	int plus = 0;
+
+	if (ClearCnt == 0) plus = 0;                        //クリア0
+	else if (ClearCnt <= 1 && ClearCnt >= 1) plus = 1;  //クリア1～3
+	else if (ClearCnt <= 4 && ClearCnt >= 20) plus = 2; //クリア4～20
+	else if (ClearCnt <= 21) plus = 3;                  //クリア21～
+	else plus = 1;
+
+	return MIN_SPEED + (PLUS_SPEED * plus);
 }
 
 /****************** イ　ジ　ケ ******************/
