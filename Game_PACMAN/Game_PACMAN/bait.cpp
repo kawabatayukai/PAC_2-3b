@@ -2,6 +2,7 @@
 #include "bait.h"
 #include "Info.h"
 #include "Stage.h"
+#include"sounds.h"
 
 Bait bait;
 
@@ -431,9 +432,16 @@ void Bait::BaitController(int playerX, int playerY)
 				}
 				pscore++;              //食べたエサ数を加算
 				bait[I].flg = false;   //表示OFF
+				
+				sound.PlayPlayerEat();
+
 				if (bait[I].type == 1) PowerFlg = true;  //パワーエサ食った
 				else PowerFlg = false;
 			}
+			//else
+			//{
+			//	sound.PlayPlayerMove();
+			//}
 		}
 	}
 }

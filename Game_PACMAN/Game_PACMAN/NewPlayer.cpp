@@ -561,7 +561,6 @@ bool Player::CheckHit(const BOX1& t_box, const CIRCLE& t_circle) {
 		nResult = true;
 		float fl = t_circle.r * t_circle.r;
 
-
 		// ç∂
 		if (t_circle.x < t_box.fLeft[I])
 		{

@@ -18,6 +18,7 @@
 //#include"A_star_CLYDE.h"
 #include"coffeebreak.h"
 #include"Enemy.h"
+#include"sounds.h"
 
 //•Ï”
 int	g_OldKey;				// ‘O‰ñ‚Ì“ü—ÍƒL[
@@ -749,4 +750,5 @@ int LoadImages()
 int LoadSounds()
 {
 	if ((Disp.LoadSounds()) == -1) return -1;
+	if ((sound.LoadSounds()) == -1) return -1;
 }

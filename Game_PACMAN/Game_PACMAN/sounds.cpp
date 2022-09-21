@@ -1,13 +1,15 @@
 #include"DxLib.h"
 #include"sounds.h"
 
+Sounds sound;
+
 //音声読み込み
 int Sounds::LoadSounds()
 {
-	if ((PlayerMove = LoadSoundMem("sounds/")) == -1) return -1;   //プレイヤー移動
-	if ((PlayerEat = LoadSoundMem("sounds/")) == -1) return -1;    //エサを食べる
-	if ((IjikeEat = LoadSoundMem("sounds/")) == -1) return -1;     //イジケを捕食
-	if ((EnemyEye = LoadSoundMem("sounds/")) == -1) return -1;     //目状態で巣に戻る
+	if ((PlayerMove = LoadSoundMem("sounds/Normal.wav")) == -1) return -1;   //プレイヤー移動
+	if ((PlayerEat = LoadSoundMem("sounds/playeat.wav")) == -1) return -1;    //エサを食べる
+	//if ((IjikeEat = LoadSoundMem("sounds/")) == -1) return -1;     //イジケを捕食
+	//if ((EnemyEye = LoadSoundMem("sounds/")) == -1) return -1;     //目状態で巣に戻る
 	//if (( = LoadSoundMem("sounds/")) == -1) return -1;
 	//if (( = LoadSoundMem("sounds/")) == -1) return -1;
 
@@ -16,13 +18,17 @@ int Sounds::LoadSounds()
 
 void Sounds::PlayPlayerMove()
 {
-	PlaySoundMem(PlayerMove, DX_PLAYTYPE_LOOP);
+	PlaySoundMem(PlayerMove, DX_PLAYTYPE_BACK);
 }
 
 
 void Sounds::PlayPlayerEat()
 {
-	PlaySoundMem(PlayerEat, DX_PLAYTYPE_LOOP);
+	PlaySoundMem(PlayerEat, DX_PLAYTYPE_BACK);
+}
+void Sounds::StopPlayerEat()
+{
+	StopSoundMem(PlayerEat);
 }
 
 void Sounds::PlayIjikeEat()
