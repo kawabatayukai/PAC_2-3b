@@ -307,11 +307,13 @@ void DrawGameTitle()
 	{
 		select--;
 		if (select < 0)select = 1;
+		sound.SelectSE();
 	}
 	if (g_KeyFlg & PAD_INPUT_DOWN)
 	{
 		select++;
 		if (select > 1)select = 0;
+		sound.SelectSE();
 	}
 
 	
