@@ -440,7 +440,7 @@ void GameMain()
 
 void NewGameMain()
 {
-	if (bait.GetPowerFlg() == false) {
+	/*if (bait.GetPowerFlg() == false) {
 		if (CheckSoundMem(EMoveSE) == 0) {
 			PlaySoundMem(EMoveSE, DX_PLAYTYPE_BACK);
 		}
@@ -450,7 +450,7 @@ void NewGameMain()
 		if (CheckSoundMem(PowerSE) == 0) {
 			PlaySoundMem(PowerSE, DX_PLAYTYPE_BACK);
 		}
-	}
+	}*/
 	//“G‚Ì“–‚½‚è”»’è‚ÍStage‚É
 	if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
 	{
@@ -773,7 +773,7 @@ int LoadSounds()
 {
 	if ((Disp.LoadSounds()) == -1) return -1;
 	if ((sound.LoadSounds()) == -1) return -1;
-	if ((EatSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
+	/*if ((EatSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
 	if ((EMoveSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
-	if ((PowerSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;
+	if ((PowerSE = LoadSoundMem("sound/mainBGM.wav")) == -1)return -1;*/
 }
