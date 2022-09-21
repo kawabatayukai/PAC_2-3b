@@ -73,6 +73,8 @@ void Player::PlayerInit() {
 
 	Life = 2;
 
+	PlayerDestroyFlg = false;
+
 	/*BOX				box[783];
 	for (int i = 0; i < 783; i++) {
 		box[i] = 0;
