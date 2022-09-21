@@ -23,9 +23,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		//coffebrake
 		animasion_Initialize();
-		//animasion1();
+		animasion1();
 		animasion2();
-		//animasion3();
+		animasion3();
 
 		////— ‰æ–Ê‚Ì“à—e‚ð•\‰æ–Ê‚É”½‰f
 		ScreenFlip();
