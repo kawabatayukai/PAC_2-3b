@@ -288,20 +288,40 @@ void DrawGameTitle()
 
 	DrawString(460, 360, "GAME START", 0xffffff);
 	DrawString(460, 420, "GAME END", 0xffffff);
-	if (g_NowKey & PAD_INPUT_A) {
-		ClearCount = 0;
-		stage.FruitCount = 0;
-		g_player.LifeUPFlg = false;
-		InitFlg = false;
-		g_GameState = GAME_STATE::GAME_INIT;
+	static int select = 0;
+	if (g_KeyFlg & PAD_INPUT_UP)
+	{
+		select--;
+		if (select < 0)select = 1;
 	}
-	if (g_NowKey & PAD_INPUT_B) {
-		ClearCount = 0;
-		stage.FruitCount = 0;
-		g_player.LifeUPFlg = false;
-		InitFlg = false;
-		g_GameState = GAME_STATE::GAME_END;
+	if (g_KeyFlg & PAD_INPUT_DOWN)
+	{
+		select++;
+		if (select > 1)select = 0;
 	}
+
+	
+	if (g_KeyFlg &PAD_INPUT_A)
+	{
+		switch (select)
+		{
+		case 0:
+			ClearCount = 0;
+			stage.FruitCount = 0;
+			g_player.LifeUPFlg = false;
+			InitFlg = false;
+			g_GameState = GAME_STATE::GAME_INIT;
+			break;
+		case 1:
+			g_GameState = GAME_STATE::GAME_END;
+			break;
+		default:
+			break;
+		}
+	}
+	//DrawTriangle(240, 40 * select, 260, 40 * select, 240, 40 * select, GetColor(255, 0, 0), TRUE);
+	DrawCircle(400, 375 + select * 60, 20, 0xff0000,true);
+	DrawFormatString(0, 0, 0xffffff, "%d", select);
 }
 
 //èâä˙èàóù
