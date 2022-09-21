@@ -219,7 +219,7 @@ void ENEMY_ORANGE::DrawEnemy()
 	if (g_enemy.flg == true)
 	{
 		//シンプル描画
-		DrawRotaGraphF(g_enemy.x + static_cast<float>(DRAW_POINT_X), g_enemy.y + static_cast<float>(DRAW_POINT_Y), 1.0, 0, enemyimage[g_enemy.img], TRUE);
+		DrawRotaGraph(static_cast<int>(g_enemy.x) + DRAW_POINT_X, static_cast<int>(g_enemy.y) +DRAW_POINT_Y, 1.0, 0, enemyimage[g_enemy.img], TRUE);
 	}
 
 	//テスト　

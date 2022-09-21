@@ -33,13 +33,16 @@ const int U_END = 3 * MAP_SIZE;
 const int D_END = 25 * MAP_SIZE;
 
 //目標地点が"コ"の字より外
-const int L_WALL_X = 7 * MAP_SIZE;   //画面左側"コ"の字 ｘ座標
-const int R_WALL_X = 20 * MAP_SIZE;  //画面右側"コ"の字 ｘ座標
+const int L_WALL_XL = 3 * MAP_SIZE;   //画面左側"コ"の字 ｘ座標左
+const int L_WALL_XR = 7 * MAP_SIZE;   //画面左側"コ"の字 ｘ座標右
+const int R_WALL_XL = 20 * MAP_SIZE;  //画面右側"コ"の字 ｘ座標左
+const int R_WALL_XR = 24 * MAP_SIZE;  //画面右側"コ"の字 ｘ座標右
 
-const int U_WALL_Y1 = 9 * MAP_SIZE;  //上"コ"の字 ｙ座標
-const int D_WALL_Y1 = 13 * MAP_SIZE;  //上"コ"の字 ｙ座標
-const int U_WALL_Y2 = 14 * MAP_SIZE; //下"コ"の字 ｙ座標
-const int D_WALL_Y2 = 18 * MAP_SIZE; //下"コ"の字 ｙ座標
+const int U_WALL_YU = 9 * MAP_SIZE;   //上"コ"の字 ｙ座標上
+const int U_WALL_YD = 13 * MAP_SIZE;  //上"コ"の字 ｙ座標下
+
+const int D_WALL_YU = 14 * MAP_SIZE;  //下"コ"の字 ｙ座標上
+const int D_WALL_YD = 18 * MAP_SIZE;  //下"コ"の字 ｙ座標下
 
 //巣の位置（中には入らない　用）
 const int L_NEST_X = 10 * MAP_SIZE; //左ｘ
@@ -583,15 +586,42 @@ void ENEMY_BASE::Move_Ijike()
 		if (MoveTarget.y < U_END) MoveTarget.y = U_END + (MAP_SIZE / 2);
 		if (MoveTarget.y > D_END) MoveTarget.y = D_END - (MAP_SIZE / 2);
 
-		//ターゲット座標が"コ"の字外の場合、ステージ内に戻す
-		//左側上
-		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y1 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
-		//左側下
-		if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y2 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y2)MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
-		//右側上
-		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y1 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
-		//右側下
-		if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y2 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y2) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+		////ターゲット座標が"コ"の字外の場合、ステージ内に戻す
+		////左側上
+		//if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y1 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
+		////左側下
+		//if (MoveTarget.x< L_WALL_X && MoveTarget.y>U_WALL_Y2 && MoveTarget.x < L_WALL_X && MoveTarget.y < D_WALL_Y2)MoveTarget.x = L_WALL_X + (MAP_SIZE / 2);
+		////右側上
+		//if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y1 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y1) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+		////右側下
+		//if (MoveTarget.x > R_WALL_X && MoveTarget.y > U_WALL_Y2 && MoveTarget.x > R_WALL_X && MoveTarget.y < D_WALL_Y2) MoveTarget.x = R_WALL_X - (MAP_SIZE / 2);
+
+		/**********************  ターゲット座標が"コ"の字外の場合、ステージ内に戻す  **********************/
+		/*** L1 ***/
+		if (MoveTarget.x > L_WALL_XL && MoveTarget.x<L_WALL_XR && MoveTarget.y>U_WALL_YU && MoveTarget.y < U_WALL_YD)
+		{
+			MoveTarget.x = L_WALL_XR + (MAP_SIZE / 2);
+			MoveTarget.y = U_WALL_YD + (MAP_SIZE / 2);
+		}
+		/*** L2 ***/
+		if (MoveTarget.x > L_WALL_XL && MoveTarget.x<L_WALL_XR && MoveTarget.y>D_WALL_YU && MoveTarget.y < D_WALL_YD)
+		{
+			MoveTarget.x = L_WALL_XR + (MAP_SIZE / 2);
+			MoveTarget.y = D_WALL_YD + (MAP_SIZE / 2);
+		}
+		/*** R1 ***/
+		if (MoveTarget.x > R_WALL_XL && MoveTarget.x<R_WALL_XR && MoveTarget.y>U_WALL_YU && MoveTarget.y < U_WALL_YD)
+		{
+			MoveTarget.x = R_WALL_XL - (MAP_SIZE / 2);
+			MoveTarget.y = U_WALL_YU - (MAP_SIZE / 2);
+		}
+		/*** R2 ***/
+		if (MoveTarget.x > R_WALL_XL && MoveTarget.x<R_WALL_XR && MoveTarget.y>D_WALL_YU && MoveTarget.y < D_WALL_YD)
+		{
+			MoveTarget.x = R_WALL_XL - (MAP_SIZE / 2);
+			MoveTarget.y = D_WALL_YU - (MAP_SIZE / 2);
+		}
+
 
 		//ターゲット座標が巣の中の場合、ずらす
 		if (MoveTarget.x > L_NEST_X && MoveTarget.x<R_NEST_X && MoveTarget.y>U_NEST_Y && MoveTarget.y < D_NEST_Y)
