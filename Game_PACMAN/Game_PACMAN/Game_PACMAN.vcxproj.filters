@@ -37,6 +37,9 @@
     <Filter Include="ソース ファイル\Bait">
       <UniqueIdentifier>{e0d3685d-4fce-4280-a371-1ceb3624fdc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Sounds">
+      <UniqueIdentifier>{cd601358-4887-4caf-80ba-73ddcffa04ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,6 +93,9 @@
     <ClCompile Include="A_star_INKY.cpp">
       <Filter>ソース ファイル\Enemy\Blue</Filter>
     </ClCompile>
+    <ClCompile Include="sounds.cpp">
+      <Filter>ソース ファイル\Sounds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stage.h">
@@ -142,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="A_star_INKY.h">
       <Filter>ソース ファイル\Enemy\Blue</Filter>
+    </ClInclude>
+    <ClInclude Include="sounds.h">
+      <Filter>ソース ファイル\Sounds</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
