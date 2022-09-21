@@ -365,13 +365,13 @@ void ENEMY_BASE::MoveShortest(int MapData[MAP_HEIGHT][MAP_WIDTH], int targetX, i
 	moveDataSet(MapData, targetX, targetY);
 
 	//敵の(map上の)座標
-	int Mx = static_cast<int>(g_enemy.x / MAP_SIZE);
-	int My = static_cast<int>(g_enemy.y / MAP_SIZE);
+	int Mx = static_cast<int>(g_enemy.x) / MAP_SIZE;
+	int My = static_cast<int>(g_enemy.y) / MAP_SIZE;
 
-	float x1 = ((g_enemy.x - (g_enemy.w / 2)) + 1); //左
-	float x2 = ((g_enemy.x + (g_enemy.w / 2)) - 1); //右
-	float y1 = ((g_enemy.y - (g_enemy.h / 2)) + 1); //上
-	float y2 = ((g_enemy.y + (g_enemy.h / 2)) - 1); //下
+	int x1 = (static_cast<int>(g_enemy.x - (g_enemy.w / 2)) + 1); //左
+	int x2 = (static_cast<int>(g_enemy.x + (g_enemy.w / 2)) - 1); //右
+	int y1 = (static_cast<int>(g_enemy.y - (g_enemy.h / 2)) + 1); //上
+	int y2 = (static_cast<int>(g_enemy.y + (g_enemy.h / 2)) - 1); //下
 
 	int Lx = static_cast<int>(x1 / MAP_SIZE); //マップ上左
 	int Rx = static_cast<int>(x2 / MAP_SIZE); //マップ上右
@@ -549,7 +549,7 @@ int ENEMY_BASE::GetIjikeTime(int ClearCnt)
 	}
 	else sec = 6;
 
-	return sec * 60;     //sec秒
+	return sec * 960;     //sec秒
 }
 
 //モード切替え
@@ -577,8 +577,8 @@ void ENEMY_BASE::Move_Ijike()
 	if (TrackPattern == 0)
 	{
 		//ランダムに動く X 4～22    y 4～24
-		MoveTarget.x = (GetRand(18) + 4) * MAP_SIZE + (MAP_SIZE / 2);
-		MoveTarget.y = (GetRand(20) + 4) * MAP_SIZE + (MAP_SIZE / 2);
+		MoveTarget.x = ((GetRand(18) + 4) * MAP_SIZE) + (MAP_SIZE / 2);
+		MoveTarget.y = ((GetRand(20) + 4) * MAP_SIZE) + (MAP_SIZE / 2);
 
 		//ターゲット座標がステージ外の場合、ステージ内に戻す
 		if (MoveTarget.x < L_END) MoveTarget.x = L_END + (MAP_SIZE / 2);
@@ -643,7 +643,12 @@ void ENEMY_BASE::Move_Ijike()
 	}
 
 	//イジケ終了時に以前のモードに戻る
-	if (IjikeCount % IjikeTime == 0 && EnemyMode != MODE::R_EYE && EnemyMode != MODE::EYE) EnemyMode = old_mode;
+	if (IjikeCount % IjikeTime == 0 && EnemyMode != MODE::R_EYE && EnemyMode != MODE::EYE)
+	{
+		//イジケ終了時にSTANDBYになるのを防ぐ
+		if (old_mode == MODE::PATROL || old_mode == MODE::TRACK) EnemyMode = old_mode;
+		else EnemyMode = MODE::PATROL;
+	}
 }
 
 //"目"状態の挙動
