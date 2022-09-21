@@ -379,6 +379,15 @@ void GameMain()
 
 void NewGameMain()
 {
+	//敵の当たり判定はStageに
+	if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
+	{
+		g_player.PlayerDestroyFlg = true;
+		if (g_player.PlayerDestroyFlg == true) {
+			g_GameState = GAME_STATE::GAME_OVER;
+		}
+	}
+
 	stage.DrawMapImageV3();
 	stage.DrawMapScore(ClearCount);
 	//エサの移動・描画を管理
@@ -486,11 +495,14 @@ void NewGameMain()
 		g_GameState = GAME_STATE::GAME_CLEAR;
 	}
 
-	//敵の当たり判定はStageに
-	if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
-	{
-		g_GameState = GAME_STATE::GAME_OVER;
-	}
+	////敵の当たり判定はStageに
+	//if (stage.HitCircle() == true/* || g_KeyFlg & PAD_INPUT_A*/)
+	//{
+	//	g_player.PlayerDestroyFlg = true;
+	//	if (g_player.PlayerDestroyFlg == true) {
+	//		g_GameState = GAME_STATE::GAME_OVER;
+	//	}
+	//}
 }
 
 //ゲームクリア
@@ -553,6 +565,7 @@ void DrawGameOver()
 			g_player.PlayerInit();
 			g_player.Life = stage.oldLife;
 			InitFlg = false;
+			g_player.PlayerDestroyFlg = false;
 			g_GameState = GAME_STATE::GAME_START;
 		}
 		else {//残機なし

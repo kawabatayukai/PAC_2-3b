@@ -154,6 +154,11 @@ void Stage::DrawFruit(int ClearCnt)
 			DrawFlg_F = false;    //描画OFF
 		}
 	}
+
+	if (g_player.PlayerDestroyFlg == true) {
+		DrawTime_F = 600;
+	}
+
 }
 
 
@@ -198,7 +203,6 @@ void Stage::DrawFruitScore(int ClearCnt)
 	//文字幅に沿った位置調整
 	drawX = drawX - (digit / 2) * 9;
 
-
 	//2秒間
 	if (++DrawTime_S < 120)
 	{
@@ -212,6 +216,10 @@ void Stage::DrawFruitScore(int ClearCnt)
 	{
 		DrawTime_S = 0;    //描画時間リセット
 		DrawFlg_S = false; //描画OFF
+	}
+
+	if (g_player.PlayerDestroyFlg == true) {
+		DrawFlg_S = false;
 	}
 
 }
@@ -333,18 +341,12 @@ int Stage::HitCircle() {
 			if (CheckHit(circleE1, circleP) == true) {
 				return true;
 			}
-			else {
-				return false;
-			}
 		}
 	}
 	if (Pink.GetEnemyMode() != IJIKE) {//ピンク
 		if (Pink.GetEnemyMode() != EYE) {
 			if (CheckHit(circleE2, circleP) == true) {
 				return true;
-			}
-			else {
-				return false;
 			}
 		}
 	}
@@ -353,18 +355,12 @@ int Stage::HitCircle() {
 			if (CheckHit(circleE3, circleP) == true) {
 				return true;
 			}
-			else {
-				return false;
-			}
 		}
 	}
 	if (Orange.GetEnemyMode() != IJIKE) {//オレンジ
 		if (Orange.GetEnemyMode() != EYE) {
 			if (CheckHit(circleE4, circleP) == true) {
 				return true;
-			}
-			else {
-				return false;
 			}
 		}
 	}

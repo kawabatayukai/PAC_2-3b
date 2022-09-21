@@ -62,6 +62,8 @@ public:
 
 	int PacManDamage_dir;
 	int PacManDamage_wait;
+
+	bool PlayerDestroyFlg;
 	void PlayerDestroy();
 
 	struct BOX

@@ -734,6 +734,11 @@ void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 			score_time = 0;    //表示時間リセット
 		}
 	}
+
+	if (g_player.PlayerDestroyFlg == true) {
+		score_flg = false;
+	}
+
 }
 
 //'引数'と敵との当たり判定
