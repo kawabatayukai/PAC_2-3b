@@ -17,6 +17,8 @@
 #define DRAW_POINT_X  (SCREEN_WIDTH - (MAP_WIDTH * MAP_SIZE)) / 2    //= 
 #define DRAW_POINT_Y  (SCREEN_HEIGHT - (MAP_HEIGHT * MAP_SIZE)) / 2  //= 
 
+
+
 //ゲームステート
 enum class GAME_STATE
 {

@@ -87,6 +87,8 @@ void Stage::FruitControl(int ClearCnt, int FoodCnt)
 		//スコア加算
 		Score += FruitScore[FruitNumToClear(ClearCnt)];
 
+		sound.PlayFruitEat();
+
 		DrawFlg_F = false;    //フルーツ描画OFF
 		DrawFlg_S = true;     //スコア表示ON
 		DrawCnt++;            //1回目の描画なら次の描画

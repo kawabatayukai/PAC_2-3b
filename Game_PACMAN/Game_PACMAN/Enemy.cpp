@@ -9,6 +9,7 @@
 #include"Stage.h"
 #include"NewPlayer.h"
 #include"Red.h"
+#include"sounds.h"
 
 //テスト出力用
 char ColorStr[][7] = { "RED","PINK","BLUE","ORANGE","CLEAR" };
@@ -568,7 +569,7 @@ int ENEMY_BASE::GetIjikeTime(int ClearCnt)
 	}
 	else sec = 6;
 
-	return sec * 960;     //sec秒
+	return sec * 60;     //sec秒
 }
 
 //モード切替え
@@ -603,6 +604,8 @@ void ENEMY_BASE::ModeChanger()
 //イジケ状態の挙動
 void ENEMY_BASE::Move_Ijike()
 {
+	sound.PlayIjikeMove();
+
 	if (TrackPattern == 0)
 	{
 		//ランダムに動く X 4～22    y 4～24
@@ -698,6 +701,8 @@ void ENEMY_BASE::Move_Ijike()
 //"目"状態の挙動
 void ENEMY_BASE::Move_Eye()
 {
+	sound.StopIjikeMove();
+	sound.PlayEnemyEye();
 	//巣の中の初期位置               初  x                    初  y
 	MoveTarget = { SbyPoint[0][0][0],SbyPoint[0][0][0] };
 	//巣に到着後
@@ -736,6 +741,7 @@ void ENEMY_BASE::Eaten_OnIjike(float px, float py, float pr, int& score)
 		g_enemy.speed = 9.0f;
 		if (hitflg_count == 1)
 		{
+			sound.PlayIjikeEat();
 			eaten_count++;                            //捕食カウンター
 			if (eaten_count == 5) eaten_count = 1;    //
 			score += All_Scores[eaten_count];         //スコアを加算
