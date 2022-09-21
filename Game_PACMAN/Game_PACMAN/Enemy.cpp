@@ -549,7 +549,7 @@ int ENEMY_BASE::GetIjikeTime(int ClearCnt)
 	}
 	else sec = 6;
 
-	return sec * 960;     //sec秒
+	return sec * 60;     //sec秒
 }
 
 //モード切替え
@@ -557,8 +557,18 @@ void ENEMY_BASE::ModeChanger()
 {
 	if (ijike_flg == true)
 	{
-		//一定時間でイジケ終了
-		if (++IjikeCount % IjikeTime == 0)
+		//イジケ時間が0秒以上
+		if (IjikeTime > 0)
+		{
+			//一定時間でイジケ終了
+			if (++IjikeCount % IjikeTime == 0)
+			{
+				ijike_flg = false;
+				IjikeCount = 0;
+				TrackPattern = 0;
+			}
+		}
+		else
 		{
 			ijike_flg = false;
 			IjikeCount = 0;
