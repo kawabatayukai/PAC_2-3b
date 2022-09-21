@@ -434,6 +434,7 @@ void Bait::BaitController(int playerX, int playerY)
 				bait[I].flg = false;   //表示OFF
 				
 				sound.PlayPlayerEat();
+				
 
 				if (bait[I].type == 1) PowerFlg = true;  //パワーエサ食った
 				else PowerFlg = false;
