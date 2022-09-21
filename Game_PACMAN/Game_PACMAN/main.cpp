@@ -726,10 +726,10 @@ void DrawCoffee()
 {
 	//アニメーション  2,5,9,13,17
 	if (ClearCount == 2) animasion1();   //
-	if (ClearCount == 5) animasion1();
-	if (ClearCount == 9) animasion1();
-	if (ClearCount == 13) animasion1();
-	if (ClearCount == 17) animasion1();
+	if (ClearCount == 5) animasion2();
+	if (ClearCount == 9) animasion3();
+	if (ClearCount == 13) animasion3();
+	if (ClearCount == 17) animasion3();
 	g_GameState = GAME_STATE::GAME_INIT;
 }
 
