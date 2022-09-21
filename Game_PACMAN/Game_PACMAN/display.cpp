@@ -22,7 +22,7 @@ int DISPLAY::LoadImages()
 //‰¹º“Ç‚İ‚İ
 int DISPLAY::LoadSounds()
 {
-	if ((StartBGM = LoadSoundMem("sounds/Start.wav")) == -1) return -1;
+	if ((StartBGM = LoadSoundMem("sounds/newstart.wav")) == -1) return -1;
 }
 
 //‰Šúˆ—
