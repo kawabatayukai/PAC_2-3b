@@ -286,8 +286,8 @@ void DrawGameTitle()
 	SetFontThickness(9);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_EDGE_8X8);
 
-	DrawString(460, 360, "GAME START", 0xffffff);
-	DrawString(460, 420, "GAME END", 0xffffff);
+	DrawString(460, 360, "GAME START", 0x0000ff);
+	DrawString(460, 420, "GAME END", 0x0000ff);
 	static int select = 0;
 	if (g_KeyFlg & PAD_INPUT_UP)
 	{
@@ -320,8 +320,8 @@ void DrawGameTitle()
 		}
 	}
 	//DrawTriangle(240, 40 * select, 260, 40 * select, 240, 40 * select, GetColor(255, 0, 0), TRUE);
-	DrawCircle(400, 375 + select * 60, 20, 0xff0000,true);
-	DrawFormatString(0, 0, 0xffffff, "%d", select);
+	DrawCircle(400, 380 + select * 60, 20, 0xf3e400,true);
+	//DrawFormatString(0, 0, 0xffffff, "%d", select);
 }
 
 //‰Šúˆ—
@@ -625,7 +625,7 @@ void DrawGameEnd()
 	static int limit = 180;
 	if (limit-- > 0) {
 		DrawGraph(150, 30, g_GameTitleImage, FALSE);
-		SetFontSize(24);
+		//SetFontSize(24);
 		DrawString(400, 360, "Thank you for Playing Game", 0x0000ff, 0);
 		//ƒ^ƒCƒ€‚Ì‰ÁZˆ—&I—¹(3•bŒã)
 	}else
