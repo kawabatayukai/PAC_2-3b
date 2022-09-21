@@ -39,6 +39,7 @@ void GameMain();         //メイン
 void DrawGameClear();    //ゲームクリア描画
 void DrawGameOver();     //ゲームオーバー描画
 void DrawCoffee();
+void DrawGameEnd();
 int LoadImages();        //画像読み込み
 int LoadSounds();        //音声読み込み
 
@@ -257,6 +258,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			DrawCoffee();     //コーヒーブレイク
 			break;
 
+		case GAME_STATE::GAME_END:
+			DrawGameEnd();
+			break;
 		default:
 			break;
 		}
@@ -282,13 +286,21 @@ void DrawGameTitle()
 	SetFontThickness(9);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_EDGE_8X8);
 
-	DrawString(500, 360, "GAME START", 0xffffff);
+	DrawString(460, 360, "GAME START", 0xffffff);
+	DrawString(460, 420, "GAME END", 0xffffff);
 	if (g_NowKey & PAD_INPUT_A) {
 		ClearCount = 0;
 		stage.FruitCount = 0;
 		g_player.LifeUPFlg = false;
 		InitFlg = false;
 		g_GameState = GAME_STATE::GAME_INIT;
+	}
+	if (g_NowKey & PAD_INPUT_B) {
+		ClearCount = 0;
+		stage.FruitCount = 0;
+		g_player.LifeUPFlg = false;
+		InitFlg = false;
+		g_GameState = GAME_STATE::GAME_END;
 	}
 }
 
@@ -572,6 +584,21 @@ void DrawCoffee()
 	if (ClearCount == 13) animasion1();
 	if (ClearCount == 17) animasion1();
 	g_GameState = GAME_STATE::GAME_INIT;
+}
+
+//ゲーム終了
+void DrawGameEnd()
+{
+	static int limit = 180;
+	if (limit-- > 0) {
+		DrawGraph(150, 30, g_GameTitleImage, FALSE);
+		SetFontSize(24);
+		DrawString(400, 360, "Thank you for Playing Game", 0x0000ff, 0);
+		//タイムの加算処理&終了(3秒後)
+	}else
+	{
+		DxLib_End();
+	}
 }
 
 //画像読み込み
